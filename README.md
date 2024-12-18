@@ -13,6 +13,7 @@ git clone https://github.com/PhoebeY05/CVWO-Winter-Assignment-2024.git
 ```
 2. Install dependencies
 ```
+cd CVWO-Winter-Assignment-2024
 bundle install
 npm install
 ```
