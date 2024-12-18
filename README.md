@@ -1,5 +1,6 @@
 # Web Forum
 Name: Phoebe Yap Xin Hui
+Deployed Website: https://cvwo-winter-assignment-2024.onrender.com
 ## Dependencies
 - Ruby 3.3.6
 - Rails 8.0.0
@@ -12,6 +13,7 @@ git clone https://github.com/PhoebeY05/CVWO-Winter-Assignment-2024.git
 ```
 2. Install dependencies
 ```
+cd CVWO-Winter-Assignment-2024
 bundle install
 npm install
 ```
