@@ -109,7 +109,7 @@ const PostList = () => {
   const noPosts = (
     <div className="vw-100 vh-50 d-flex align-items-center justify-content-center">
       <h4>
-        No posts yet. Why not <Link to="/new_post">create one</Link>
+        No posts yet. Why not <Link to="/new_post">create one</Link>?
       </h4>
     </div>
   );
@@ -193,18 +193,13 @@ const PostList = () => {
               </div>
             </form>
           </div>
-          <div className="row">
-            <div className="col d-flex flex-row justify-content-start">
-              <Link to="/" className="btn btn-outline-dark border-3 fs-5 shadow-lg  rounded-3">
-                Home
-              </Link>
-            </div>
-            <div className="col d-flex flex-row justify-content-end">
+          {localStorage.getItem('username') != null ? 
+            <div className="row d-flex flex-row justify-content-end">
               <Link to="/new_post" className="btn fs-5 btn-outline-dark border-3 shadow-lg rounded-3">
                 Create New Post
               </Link>
-            </div>
-          </div>
+            </div> 
+          : ""}
           <div className="row">
             {posts.length > 0 ? <div className="row row-cols-1 row-cols-md-4 g-4">{allPosts}</div> : noPosts}
           </div>
