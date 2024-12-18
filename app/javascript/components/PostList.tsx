@@ -150,7 +150,7 @@ const PostList = () => {
     setPosts(sorted_posts);
   }
   const createButton = (
-    <div className="row d-flex flex-row justify-content-end">
+    <div className="col offset-md-3 d-flex flex-row justify-content-end mb-3">
         <Link to="/new_post" className="btn fs-5 btn-outline-dark border-3 shadow-lg rounded-3">
           Create New Post
         </Link>
@@ -199,9 +199,10 @@ const PostList = () => {
               </div>
             </form>
           </div>
-          {localStorage.getItem('username') != null ? 
-            createButton
-          : ""}
+          <div className="row">
+            {localStorage.getItem("username") && posts.length > 0 ? createButton : ""}
+          </div>
+          
           <div className="row">
             {posts.length > 0 ? <div className="row row-cols-1 row-cols-md-4 g-4">{allPosts}</div> : noPosts}
           </div>
