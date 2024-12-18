@@ -1,4 +1,6 @@
 # Web Forum
+[![Netlify Status](https://api.netlify.com/api/v1/badges/906221e6-cc7f-4f4e-bd86-21bceae22133/deploy-status)](https://app.netlify.com/sites/cvwowebforum/deploys)
+
 Name: Phoebe Yap Xin Hui
 ## Dependencies
 - Ruby 3.3.6
