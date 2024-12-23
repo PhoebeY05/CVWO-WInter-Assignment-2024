@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import NewComment from "./NewComment";
 import Comment from "./Comment";
+import {del, update, create} from "../functions/requests"
+import { getUsername } from "../functions/username"
 
 const Post = () => {
   const params = useParams();
@@ -18,22 +20,14 @@ const Post = () => {
   });
   const [comments, setComments] = useState<{ id: number, body: string, post_id: number, parent_id: number }[]>([]);
   const [body, setBody] = useState("");
-  let [upvoted, setUpvoted] = useState(localStorage.getItem(`upvote_${params.id}`) !== null ? JSON.parse(localStorage.getItem(`upvote_${params.id}`)!) : false);
-  let [downvoted, setDownvoted] = useState(localStorage.getItem(`downvote_${params.id}`) !== null ? JSON.parse(localStorage.getItem(`downvote_${params.id}`)!) : false);
-  let [starred, setStarred] = useState(localStorage.getItem(`star_${params.id}`) !== null ? JSON.parse(localStorage.getItem(`star_${params.id}`)!) : false);
-
-  // Remember if user has already upvoted/downvoted
-  useEffect(() => {
-    localStorage.setItem(`upvote_${params.id}`, String(upvoted)) 
-  }, [upvoted])
+  const [upvoted, setUpvoted] = useState(false)
+  const [downvoted, setDownvoted] = useState(false) 
+  const [starred, setStarred] = useState(false)
+  const [name, setName] = useState(null)
 
   useEffect(() => {
-    localStorage.setItem(`downvote_${params.id}`, String(downvoted)) 
-  }, [downvoted])
-
-  useEffect(() => {
-    localStorage.setItem(`star_${params.id}`, String(starred)) 
-  }, [starred])
+    getUsername().then((res) => res.message ? setName(null) : setName(res.username));
+  }, [params.id])
 
   // Loading post
   useEffect(() => {
@@ -62,6 +56,27 @@ const Post = () => {
       .then((res) => setComments(res.sort((a: { id: number; }, b: { id: number; }) => post.pinned == a.id ? -1 : post.pinned == b.id ? 1 : a.id - b.id)))
       .catch(() => navigate("/"));
     }, [post.pinned]);
+  
+  // Loading Fields
+  useEffect(() => {
+    const url_f = `/api/v1/fields/${params.id}`;
+    fetch(url_f)
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((res) => {
+        if (!res.message) {
+          setUpvoted(res.upvoted)
+          setDownvoted(res.downvoted)
+          setStarred(res.starred)
+        }
+      })
+      .catch(() => navigate("/"));
+     
+    }, [params.id]);
 
   // Accounting for HTML's behaviour
   const addHtmlEntities = (str: string) => {
@@ -72,6 +87,8 @@ const Post = () => {
   // Function to either update (star, upvote, downvote) or delete post
   const changePost = (event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>, action: string, change: string = "upvote", direction: string = "plus") => {
     event.preventDefault()
+    if (!name)
+      return;
     let url = `/api/v1/${action}/${params.id}`;
     const destination = action == "destroy" ? "/" : `/posts/${params.id}`
     const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')!;
@@ -80,87 +97,53 @@ const Post = () => {
     let request_body = post;
     const changeField = (val : number) => {
       change == "upvote" ? setUpvoted(!upvoted) : setDownvoted(!downvoted)
+      const url_f = "api/v1/fields/create";
+      const field_body = {
+        username: name,
+        post_id: params.id,
+        starred: starred,
+        upvoted: change == "upvote" ? !upvoted : upvoted,
+        downvoted: change == "downvote" ? !downvoted : downvoted
+      }
+      create(url_f, token, field_body)
       return direction == "plus" ? addOne(val) : val >= 1 ? minusOne(val) : val;
     } 
     request_body = change == "upvote" ? {...post, upvote: changeField(post.upvote)} : {...post, downvote: changeField(post.downvote)}
     setPost(request_body)
-    console.log(request_body)
-    // Function to send DELETE request
-    const del = () => fetch(url, {
-                        method: "DELETE",
-                        headers: {
-                          "X-CSRF-Token": token,
-                          "Content-Type": "application/json",
-                        },
-                      });
-    // Function to send PUT request
-    const update = () => fetch(url, {
-                        method: "PUT",
-                        headers: {
-                          "X-CSRF-Token": token,
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(request_body),
-                      });
-    let request = action === "update" ? update() : del();
-    console.log(request_body)
+    let request = action === "update" ? update(url, token, request_body) : del(url, token);
+
     // Processing DELETE/PUT request
     request
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error("Network response was not ok.");
+    })
+    .then((response) => navigate(destination))
+    .catch((error) => console.log(error.message));
+  };
+
+  const changeStar = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const request_body = {
+      username: name,
+      post_id: params.id,
+      starred: !starred,
+      upvoted: upvoted,
+      downvoted: downvoted
+    };
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')!;
+    const url = `/api/v1/fields/create`;
+    create(url, token, request_body)
       .then((response) => {
         if (response.ok) {
           return response.json();
         }
         throw new Error("Network response was not ok.");
       })
-      .then((response) => navigate(destination))
+      .then((response) => navigate(`/posts/${params.id}`))
       .catch((error) => console.log(error.message));
-  };
-
-  const changeStar = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const username = localStorage.getItem("username");
-    const request_body = {
-      username: username,
-      post_id: params.id
-    };
-    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')!;
-    if (!starred) {
-      const url = `/api/v1/stars/create`;
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "X-CSRF-Token": token,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(request_body),
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("Network response was not ok.");
-        })
-        .then((response) => navigate(`/posts/${params.id}`))
-        .catch((error) => console.log(error.message));
-    } else{
-      const url= `/api/v1/stars/destroy`;
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "X-CSRF-Token": token,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(request_body),
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("Network response was not ok.");
-        })
-        .then((response) => navigate(`/posts/${params.id}`))
-        .catch((error) => console.log(error.message));
-    }
     setStarred(!starred);
   }
 
@@ -176,18 +159,12 @@ const Post = () => {
       body,
       post_id: Number(params.id), 
       parent_id: 0,
-      author: localStorage.getItem("username")
+      author: name
     };
 
     const token = document.getElementsByName("csrf-token")[0].getAttribute('content')!;
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(request_body),
-    })
+
+    create(url, token, request_body)
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -202,12 +179,12 @@ const Post = () => {
   // Rendering comments
   const allComments = comments.filter((comment) => comment.id !== undefined && comment.parent_id === 0).map((comment: any, index: number) => (
     <div key={String(index)} className="row">
-      <Comment comment={comment} author = {post.author} />
+      <Comment comment={comment} author = {post.author} pinned={post.pinned} />
     </div>
   ));
 
   const noComments = (
-    <div className="d-flex align-items-center justify-content-center">
+    <div className="d-flex align-items-center justify-content-center mt-4">
       <span className="fst-italic fs-5">
         No comments yet. Why not <NewComment text="add one" onSubmit={onSubmit} setBody={setBody}/>?
       </span>
@@ -218,7 +195,7 @@ const Post = () => {
   
   // Rendering starred property
   const star = () => {
-    if (!starred) {
+    if (!starred || name == null) {
       return (
         <form onSubmit={changeStar} className="m-0 pt-0">
           <button className= "btn fs-4" type="submit">☆</button>
@@ -235,7 +212,7 @@ const Post = () => {
 
   // Downvote/Upvote Component and Functionality (increase/undo)
   const downVote = () => {
-    if (!downvoted) {
+    if (!downvoted || name == null) {
       return (
         <form onSubmit={(event: React.FormEvent<HTMLFormElement>) => changePost(event, "update", "downvote")} className="m-0 pt-0">
           <button className= "btn fs-4" type="submit"><img width="30" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAaVJREFUaEPtWUFuAzEIJD9rX5b2ZWleli5SHVkOGANjVRvhyx7iDTMDA3ZyoZOvy8nxUxH47wwiMvBBRFci4qdn/RDR9/EeP8MLQeAWAN8AM/jPMPpDAQSBRwZAFkMROOp/zIAlinf/NMFWsJXq8ALy7i8CVha8inr3VwYqA4MCVUK9INVGa5Alz2NvXULRc74lSuT0ykdu8d4wCxYJxA1iBwH13jALFr2o7CCgCjMLxiXEJLxrBwG+en5JQKxg/BLfd/ulfpmXqbDfHc8iwDGkUtpBwg1+xXBNJImE2hkCmdDK1RTY3PAHRgqQ/kWhIyp1vCWBVglwLCnFCBKh0mnkPQQ0Ehk/pMB7PNCXNcrUafBRAlpnWqrZiadCeLwl1DKRNXXYtGOHixLImBpSOlETjwJ4wXj3myMlk4HZkJM6Exx8yDSKJNakDk9aKwWIDHAMy9Qw0yJNvOIHntT3nSdaVAYaGanOR6KZyf1SUWgC2pBrgaHgkSYeldGuo3DB4F84OSp4jhpW83l+votAP6khf6dqjHYSWFYxs7EIZNRDvHv6DPwC/GVtMYS+tZ0AAAAASUVORK5CYII="/></button>
@@ -251,7 +228,7 @@ const Post = () => {
   }
 
   const upVote = () => {
-    if (!upvoted) {
+    if (!upvoted || name == null) {
       return (
         <form onSubmit={(event: React.FormEvent<HTMLFormElement>) => changePost(event, "update", "upvote")} className="m-0 pt-0">
           <button className= "btn fs-4" type="submit"><img width="30" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAZpJREFUaEPtmeFuwyAMhN0nW/dkW5+s3ZNttRTUlBkOzLlVJPOrUgjcB3fETU5y8HY6uH5JgHfvYOQOnEXkS0R+NsjvCNgoABV/rQR/isiNDREF8GsIVfEKQW0RAGoVtY7V6BBsgJ74AnS5/6DlgQlgiVexH3fvayb2jQbBArBCq4LL+BroGoISahaAFdq9QAuQkgcGQMs6tc+tfssQqwCj4ov/Z/vDI3cFwCvGyoM71F4AFFq0crRQewFQaBEALdQeAK91aihKqGcBWOJpoZ4BYIsvEEuhHgVYDS3KhDvUowCroUUA7lCPAERZhxJqBPAq8e5Q9wBGanvLGmhRLDsiizUr195knon2JXRLlGfcZtHXA7BOBrRSUQDNcXsAraMTQbAtpKuvxZ75RgNNhsTq9doSaMzZ/l0NaLIEMFYgd2C/KGmhDPHj3dHIgfGvT1ooLZQWckXn6abZB9Ns/5eXErNLsnSQLN28KfXU97SHKQPA+79BId7+dlpFlM+p9QcMZKVunY9uLtcZOzA6V0i/BAhZ1olBD78Df9sqbTFsV3baAAAAAElFTkSuQmCC"/></button>
@@ -286,7 +263,7 @@ const Post = () => {
       </div>
     )
   }
-  console.log(comments)
+
   // Rendering post
   return (
     <div className="">
@@ -345,14 +322,16 @@ const Post = () => {
             />
           </div>
           <div className="col d-flex flex-column align-self-start">
-            {post.author === localStorage.getItem("username") ? buttons() : ""}
-            <div className="row d-flex justify-content-end mt-3">
+            {post.author === name ? buttons() : ""}
+            <div className="row d-flex justify-content-end mt-3 ">
               <div className="col">
                 <span className="lead fw-medium">Comments:</span>
               </div>
-              <div className="col d-flex justify-content-end">
-                <NewComment text="Add Comment" onSubmit={onSubmit} setBody={setBody}/>
-              </div>
+              {name != null ?
+               (<div className="col d-flex justify-content-end">
+                  <NewComment text="Add Comment" onSubmit={onSubmit} setBody={setBody}/>
+                </div>) :""
+              }
               {comments.length === 0 ? noComments : allComments}
             </div>
           </div>

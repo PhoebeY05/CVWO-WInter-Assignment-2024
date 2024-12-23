@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { update } from "../functions/requests"
+import { getUsername } from "../functions/username"
 
 const EditPost = () => {
     const params = useParams();
@@ -12,8 +14,11 @@ const EditPost = () => {
     const [content_def, setContent_def] = useState("");
     const [upvotes, setUpvotes] = useState(0);
     const [downvotes, setDownvotes] = useState(0);
-
-
+    const [name, setName] = useState(null);
+    
+    useEffect(() => {
+        getUsername().then((res) => res.message ? setName(null) : setName(res.username))
+    }, [])
 
     useEffect(() => {
         const url_p = `/api/v1/show/${params.id}`;
@@ -55,25 +60,17 @@ const EditPost = () => {
         event.preventDefault();
         const url = `/api/v1/update/${params.id}`;
         if (title.length == 0 || content.length == 0 )
-        return;
-        console.log(upvotes)
+            return;
         const body = {
             title,
-            "author": localStorage.getItem("username"),
+            "author": name,
             category,
             "upvote": upvotes,
             "downvote": downvotes,
             content: stripHtmlEntities(content),
         };
         const token = document.getElementsByName("csrf-token")[0].getAttribute('content')!;
-        fetch(url, {
-        method: "PUT",
-        headers: {
-            "X-CSRF-Token": token,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-        })
+        update(url, token, body)
         .then((response) => {
             if (response.ok) {
             return response.json();

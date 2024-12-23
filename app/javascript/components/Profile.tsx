@@ -1,17 +1,23 @@
 import React, {useEffect, useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { create } from "../functions/requests"
+import { getUsername } from "../functions/username"
+import { logout } from "../functions/logout"
 
 const Profile = () => {
-    const navigate = useNavigate();
     const [posts, setPosts] = useState<{ title: string, author: string, category: string, content: string, id: number, pinned: number }[]>([]);
     const [stars, setStars] = useState<{ title: string, author: string, category: string, content: string, id: number }[]>([]);
+    const [upvotes, setUpvotes] = useState<{ title: string, author: string, category: string, content: string, id: number }[]>([]);
+    const [downvotes, setDownvotes] = useState<{ title: string, author: string, category: string, content: string, id: number }[]>([]);
     const [comments, setComments] = useState<{ id: number, body: string, post_id: number, parent_id: number, author: string}[]>([]);
     const [parent, setParent] = useState<{ title: string, author: string,  category: string, content: string, id: number }[]>([]);
     const char_limit = 100
+    const [name, setName] = useState<string | null>("");
 
     const addHtmlEntities = (str: string) => {
         return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
     };
+
     const content = (index: number) => {
         const result_content = addHtmlEntities(posts[index].content);
         if (result_content.length > char_limit) {
@@ -26,20 +32,18 @@ const Profile = () => {
         }
     }
     const date_created = (date:string) => date.substring(0, 10);
+    useEffect(() => {
+        getUsername().then((res) => res.message == "User not found" ? setName(null) : setName(res.username));
+    }, [])
 
     // Loading my posts
     useEffect(() => {
         const url = "/api/v1/search/posts";
-        fetch(url, {
-          method: "POST",
-          headers: {
-            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')!,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            query: localStorage.getItem("username")
-          }),
-        })
+        const body = {
+          query: name
+        }
+        const token = document.getElementsByName("csrf-token")[0].getAttribute('content')!;
+        create(url, token, body)
           .then((response) => {
             if (response.ok) {
               return response.json();
@@ -48,45 +52,38 @@ const Profile = () => {
           })
           .then((response) => setPosts(response.user))
           .catch((error) => console.log(error.message));
-      }, []);
+      }, [name]);
     
     // Loading my starred posts
     useEffect(() => {
-        const url = "/api/v1/stars/index";
-        fetch (url, {
-          method: "POST",
-          headers: {
-            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')!,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: localStorage.getItem("username")
-          }),
+        const url = `/api/v1/fields/index`;
+        const token = document.getElementsByName("csrf-token")[0].getAttribute('content')!;
+        const body = {
+          username: name
+        }
+        create(url, token , body)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Network response was not ok.");
         })
           .then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-            throw new Error("Network response was not ok.");
+            setStars(response.starred)
+            setUpvotes(response.upvoted)
+            setDownvotes(response.downvoted)
           })
-          .then((response) => setStars(response))
           .catch((error) => console.log(error.message));
-      }, []);
+      }, [name]);
     
     // Loading my comments
     useEffect(() => {
-        const url = "/api/v1/comments/all";
-        const request_body = {
-          author: localStorage.getItem("username")
+        const url = `/api/v1/comments`;
+        const body = {
+          username: name
         }
-        fetch(url, {
-          method: "POST",
-          headers: {
-            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')!,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(request_body),
-        })
+        const token = document.getElementsByName("csrf-token")[0].getAttribute('content')!;
+        create(url, token, body)
           .then((response) => {
             if (response.ok) {
               return response.json();
@@ -95,8 +92,8 @@ const Profile = () => {
           })
           .then((response) => {setParent(response.posts); setComments(response.comments)})
           .catch((error) => console.log(error.message));
-      }, []);
-  
+      }, [name]);
+    
 
     const myPosts = posts.map((post: any, index: number) => (
       <div key={index}>
@@ -126,14 +123,6 @@ const Profile = () => {
         <td><Link to={`/posts/${parent[index].id}`} className="text-dark">{parent[index].title}</Link></td>
       </tr>
     ))
-
-    const logout = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        sessionStorage.clear();
-        localStorage.clear();
-        navigate("/");
-        location.reload();
-    }
 
     return (
         <div className="container mt-4">

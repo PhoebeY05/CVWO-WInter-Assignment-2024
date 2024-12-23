@@ -13,15 +13,17 @@ Rails.application.routes.draw do
       get "/comments/show/:id", to: "comments#show"
       delete "/comments/destroy/:id", to: "comments#destroy"
       put "/comments/update/:id", to: "comments#update"
-      post "comments/all", to: "comments#all"
+      post "comments", to: "comments#all"
+      get "/comments/count", to: "comments#count"
 
       post "users/index", to: "users#index"
       post "users/create"
-      # get "/users/:id", to: "users#show"
+      get "/users/show", to: "users#show"
 
-      post "/stars/index", to: "stars#index"
-      post "/stars/destroy", to: "stars#destroy"
-      post "stars/create", to: "stars#create"
+      post "/fields/index", to: "fields#index"
+      post "/fields/destroy", to: "fields#destroy"
+      post "fields/create", to: "fields#create"
+      get "fields/:id", to: "fields#post"
 
       post "search/posts", to: "search#index"
       get "search/post/:id", to: "search#post"

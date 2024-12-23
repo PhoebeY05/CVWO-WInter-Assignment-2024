@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { create } from "../functions/requests"
 
 const Register = () => {
   const navigate = useNavigate();
@@ -34,29 +35,14 @@ const Register = () => {
         if (response.message) {
           alert(response.message);
         } else {
-          localStorage.setItem("username", username);
-          fetch(url_session, {
-              method: "POST",
-              headers: {
-                "X-CSRF-Token": token,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(body),
-            })
+          create(url_session, token, body)
               .then((response) => {navigate("/"); location.reload();})
               .catch((error) => console.log(error.message));
         }
     }
 
     const token = document.getElementsByName("csrf-token")[0].getAttribute('content')!;
-    fetch(url_new_user, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
+    create(url_new_user, token, body)
       .then((response) => {
         if (response.ok) {
           return response.json();

@@ -14,4 +14,5 @@ class Api::V1::SearchController < ApplicationController
     @comment = Comment.find(params[:id])
     render json: @comment
   end
+
 end

@@ -8,9 +8,9 @@ interface NewCommentProps {
 
 const NewComment: React.FC<NewCommentProps> = ({ text, onSubmit, setBody }) => {
   const handleSubmit = (event) => {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault(); 
     event.stopPropagation(); // Prevent bubbling to parent elements
-    onSubmit(event); // Call the provided onSubmit handler
+    onSubmit(event); 
   };
   useEffect(() => {
     const myModal = document.getElementById('Modal');

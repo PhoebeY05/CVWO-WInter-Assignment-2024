@@ -1,5 +1,7 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { del } from "../functions/requests"
+import { getUsername } from "../functions/username"
 
 const PostList = () => {
   const navigate = useNavigate();
@@ -8,8 +10,18 @@ const PostList = () => {
   const [categories, setCategories] = useState<string[]>([]);
   const [category, setCategory] = useState<string>("");
   const [sort, setSort] = useState<string>("");
+  const [name, setName] = useState(null);
+  const [count, setCount] = useState<number[]>([])
   const char_limit = 150;
 
+  useEffect(() => {
+    getUsername().then((res) => res.message ? setName(null) : setName(res.username))
+  }, [])
+
+  const loadPosts = (res: { title: string, author: string, category: string, content: string, id: number, pinned:number }[]) => {
+    setPosts(res);
+    setFiltered(res);
+  }
   // Loading all posts
   useEffect(() => {
     const url = "/api/v1/posts/index";
@@ -20,7 +32,7 @@ const PostList = () => {
         }
         throw new Error("Network response was not ok.");
       })
-      .then((res) => {setPosts(res); setFiltered(res);})
+      .then((res) => loadPosts(res.reverse()))
       .catch(() => navigate("/"));  
   }, []);
 
@@ -33,25 +45,34 @@ const PostList = () => {
     })
   }, [posts, categories])
 
+  // Loading all comment count 
+  useEffect(() => {
+    const url = `/api/v1/comments/count`;
+    fetch(url)
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((res) => setCount(res))
+      .catch(() => navigate("/"));
+  }, [posts])
+
   // Function to fit content to card height
   const addHtmlEntities = (str: string) => {
     return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
   };
-  const content = (index: number) => {
-    return addHtmlEntities(posts[index].content.substring(0, char_limit));
+  const content = (post_content:string) => {
+    return addHtmlEntities(post_content.substring(0, char_limit));
   }
 
   const deletePost = (event:  React.MouseEvent<HTMLButtonElement, MouseEvent>, id:number) => {
     event.preventDefault()
     const url = `/api/v1/destroy/${id}`;
     const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')!;
-    fetch(url, {
-      method: "DELETE",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json",
-      },
-    }).then((response) => {
+    del(url, token)
+    .then((response) => {
         if (response.ok) {
           return response.json();
         }
@@ -63,7 +84,6 @@ const PostList = () => {
 
   const deleteButton = (id:number) => {
     return (
-      // <div className="col">
         <button
           type="button"
           className="btn btn-outline-danger card-link"
@@ -71,17 +91,14 @@ const PostList = () => {
         >
           Delete Post
         </button>
-      // </div>
     )
   }
 
   const editButton = (id:number) => {
     return (
-      // <div className="col">
         <Link to={`/posts/${id}/edit`} className="btn btn-outline-warning card-link">
           Edit Post
         </Link>
-      // </div>
     )
   }
   // Rendering posts
@@ -89,18 +106,18 @@ const PostList = () => {
     <div key={String(index)} className="col-md-6 col-lg-4">
       <div className="card border-dark mb-4 h-100 shadow">
         <div className="card-header">
-          <h5 className="card-title pt-2">{post.title}</h5>
+          <h5 className="card-title pt-2">{post.title} ({count[post.id]} comments)</h5>
           <h6 className="card-subtitle mb-2 text-muted">{post.category}</h6>
         </div>
         <div className="card-body">
-          {post.content.length > char_limit ? <p className="card-text">{content(index)}... <a href={`/posts/${post.id}`} className="fst-italic link-dark">Read more</a></p> : <p className="card-text">{content(index)}</p>}
+          {post.content.length > char_limit ? <p className="card-text">{content(post.content)}... <a href={`/posts/${post.id}`} className="fst-italic link-dark">Read more</a></p> : <p className="card-text">{content(post.content)}</p>}
         </div>
         <div className="card-footer d-flex justify-content-center bg-body border-0">
           <Link to={`/posts/${post.id}`} className="btn btn-outline-primary card-link">
               View Post
           </Link>
-          {post.author == localStorage.getItem('username') ? deleteButton(post.id) : ""}
-          {post.author == localStorage.getItem('username') ? editButton(post.id) : ""}
+          {post.author == name ? deleteButton(post.id) : ""}
+          {post.author == name ? editButton(post.id) : ""}
         </div>
       </div>
     </div>
@@ -118,7 +135,7 @@ const PostList = () => {
     if (categories.length > 0) {
       return (
         categories.map((category: any, index: number) => (
-          <option key={index} value={category}>{category}</option>
+          <option key={index} value={category}>{category ? category : "No Category"}</option>
         ))
       )
     }
@@ -130,14 +147,13 @@ const PostList = () => {
 
   const filterCategories = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(category)
     const filtered_posts = category == "remove" ? posts : posts.filter((post: any) => post.category == category);
     setFiltered(filtered_posts);
   }
 
   const sortPosts = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const sorted_posts = [...posts]
+    const sorted_posts = [...filtered]
     if (sort == "upvote") {
       sorted_posts.sort((a: any, b: any) => b.upvote - a.upvote);
     } else if (sort == "downvote") {
@@ -146,8 +162,10 @@ const PostList = () => {
       sorted_posts.sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
     } else if (sort == "category") {
       sorted_posts.sort((a: any, b: any) => a.category.localeCompare(b.category));
+    } else if (sort == "comments") {
+      sorted_posts.sort((a: any, b: any) => count[b.id] - count[a.id]);
     }
-    setPosts(sorted_posts);
+    setFiltered(sorted_posts)
   }
   const createButton = (
     <div className="col offset-md-3 d-flex flex-row justify-content-end mb-3">
@@ -178,6 +196,7 @@ const PostList = () => {
                   <option value="category">Category of Post</option>
                   <option value="upvote">Upvotes</option>
                   <option value="downvote">Downvotes</option>
+                  <option value="comments">Comment Count</option>
                 </select>
               </div>
               <div className="col-sm-1 d-flex flex-row justify-content-end mr-5 pl-0">
@@ -200,7 +219,7 @@ const PostList = () => {
             </form>
           </div>
           <div className="row">
-            {localStorage.getItem("username") && posts.length > 0 ? createButton : ""}
+            {name && posts.length > 0 ? createButton : ""}
           </div>
           
           <div className="row">

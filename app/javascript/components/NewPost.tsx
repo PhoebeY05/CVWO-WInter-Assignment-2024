@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { create } from "../functions/requests"
+import { getUsername } from "../functions/username"
 
 const NewPost = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [content, setContent] = useState("");
+  const [name, setName] = useState(null);
+
+  useEffect(() => {
+    getUsername().then((res) => res.message ? setName(null) : setName(res.username))
+  }, [])
 
   // Accounting for HTML's behaviour
   const stripHtmlEntities = (str: String) => {
@@ -25,12 +32,18 @@ const NewPost = () => {
     event.preventDefault();
     const url = "/api/v1/posts/create";
 
-    if (title.length == 0 || content.length == 0 )
+    if (title.length == 0 || content.length == 0) {
+      alert("Please fill in all fields!");
       return;
-
+    }
+    if (name == null) {
+      alert("You must be logged in to create a post!");
+      navigate("/login");
+      return;
+    }
     const body = {
       title,
-      "author": localStorage.getItem("username"),
+      "author": name,
       category,
       "upvote": 0,
       "downvote": 0,
@@ -38,14 +51,7 @@ const NewPost = () => {
     };
 
     const token = document.getElementsByName("csrf-token")[0].getAttribute('content')!;
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
+    create(url, token, body)
       .then((response) => {
         if (response.ok) {
           return response.json();

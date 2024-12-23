@@ -1,5 +1,5 @@
 class Api::V1::CommentsController < ApplicationController
-  before_action :set_comment, only: %i[show edit update destroy]
+  before_action :set_comment, only: %i[show update destroy]
 
   def index
     @post = Post.find(params[:id])
@@ -18,13 +18,27 @@ class Api::V1::CommentsController < ApplicationController
     render json: { comments: @comments, posts: @posts }
   end
 
-  def edit
+  def count
+    @counts = {}
+    for @post in Post.all
+      id = @post.id
+      @exists = Comment.find_by(post_id: id)
+      if @exists.nil?
+        @count = 0
+      else
+        @comments = Comment.where(post_id: id)
+        @replies = @comments.map { |comment| Comment.where(parent_id: comment.id) }
+        @count = @replies.flatten.count + @comments.count
+      end
+      @counts[id] = @count
+    end
+    render json: @counts
   end
 
   def create
-    comment = Comment.create!(comment_params)
-    if comment
-      render json: comment
+    @comment = Comment.create!(comment_params)
+    if @comment
+      render json: @comment
     else
       render json: comment_params
     end

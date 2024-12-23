@@ -1678,23 +1678,23 @@ var require_react_development = __commonJS({
       exports.useDeferredValue = function(value, initialValue) {
         return resolveDispatcher().useDeferredValue(value, initialValue);
       };
-      exports.useEffect = function(create, deps) {
-        return resolveDispatcher().useEffect(create, deps);
+      exports.useEffect = function(create2, deps) {
+        return resolveDispatcher().useEffect(create2, deps);
       };
       exports.useId = function() {
         return resolveDispatcher().useId();
       };
-      exports.useImperativeHandle = function(ref, create, deps) {
-        return resolveDispatcher().useImperativeHandle(ref, create, deps);
+      exports.useImperativeHandle = function(ref, create2, deps) {
+        return resolveDispatcher().useImperativeHandle(ref, create2, deps);
       };
-      exports.useInsertionEffect = function(create, deps) {
-        return resolveDispatcher().useInsertionEffect(create, deps);
+      exports.useInsertionEffect = function(create2, deps) {
+        return resolveDispatcher().useInsertionEffect(create2, deps);
       };
-      exports.useLayoutEffect = function(create, deps) {
-        return resolveDispatcher().useLayoutEffect(create, deps);
+      exports.useLayoutEffect = function(create2, deps) {
+        return resolveDispatcher().useLayoutEffect(create2, deps);
       };
-      exports.useMemo = function(create, deps) {
-        return resolveDispatcher().useMemo(create, deps);
+      exports.useMemo = function(create2, deps) {
+        return resolveDispatcher().useMemo(create2, deps);
       };
       exports.useOptimistic = function(passthrough, reducer) {
         return resolveDispatcher().useOptimistic(passthrough, reducer);
@@ -2353,14 +2353,14 @@ var require_react_dom_client_development = __commonJS({
       function scheduleRoot(root2, element) {
         root2.context === emptyContextObject && (updateContainerSync(element, root2, null, null), flushSyncWork$1());
       }
-      function scheduleRefresh(root2, update) {
+      function scheduleRefresh(root2, update2) {
         if (null !== resolveFamily) {
-          var staleFamilies = update.staleFamilies;
-          update = update.updatedFamilies;
+          var staleFamilies = update2.staleFamilies;
+          update2 = update2.updatedFamilies;
           flushPassiveEffects();
           scheduleFibersWithFamiliesRecursively(
             root2.current,
-            update,
+            update2,
             staleFamilies
           );
           flushSyncWork$1();
@@ -3187,8 +3187,8 @@ var require_react_dom_client_development = __commonJS({
           var hiddenUpdatesForLane = hiddenUpdates[index];
           if (null !== hiddenUpdatesForLane)
             for (hiddenUpdates[index] = null, index = 0; index < hiddenUpdatesForLane.length; index++) {
-              var update = hiddenUpdatesForLane[index];
-              null !== update && (update.lane &= -536870913);
+              var update2 = hiddenUpdatesForLane[index];
+              null !== update2 && (update2.lane &= -536870913);
             }
           remainingLanes &= ~lane;
         }
@@ -4875,43 +4875,43 @@ var require_react_dom_client_development = __commonJS({
           concurrentQueues[i++] = null;
           var queue = concurrentQueues[i];
           concurrentQueues[i++] = null;
-          var update = concurrentQueues[i];
+          var update2 = concurrentQueues[i];
           concurrentQueues[i++] = null;
           var lane = concurrentQueues[i];
           concurrentQueues[i++] = null;
-          if (null !== queue && null !== update) {
+          if (null !== queue && null !== update2) {
             var pending = queue.pending;
-            null === pending ? update.next = update : (update.next = pending.next, pending.next = update);
-            queue.pending = update;
+            null === pending ? update2.next = update2 : (update2.next = pending.next, pending.next = update2);
+            queue.pending = update2;
           }
-          0 !== lane && markUpdateLaneFromFiberToRoot(fiber, update, lane);
+          0 !== lane && markUpdateLaneFromFiberToRoot(fiber, update2, lane);
         }
       }
-      function enqueueUpdate$1(fiber, queue, update, lane) {
+      function enqueueUpdate$1(fiber, queue, update2, lane) {
         concurrentQueues[concurrentQueuesIndex++] = fiber;
         concurrentQueues[concurrentQueuesIndex++] = queue;
-        concurrentQueues[concurrentQueuesIndex++] = update;
+        concurrentQueues[concurrentQueuesIndex++] = update2;
         concurrentQueues[concurrentQueuesIndex++] = lane;
         concurrentlyUpdatedLanes |= lane;
         fiber.lanes |= lane;
         fiber = fiber.alternate;
         null !== fiber && (fiber.lanes |= lane);
       }
-      function enqueueConcurrentHookUpdate(fiber, queue, update, lane) {
-        enqueueUpdate$1(fiber, queue, update, lane);
+      function enqueueConcurrentHookUpdate(fiber, queue, update2, lane) {
+        enqueueUpdate$1(fiber, queue, update2, lane);
         return getRootForUpdatedFiber(fiber);
       }
       function enqueueConcurrentRenderForLane(fiber, lane) {
         enqueueUpdate$1(fiber, null, null, lane);
         return getRootForUpdatedFiber(fiber);
       }
-      function markUpdateLaneFromFiberToRoot(sourceFiber, update, lane) {
+      function markUpdateLaneFromFiberToRoot(sourceFiber, update2, lane) {
         sourceFiber.lanes |= lane;
         var alternate = sourceFiber.alternate;
         null !== alternate && (alternate.lanes |= lane);
         for (var isHidden = false, parent = sourceFiber.return; null !== parent; )
           parent.childLanes |= lane, alternate = parent.alternate, null !== alternate && (alternate.childLanes |= lane), 22 === parent.tag && (sourceFiber = parent.stateNode, null === sourceFiber || sourceFiber._visibility & OffscreenVisible || (isHidden = true)), sourceFiber = parent, parent = parent.return;
-        isHidden && null !== update && 3 === sourceFiber.tag && (parent = sourceFiber.stateNode, isHidden = 31 - clz32(lane), parent = parent.hiddenUpdates, sourceFiber = parent[isHidden], null === sourceFiber ? parent[isHidden] = [update] : sourceFiber.push(update), update.lane = lane | 536870912);
+        isHidden && null !== update2 && 3 === sourceFiber.tag && (parent = sourceFiber.stateNode, isHidden = 31 - clz32(lane), parent = parent.hiddenUpdates, sourceFiber = parent[isHidden], null === sourceFiber ? parent[isHidden] = [update2] : sourceFiber.push(update2), update2.lane = lane | 536870912);
       }
       function getRootForUpdatedFiber(sourceFiber) {
         if (nestedUpdateCount > NESTED_UPDATE_LIMIT)
@@ -6449,7 +6449,7 @@ var require_react_dom_client_development = __commonJS({
         null === (null === workInProgressHook ? index.memoizedState : workInProgressHook.next) && (index = index.alternate, ReactSharedInternals.H = null !== index && null !== index.memoizedState ? HooksDispatcherOnUpdateInDEV : HooksDispatcherOnMountInDEV);
         return thenable;
       }
-      function use2(usable) {
+      function use(usable) {
         if (null !== usable && "object" === typeof usable) {
           if ("function" === typeof usable.then) return useThenable(usable);
           if (usable.$$typeof === REACT_CONTEXT_TYPE) return readContext(usable);
@@ -6544,47 +6544,47 @@ var require_react_dom_client_development = __commonJS({
         if (null === baseQueue) hook.memoizedState = pendingQueue;
         else {
           current2 = baseQueue.next;
-          var newBaseQueueFirst = baseFirst = null, newBaseQueueLast = null, update = current2, didReadFromEntangledAsyncAction2 = false;
+          var newBaseQueueFirst = baseFirst = null, newBaseQueueLast = null, update2 = current2, didReadFromEntangledAsyncAction2 = false;
           do {
-            var updateLane = update.lane & -536870913;
-            if (updateLane !== update.lane ? (workInProgressRootRenderLanes & updateLane) === updateLane : (renderLanes & updateLane) === updateLane) {
-              var revertLane = update.revertLane;
+            var updateLane = update2.lane & -536870913;
+            if (updateLane !== update2.lane ? (workInProgressRootRenderLanes & updateLane) === updateLane : (renderLanes & updateLane) === updateLane) {
+              var revertLane = update2.revertLane;
               if (0 === revertLane)
                 null !== newBaseQueueLast && (newBaseQueueLast = newBaseQueueLast.next = {
                   lane: 0,
                   revertLane: 0,
-                  action: update.action,
-                  hasEagerState: update.hasEagerState,
-                  eagerState: update.eagerState,
+                  action: update2.action,
+                  hasEagerState: update2.hasEagerState,
+                  eagerState: update2.eagerState,
                   next: null
                 }), updateLane === currentEntangledLane && (didReadFromEntangledAsyncAction2 = true);
               else if ((renderLanes & revertLane) === revertLane) {
-                update = update.next;
+                update2 = update2.next;
                 revertLane === currentEntangledLane && (didReadFromEntangledAsyncAction2 = true);
                 continue;
               } else
                 updateLane = {
                   lane: 0,
-                  revertLane: update.revertLane,
-                  action: update.action,
-                  hasEagerState: update.hasEagerState,
-                  eagerState: update.eagerState,
+                  revertLane: update2.revertLane,
+                  action: update2.action,
+                  hasEagerState: update2.hasEagerState,
+                  eagerState: update2.eagerState,
                   next: null
                 }, null === newBaseQueueLast ? (newBaseQueueFirst = newBaseQueueLast = updateLane, baseFirst = pendingQueue) : newBaseQueueLast = newBaseQueueLast.next = updateLane, currentlyRenderingFiber$1.lanes |= revertLane, workInProgressRootSkippedLanes |= revertLane;
-              updateLane = update.action;
+              updateLane = update2.action;
               shouldDoubleInvokeUserFnsInHooksDEV && reducer(pendingQueue, updateLane);
-              pendingQueue = update.hasEagerState ? update.eagerState : reducer(pendingQueue, updateLane);
+              pendingQueue = update2.hasEagerState ? update2.eagerState : reducer(pendingQueue, updateLane);
             } else
               revertLane = {
                 lane: updateLane,
-                revertLane: update.revertLane,
-                action: update.action,
-                hasEagerState: update.hasEagerState,
-                eagerState: update.eagerState,
+                revertLane: update2.revertLane,
+                action: update2.action,
+                hasEagerState: update2.hasEagerState,
+                eagerState: update2.eagerState,
                 next: null
               }, null === newBaseQueueLast ? (newBaseQueueFirst = newBaseQueueLast = revertLane, baseFirst = pendingQueue) : newBaseQueueLast = newBaseQueueLast.next = revertLane, currentlyRenderingFiber$1.lanes |= updateLane, workInProgressRootSkippedLanes |= updateLane;
-            update = update.next;
-          } while (null !== update && update !== current2);
+            update2 = update2.next;
+          } while (null !== update2 && update2 !== current2);
           null === newBaseQueueLast ? baseFirst = pendingQueue : newBaseQueueLast.next = newBaseQueueFirst;
           if (!objectIs(pendingQueue, hook.memoizedState) && (didReceiveUpdate = true, didReadFromEntangledAsyncAction2 && (reducer = currentEntangledActionThenable, null !== reducer)))
             throw reducer;
@@ -6606,10 +6606,10 @@ var require_react_dom_client_development = __commonJS({
         var dispatch2 = queue.dispatch, lastRenderPhaseUpdate = queue.pending, newState = hook.memoizedState;
         if (null !== lastRenderPhaseUpdate) {
           queue.pending = null;
-          var update = lastRenderPhaseUpdate = lastRenderPhaseUpdate.next;
+          var update2 = lastRenderPhaseUpdate = lastRenderPhaseUpdate.next;
           do
-            newState = reducer(newState, update.action), update = update.next;
-          while (update !== lastRenderPhaseUpdate);
+            newState = reducer(newState, update2.action), update2 = update2.next;
+          while (update2 !== lastRenderPhaseUpdate);
           objectIs(newState, hook.memoizedState) || (didReceiveUpdate = true);
           hook.memoizedState = newState;
           null === hook.baseQueue && (hook.baseState = newState);
@@ -6681,8 +6681,8 @@ var require_react_dom_client_development = __commonJS({
         ))
           hook.memoizedState = getServerSnapshot, didReceiveUpdate = true;
         hook = hook.queue;
-        var create = subscribeToStore.bind(null, fiber, hook, subscribe);
-        updateEffectImpl(2048, Passive, create, [subscribe]);
+        var create2 = subscribeToStore.bind(null, fiber, hook, subscribe);
+        updateEffectImpl(2048, Passive, create2, [subscribe]);
         if (hook.getSnapshot !== getSnapshot || cachedSnapshot || null !== workInProgressHook && workInProgressHook.memoizedState.tag & HasEffect) {
           fiber.flags |= 2048;
           pushEffect(
@@ -7012,12 +7012,12 @@ var require_react_dom_client_development = __commonJS({
         currentStateHook.memoizedState = action;
         return [stateHook, dispatch2, false];
       }
-      function pushEffect(tag, create, inst, deps) {
-        tag = { tag, create, inst, deps, next: null };
-        create = currentlyRenderingFiber$1.updateQueue;
-        null === create && (create = createFunctionComponentUpdateQueue(), currentlyRenderingFiber$1.updateQueue = create);
-        inst = create.lastEffect;
-        null === inst ? create.lastEffect = tag.next = tag : (deps = inst.next, inst.next = tag, tag.next = deps, create.lastEffect = tag);
+      function pushEffect(tag, create2, inst, deps) {
+        tag = { tag, create: create2, inst, deps, next: null };
+        create2 = currentlyRenderingFiber$1.updateQueue;
+        null === create2 && (create2 = createFunctionComponentUpdateQueue(), currentlyRenderingFiber$1.updateQueue = create2);
+        inst = create2.lastEffect;
+        null === inst ? create2.lastEffect = tag.next = tag : (deps = inst.next, inst.next = tag, tag.next = deps, create2.lastEffect = tag);
         return tag;
       }
       function mountRef(initialValue) {
@@ -7025,39 +7025,39 @@ var require_react_dom_client_development = __commonJS({
         initialValue = { current: initialValue };
         return hook.memoizedState = initialValue;
       }
-      function mountEffectImpl(fiberFlags, hookFlags, create, deps) {
+      function mountEffectImpl(fiberFlags, hookFlags, create2, deps) {
         var hook = mountWorkInProgressHook();
         currentlyRenderingFiber$1.flags |= fiberFlags;
         hook.memoizedState = pushEffect(
           HasEffect | hookFlags,
-          create,
+          create2,
           { destroy: void 0 },
           void 0 === deps ? null : deps
         );
       }
-      function updateEffectImpl(fiberFlags, hookFlags, create, deps) {
+      function updateEffectImpl(fiberFlags, hookFlags, create2, deps) {
         var hook = updateWorkInProgressHook();
         deps = void 0 === deps ? null : deps;
         var inst = hook.memoizedState.inst;
-        null !== currentHook && null !== deps && areHookInputsEqual(deps, currentHook.memoizedState.deps) ? hook.memoizedState = pushEffect(hookFlags, create, inst, deps) : (currentlyRenderingFiber$1.flags |= fiberFlags, hook.memoizedState = pushEffect(
+        null !== currentHook && null !== deps && areHookInputsEqual(deps, currentHook.memoizedState.deps) ? hook.memoizedState = pushEffect(hookFlags, create2, inst, deps) : (currentlyRenderingFiber$1.flags |= fiberFlags, hook.memoizedState = pushEffect(
           HasEffect | hookFlags,
-          create,
+          create2,
           inst,
           deps
         ));
       }
-      function mountEffect(create, deps) {
-        (currentlyRenderingFiber$1.mode & StrictEffectsMode) !== NoMode && (currentlyRenderingFiber$1.mode & NoStrictPassiveEffectsMode) === NoMode ? mountEffectImpl(142608384, Passive, create, deps) : mountEffectImpl(8390656, Passive, create, deps);
+      function mountEffect(create2, deps) {
+        (currentlyRenderingFiber$1.mode & StrictEffectsMode) !== NoMode && (currentlyRenderingFiber$1.mode & NoStrictPassiveEffectsMode) === NoMode ? mountEffectImpl(142608384, Passive, create2, deps) : mountEffectImpl(8390656, Passive, create2, deps);
       }
-      function mountLayoutEffect(create, deps) {
+      function mountLayoutEffect(create2, deps) {
         var fiberFlags = 4194308;
         (currentlyRenderingFiber$1.mode & StrictEffectsMode) !== NoMode && (fiberFlags |= 67108864);
-        return mountEffectImpl(fiberFlags, Layout, create, deps);
+        return mountEffectImpl(fiberFlags, Layout, create2, deps);
       }
-      function imperativeHandleEffect(create, ref) {
+      function imperativeHandleEffect(create2, ref) {
         if ("function" === typeof ref) {
-          create = create();
-          var refCleanup = ref(create);
+          create2 = create2();
+          var refCleanup = ref(create2);
           return function() {
             "function" === typeof refCleanup ? refCleanup() : ref(null);
           };
@@ -7066,14 +7066,14 @@ var require_react_dom_client_development = __commonJS({
           return ref.hasOwnProperty("current") || console.error(
             "Expected useImperativeHandle() first argument to either be a ref callback or React.createRef() object. Instead received: %s.",
             "an object with keys {" + Object.keys(ref).join(", ") + "}"
-          ), create = create(), ref.current = create, function() {
+          ), create2 = create2(), ref.current = create2, function() {
             ref.current = null;
           };
       }
-      function mountImperativeHandle(ref, create, deps) {
-        "function" !== typeof create && console.error(
+      function mountImperativeHandle(ref, create2, deps) {
+        "function" !== typeof create2 && console.error(
           "Expected useImperativeHandle() second argument to be a function that creates a handle. Instead received: %s.",
-          null !== create ? typeof create : "null"
+          null !== create2 ? typeof create2 : "null"
         );
         deps = null !== deps && void 0 !== deps ? deps.concat([ref]) : null;
         var fiberFlags = 4194308;
@@ -7081,20 +7081,20 @@ var require_react_dom_client_development = __commonJS({
         mountEffectImpl(
           fiberFlags,
           Layout,
-          imperativeHandleEffect.bind(null, create, ref),
+          imperativeHandleEffect.bind(null, create2, ref),
           deps
         );
       }
-      function updateImperativeHandle(ref, create, deps) {
-        "function" !== typeof create && console.error(
+      function updateImperativeHandle(ref, create2, deps) {
+        "function" !== typeof create2 && console.error(
           "Expected useImperativeHandle() second argument to be a function that creates a handle. Instead received: %s.",
-          null !== create ? typeof create : "null"
+          null !== create2 ? typeof create2 : "null"
         );
         deps = null !== deps && void 0 !== deps ? deps.concat([ref]) : null;
         updateEffectImpl(
           4,
           Layout,
-          imperativeHandleEffect.bind(null, create, ref),
+          imperativeHandleEffect.bind(null, create2, ref),
           deps
         );
       }
@@ -7406,7 +7406,7 @@ var require_react_dom_client_development = __commonJS({
         markStateUpdateScheduled(fiber, JSCompiler_OptimizeArgumentsArray_p1);
       }
       function dispatchSetStateInternal(fiber, queue, action, lane) {
-        var update = {
+        var update2 = {
           lane,
           revertLane: 0,
           action,
@@ -7414,7 +7414,7 @@ var require_react_dom_client_development = __commonJS({
           eagerState: null,
           next: null
         };
-        if (isRenderPhaseUpdate(fiber)) enqueueRenderPhaseUpdate(queue, update);
+        if (isRenderPhaseUpdate(fiber)) enqueueRenderPhaseUpdate(queue, update2);
         else {
           var alternate = fiber.alternate;
           if (0 === fiber.lanes && (null === alternate || 0 === alternate.lanes) && (alternate = queue.lastRenderedReducer, null !== alternate)) {
@@ -7422,16 +7422,16 @@ var require_react_dom_client_development = __commonJS({
             ReactSharedInternals.H = InvalidNestedHooksDispatcherOnUpdateInDEV;
             try {
               var currentState = queue.lastRenderedState, eagerState = alternate(currentState, action);
-              update.hasEagerState = true;
-              update.eagerState = eagerState;
+              update2.hasEagerState = true;
+              update2.eagerState = eagerState;
               if (objectIs(eagerState, currentState))
-                return enqueueUpdate$1(fiber, queue, update, 0), null === workInProgressRoot && finishQueueingConcurrentUpdates(), false;
+                return enqueueUpdate$1(fiber, queue, update2, 0), null === workInProgressRoot && finishQueueingConcurrentUpdates(), false;
             } catch (error2) {
             } finally {
               ReactSharedInternals.H = prevDispatcher;
             }
           }
-          action = enqueueConcurrentHookUpdate(fiber, queue, update, lane);
+          action = enqueueConcurrentHookUpdate(fiber, queue, update2, lane);
           if (null !== action)
             return scheduleUpdateOnFiber(action, fiber, lane), entangleTransitionUpdate(action, queue, lane), true;
         }
@@ -7466,11 +7466,11 @@ var require_react_dom_client_development = __commonJS({
         var alternate = fiber.alternate;
         return fiber === currentlyRenderingFiber$1 || null !== alternate && alternate === currentlyRenderingFiber$1;
       }
-      function enqueueRenderPhaseUpdate(queue, update) {
+      function enqueueRenderPhaseUpdate(queue, update2) {
         didScheduleRenderPhaseUpdateDuringThisPass = didScheduleRenderPhaseUpdate = true;
         var pending = queue.pending;
-        null === pending ? update.next = update : (update.next = pending.next, pending.next = update);
-        queue.pending = update;
+        null === pending ? update2.next = update2 : (update2.next = pending.next, pending.next = update2);
+        queue.pending = update2;
       }
       function entangleTransitionUpdate(root2, queue, lane) {
         if (0 !== (lane & 4194176)) {
@@ -7654,14 +7654,14 @@ var require_react_dom_client_development = __commonJS({
         lane.tag = CaptureUpdate;
         return lane;
       }
-      function initializeClassErrorUpdate(update, root2, fiber, errorInfo) {
+      function initializeClassErrorUpdate(update2, root2, fiber, errorInfo) {
         var getDerivedStateFromError = fiber.type.getDerivedStateFromError;
         if ("function" === typeof getDerivedStateFromError) {
           var error2 = errorInfo.value;
-          update.payload = function() {
+          update2.payload = function() {
             return getDerivedStateFromError(error2);
           };
-          update.callback = function() {
+          update2.callback = function() {
             markFailedErrorBoundaryForHotReloading(fiber);
             runWithFiberInDEV(
               errorInfo.source,
@@ -7673,7 +7673,7 @@ var require_react_dom_client_development = __commonJS({
           };
         }
         var inst = fiber.stateNode;
-        null !== inst && "function" === typeof inst.componentDidCatch && (update.callback = function() {
+        null !== inst && "function" === typeof inst.componentDidCatch && (update2.callback = function() {
           markFailedErrorBoundaryForHotReloading(fiber);
           runWithFiberInDEV(
             errorInfo.source,
@@ -9521,7 +9521,7 @@ var require_react_dom_client_development = __commonJS({
           next: null
         };
       }
-      function enqueueUpdate(fiber, update, lane) {
+      function enqueueUpdate(fiber, update2, lane) {
         var updateQueue = fiber.updateQueue;
         if (null === updateQueue) return null;
         updateQueue = updateQueue.shared;
@@ -9534,8 +9534,8 @@ var require_react_dom_client_development = __commonJS({
           didWarnUpdateInsideUpdate = true;
         }
         if ((executionContext & RenderContext) !== NoContext)
-          return componentName2 = updateQueue.pending, null === componentName2 ? update.next = update : (update.next = componentName2.next, componentName2.next = update), updateQueue.pending = update, update = getRootForUpdatedFiber(fiber), markUpdateLaneFromFiberToRoot(fiber, null, lane), update;
-        enqueueUpdate$1(fiber, updateQueue, update, lane);
+          return componentName2 = updateQueue.pending, null === componentName2 ? update2.next = update2 : (update2.next = componentName2.next, componentName2.next = update2), updateQueue.pending = update2, update2 = getRootForUpdatedFiber(fiber), markUpdateLaneFromFiberToRoot(fiber, null, lane), update2;
+        enqueueUpdate$1(fiber, updateQueue, update2, lane);
         return getRootForUpdatedFiber(fiber);
       }
       function entangleTransitions(root2, fiber, lane) {
@@ -18222,10 +18222,10 @@ var require_react_dom_client_development = __commonJS({
         }
       }, callComponentWillUnmountInDEV = callComponentWillUnmount["react-stack-bottom-frame"].bind(callComponentWillUnmount), callCreate = {
         "react-stack-bottom-frame": function(effect4) {
-          var create = effect4.create;
+          var create2 = effect4.create;
           effect4 = effect4.inst;
-          create = create();
-          return effect4.destroy = create;
+          create2 = create2();
+          return effect4.destroy = create2;
         }
       }, callCreateInDEV = callCreate["react-stack-bottom-frame"].bind(callCreate), callDestroy = {
         "react-stack-bottom-frame": function(current2, nearestMountedAncestor, destroy) {
@@ -18310,7 +18310,7 @@ var require_react_dom_client_development = __commonJS({
       };
       var ContextOnlyDispatcher = {
         readContext,
-        use: use2,
+        use,
         useCallback: throwInvalidHookError,
         useContext: throwInvalidHookError,
         useEffect: throwInvalidHookError,
@@ -18338,7 +18338,7 @@ var require_react_dom_client_development = __commonJS({
         readContext: function(context) {
           return readContext(context);
         },
-        use: use2,
+        use,
         useCallback: function(callback, deps) {
           currentHookNameInDev = "useCallback";
           mountHookTypesDev();
@@ -18350,38 +18350,38 @@ var require_react_dom_client_development = __commonJS({
           mountHookTypesDev();
           return readContext(context);
         },
-        useEffect: function(create, deps) {
+        useEffect: function(create2, deps) {
           currentHookNameInDev = "useEffect";
           mountHookTypesDev();
           checkDepsAreArrayDev(deps);
-          return mountEffect(create, deps);
+          return mountEffect(create2, deps);
         },
-        useImperativeHandle: function(ref, create, deps) {
+        useImperativeHandle: function(ref, create2, deps) {
           currentHookNameInDev = "useImperativeHandle";
           mountHookTypesDev();
           checkDepsAreArrayDev(deps);
-          return mountImperativeHandle(ref, create, deps);
+          return mountImperativeHandle(ref, create2, deps);
         },
-        useInsertionEffect: function(create, deps) {
+        useInsertionEffect: function(create2, deps) {
           currentHookNameInDev = "useInsertionEffect";
           mountHookTypesDev();
           checkDepsAreArrayDev(deps);
-          mountEffectImpl(4, Insertion, create, deps);
+          mountEffectImpl(4, Insertion, create2, deps);
         },
-        useLayoutEffect: function(create, deps) {
+        useLayoutEffect: function(create2, deps) {
           currentHookNameInDev = "useLayoutEffect";
           mountHookTypesDev();
           checkDepsAreArrayDev(deps);
-          return mountLayoutEffect(create, deps);
+          return mountLayoutEffect(create2, deps);
         },
-        useMemo: function(create, deps) {
+        useMemo: function(create2, deps) {
           currentHookNameInDev = "useMemo";
           mountHookTypesDev();
           checkDepsAreArrayDev(deps);
           var prevDispatcher = ReactSharedInternals.H;
           ReactSharedInternals.H = InvalidNestedHooksDispatcherOnMountInDEV;
           try {
-            return mountMemo(create, deps);
+            return mountMemo(create2, deps);
           } finally {
             ReactSharedInternals.H = prevDispatcher;
           }
@@ -18469,7 +18469,7 @@ var require_react_dom_client_development = __commonJS({
         readContext: function(context) {
           return readContext(context);
         },
-        use: use2,
+        use,
         useCallback: function(callback, deps) {
           currentHookNameInDev = "useCallback";
           updateHookTypesDev();
@@ -18480,33 +18480,33 @@ var require_react_dom_client_development = __commonJS({
           updateHookTypesDev();
           return readContext(context);
         },
-        useEffect: function(create, deps) {
+        useEffect: function(create2, deps) {
           currentHookNameInDev = "useEffect";
           updateHookTypesDev();
-          return mountEffect(create, deps);
+          return mountEffect(create2, deps);
         },
-        useImperativeHandle: function(ref, create, deps) {
+        useImperativeHandle: function(ref, create2, deps) {
           currentHookNameInDev = "useImperativeHandle";
           updateHookTypesDev();
-          return mountImperativeHandle(ref, create, deps);
+          return mountImperativeHandle(ref, create2, deps);
         },
-        useInsertionEffect: function(create, deps) {
+        useInsertionEffect: function(create2, deps) {
           currentHookNameInDev = "useInsertionEffect";
           updateHookTypesDev();
-          mountEffectImpl(4, Insertion, create, deps);
+          mountEffectImpl(4, Insertion, create2, deps);
         },
-        useLayoutEffect: function(create, deps) {
+        useLayoutEffect: function(create2, deps) {
           currentHookNameInDev = "useLayoutEffect";
           updateHookTypesDev();
-          return mountLayoutEffect(create, deps);
+          return mountLayoutEffect(create2, deps);
         },
-        useMemo: function(create, deps) {
+        useMemo: function(create2, deps) {
           currentHookNameInDev = "useMemo";
           updateHookTypesDev();
           var prevDispatcher = ReactSharedInternals.H;
           ReactSharedInternals.H = InvalidNestedHooksDispatcherOnMountInDEV;
           try {
-            return mountMemo(create, deps);
+            return mountMemo(create2, deps);
           } finally {
             ReactSharedInternals.H = prevDispatcher;
           }
@@ -18594,7 +18594,7 @@ var require_react_dom_client_development = __commonJS({
         readContext: function(context) {
           return readContext(context);
         },
-        use: use2,
+        use,
         useCallback: function(callback, deps) {
           currentHookNameInDev = "useCallback";
           updateHookTypesDev();
@@ -18605,33 +18605,33 @@ var require_react_dom_client_development = __commonJS({
           updateHookTypesDev();
           return readContext(context);
         },
-        useEffect: function(create, deps) {
+        useEffect: function(create2, deps) {
           currentHookNameInDev = "useEffect";
           updateHookTypesDev();
-          updateEffectImpl(2048, Passive, create, deps);
+          updateEffectImpl(2048, Passive, create2, deps);
         },
-        useImperativeHandle: function(ref, create, deps) {
+        useImperativeHandle: function(ref, create2, deps) {
           currentHookNameInDev = "useImperativeHandle";
           updateHookTypesDev();
-          return updateImperativeHandle(ref, create, deps);
+          return updateImperativeHandle(ref, create2, deps);
         },
-        useInsertionEffect: function(create, deps) {
+        useInsertionEffect: function(create2, deps) {
           currentHookNameInDev = "useInsertionEffect";
           updateHookTypesDev();
-          return updateEffectImpl(4, Insertion, create, deps);
+          return updateEffectImpl(4, Insertion, create2, deps);
         },
-        useLayoutEffect: function(create, deps) {
+        useLayoutEffect: function(create2, deps) {
           currentHookNameInDev = "useLayoutEffect";
           updateHookTypesDev();
-          return updateEffectImpl(4, Layout, create, deps);
+          return updateEffectImpl(4, Layout, create2, deps);
         },
-        useMemo: function(create, deps) {
+        useMemo: function(create2, deps) {
           currentHookNameInDev = "useMemo";
           updateHookTypesDev();
           var prevDispatcher = ReactSharedInternals.H;
           ReactSharedInternals.H = InvalidNestedHooksDispatcherOnUpdateInDEV;
           try {
-            return updateMemo(create, deps);
+            return updateMemo(create2, deps);
           } finally {
             ReactSharedInternals.H = prevDispatcher;
           }
@@ -18719,7 +18719,7 @@ var require_react_dom_client_development = __commonJS({
         readContext: function(context) {
           return readContext(context);
         },
-        use: use2,
+        use,
         useCallback: function(callback, deps) {
           currentHookNameInDev = "useCallback";
           updateHookTypesDev();
@@ -18730,33 +18730,33 @@ var require_react_dom_client_development = __commonJS({
           updateHookTypesDev();
           return readContext(context);
         },
-        useEffect: function(create, deps) {
+        useEffect: function(create2, deps) {
           currentHookNameInDev = "useEffect";
           updateHookTypesDev();
-          updateEffectImpl(2048, Passive, create, deps);
+          updateEffectImpl(2048, Passive, create2, deps);
         },
-        useImperativeHandle: function(ref, create, deps) {
+        useImperativeHandle: function(ref, create2, deps) {
           currentHookNameInDev = "useImperativeHandle";
           updateHookTypesDev();
-          return updateImperativeHandle(ref, create, deps);
+          return updateImperativeHandle(ref, create2, deps);
         },
-        useInsertionEffect: function(create, deps) {
+        useInsertionEffect: function(create2, deps) {
           currentHookNameInDev = "useInsertionEffect";
           updateHookTypesDev();
-          return updateEffectImpl(4, Insertion, create, deps);
+          return updateEffectImpl(4, Insertion, create2, deps);
         },
-        useLayoutEffect: function(create, deps) {
+        useLayoutEffect: function(create2, deps) {
           currentHookNameInDev = "useLayoutEffect";
           updateHookTypesDev();
-          return updateEffectImpl(4, Layout, create, deps);
+          return updateEffectImpl(4, Layout, create2, deps);
         },
-        useMemo: function(create, deps) {
+        useMemo: function(create2, deps) {
           currentHookNameInDev = "useMemo";
           updateHookTypesDev();
           var prevDispatcher = ReactSharedInternals.H;
           ReactSharedInternals.H = InvalidNestedHooksDispatcherOnRerenderInDEV;
           try {
-            return updateMemo(create, deps);
+            return updateMemo(create2, deps);
           } finally {
             ReactSharedInternals.H = prevDispatcher;
           }
@@ -18847,7 +18847,7 @@ var require_react_dom_client_development = __commonJS({
         },
         use: function(usable) {
           warnInvalidHookAccess();
-          return use2(usable);
+          return use(usable);
         },
         useCallback: function(callback, deps) {
           currentHookNameInDev = "useCallback";
@@ -18861,38 +18861,38 @@ var require_react_dom_client_development = __commonJS({
           mountHookTypesDev();
           return readContext(context);
         },
-        useEffect: function(create, deps) {
+        useEffect: function(create2, deps) {
           currentHookNameInDev = "useEffect";
           warnInvalidHookAccess();
           mountHookTypesDev();
-          return mountEffect(create, deps);
+          return mountEffect(create2, deps);
         },
-        useImperativeHandle: function(ref, create, deps) {
+        useImperativeHandle: function(ref, create2, deps) {
           currentHookNameInDev = "useImperativeHandle";
           warnInvalidHookAccess();
           mountHookTypesDev();
-          return mountImperativeHandle(ref, create, deps);
+          return mountImperativeHandle(ref, create2, deps);
         },
-        useInsertionEffect: function(create, deps) {
+        useInsertionEffect: function(create2, deps) {
           currentHookNameInDev = "useInsertionEffect";
           warnInvalidHookAccess();
           mountHookTypesDev();
-          mountEffectImpl(4, Insertion, create, deps);
+          mountEffectImpl(4, Insertion, create2, deps);
         },
-        useLayoutEffect: function(create, deps) {
+        useLayoutEffect: function(create2, deps) {
           currentHookNameInDev = "useLayoutEffect";
           warnInvalidHookAccess();
           mountHookTypesDev();
-          return mountLayoutEffect(create, deps);
+          return mountLayoutEffect(create2, deps);
         },
-        useMemo: function(create, deps) {
+        useMemo: function(create2, deps) {
           currentHookNameInDev = "useMemo";
           warnInvalidHookAccess();
           mountHookTypesDev();
           var prevDispatcher = ReactSharedInternals.H;
           ReactSharedInternals.H = InvalidNestedHooksDispatcherOnMountInDEV;
           try {
-            return mountMemo(create, deps);
+            return mountMemo(create2, deps);
           } finally {
             ReactSharedInternals.H = prevDispatcher;
           }
@@ -18996,7 +18996,7 @@ var require_react_dom_client_development = __commonJS({
         },
         use: function(usable) {
           warnInvalidHookAccess();
-          return use2(usable);
+          return use(usable);
         },
         useCallback: function(callback, deps) {
           currentHookNameInDev = "useCallback";
@@ -19010,38 +19010,38 @@ var require_react_dom_client_development = __commonJS({
           updateHookTypesDev();
           return readContext(context);
         },
-        useEffect: function(create, deps) {
+        useEffect: function(create2, deps) {
           currentHookNameInDev = "useEffect";
           warnInvalidHookAccess();
           updateHookTypesDev();
-          updateEffectImpl(2048, Passive, create, deps);
+          updateEffectImpl(2048, Passive, create2, deps);
         },
-        useImperativeHandle: function(ref, create, deps) {
+        useImperativeHandle: function(ref, create2, deps) {
           currentHookNameInDev = "useImperativeHandle";
           warnInvalidHookAccess();
           updateHookTypesDev();
-          return updateImperativeHandle(ref, create, deps);
+          return updateImperativeHandle(ref, create2, deps);
         },
-        useInsertionEffect: function(create, deps) {
+        useInsertionEffect: function(create2, deps) {
           currentHookNameInDev = "useInsertionEffect";
           warnInvalidHookAccess();
           updateHookTypesDev();
-          return updateEffectImpl(4, Insertion, create, deps);
+          return updateEffectImpl(4, Insertion, create2, deps);
         },
-        useLayoutEffect: function(create, deps) {
+        useLayoutEffect: function(create2, deps) {
           currentHookNameInDev = "useLayoutEffect";
           warnInvalidHookAccess();
           updateHookTypesDev();
-          return updateEffectImpl(4, Layout, create, deps);
+          return updateEffectImpl(4, Layout, create2, deps);
         },
-        useMemo: function(create, deps) {
+        useMemo: function(create2, deps) {
           currentHookNameInDev = "useMemo";
           warnInvalidHookAccess();
           updateHookTypesDev();
           var prevDispatcher = ReactSharedInternals.H;
           ReactSharedInternals.H = InvalidNestedHooksDispatcherOnUpdateInDEV;
           try {
-            return updateMemo(create, deps);
+            return updateMemo(create2, deps);
           } finally {
             ReactSharedInternals.H = prevDispatcher;
           }
@@ -19145,7 +19145,7 @@ var require_react_dom_client_development = __commonJS({
         },
         use: function(usable) {
           warnInvalidHookAccess();
-          return use2(usable);
+          return use(usable);
         },
         useCallback: function(callback, deps) {
           currentHookNameInDev = "useCallback";
@@ -19159,38 +19159,38 @@ var require_react_dom_client_development = __commonJS({
           updateHookTypesDev();
           return readContext(context);
         },
-        useEffect: function(create, deps) {
+        useEffect: function(create2, deps) {
           currentHookNameInDev = "useEffect";
           warnInvalidHookAccess();
           updateHookTypesDev();
-          updateEffectImpl(2048, Passive, create, deps);
+          updateEffectImpl(2048, Passive, create2, deps);
         },
-        useImperativeHandle: function(ref, create, deps) {
+        useImperativeHandle: function(ref, create2, deps) {
           currentHookNameInDev = "useImperativeHandle";
           warnInvalidHookAccess();
           updateHookTypesDev();
-          return updateImperativeHandle(ref, create, deps);
+          return updateImperativeHandle(ref, create2, deps);
         },
-        useInsertionEffect: function(create, deps) {
+        useInsertionEffect: function(create2, deps) {
           currentHookNameInDev = "useInsertionEffect";
           warnInvalidHookAccess();
           updateHookTypesDev();
-          return updateEffectImpl(4, Insertion, create, deps);
+          return updateEffectImpl(4, Insertion, create2, deps);
         },
-        useLayoutEffect: function(create, deps) {
+        useLayoutEffect: function(create2, deps) {
           currentHookNameInDev = "useLayoutEffect";
           warnInvalidHookAccess();
           updateHookTypesDev();
-          return updateEffectImpl(4, Layout, create, deps);
+          return updateEffectImpl(4, Layout, create2, deps);
         },
-        useMemo: function(create, deps) {
+        useMemo: function(create2, deps) {
           currentHookNameInDev = "useMemo";
           warnInvalidHookAccess();
           updateHookTypesDev();
           var prevDispatcher = ReactSharedInternals.H;
           ReactSharedInternals.H = InvalidNestedHooksDispatcherOnUpdateInDEV;
           try {
-            return updateMemo(create, deps);
+            return updateMemo(create2, deps);
           } finally {
             ReactSharedInternals.H = prevDispatcher;
           }
@@ -19314,29 +19314,29 @@ var require_react_dom_client_development = __commonJS({
         },
         enqueueSetState: function(inst, payload, callback) {
           inst = inst._reactInternals;
-          var lane = requestUpdateLane(inst), update = createUpdate(lane);
-          update.payload = payload;
-          void 0 !== callback && null !== callback && (warnOnInvalidCallback(callback), update.callback = callback);
-          payload = enqueueUpdate(inst, update, lane);
+          var lane = requestUpdateLane(inst), update2 = createUpdate(lane);
+          update2.payload = payload;
+          void 0 !== callback && null !== callback && (warnOnInvalidCallback(callback), update2.callback = callback);
+          payload = enqueueUpdate(inst, update2, lane);
           null !== payload && (scheduleUpdateOnFiber(payload, inst, lane), entangleTransitions(payload, inst, lane));
           markStateUpdateScheduled(inst, lane);
         },
         enqueueReplaceState: function(inst, payload, callback) {
           inst = inst._reactInternals;
-          var lane = requestUpdateLane(inst), update = createUpdate(lane);
-          update.tag = ReplaceState;
-          update.payload = payload;
-          void 0 !== callback && null !== callback && (warnOnInvalidCallback(callback), update.callback = callback);
-          payload = enqueueUpdate(inst, update, lane);
+          var lane = requestUpdateLane(inst), update2 = createUpdate(lane);
+          update2.tag = ReplaceState;
+          update2.payload = payload;
+          void 0 !== callback && null !== callback && (warnOnInvalidCallback(callback), update2.callback = callback);
+          payload = enqueueUpdate(inst, update2, lane);
           null !== payload && (scheduleUpdateOnFiber(payload, inst, lane), entangleTransitions(payload, inst, lane));
           markStateUpdateScheduled(inst, lane);
         },
         enqueueForceUpdate: function(inst, callback) {
           inst = inst._reactInternals;
-          var lane = requestUpdateLane(inst), update = createUpdate(lane);
-          update.tag = ForceUpdate;
-          void 0 !== callback && null !== callback && (warnOnInvalidCallback(callback), update.callback = callback);
-          callback = enqueueUpdate(inst, update, lane);
+          var lane = requestUpdateLane(inst), update2 = createUpdate(lane);
+          update2.tag = ForceUpdate;
+          void 0 !== callback && null !== callback && (warnOnInvalidCallback(callback), update2.callback = callback);
+          callback = enqueueUpdate(inst, update2, lane);
           null !== callback && (scheduleUpdateOnFiber(callback, inst, lane), entangleTransitions(callback, inst, lane));
           null !== injectedProfilingHooks && "function" === typeof injectedProfilingHooks.markForceUpdateScheduled && injectedProfilingHooks.markForceUpdateScheduled(inst, lane);
         }
@@ -35307,6 +35307,44 @@ var encoder = new TextEncoder();
 
 // app/javascript/components/PostList.tsx
 var import_react = __toESM(require_react());
+
+// app/javascript/functions/requests.ts
+var del2 = (url, token) => fetch(url, {
+  method: "DELETE",
+  headers: {
+    "X-CSRF-Token": token,
+    "Content-Type": "application/json"
+  }
+});
+var update = (url, token, body) => fetch(url, {
+  method: "PUT",
+  headers: {
+    "X-CSRF-Token": token,
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(body)
+});
+var create = (url, token, body) => fetch(url, {
+  method: "POST",
+  headers: {
+    "X-CSRF-Token": token,
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(body)
+});
+
+// app/javascript/functions/username.ts
+var getUsername = () => {
+  const url = "/api/v1/users/show";
+  return fetch(url).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    throw new Error("Network response was not ok.");
+  });
+};
+
+// app/javascript/components/PostList.tsx
 var PostList = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = (0, import_react.useState)([]);
@@ -35314,7 +35352,16 @@ var PostList = () => {
   const [categories, setCategories] = (0, import_react.useState)([]);
   const [category, setCategory] = (0, import_react.useState)("");
   const [sort, setSort] = (0, import_react.useState)("");
+  const [name, setName] = (0, import_react.useState)(null);
+  const [count, setCount] = (0, import_react.useState)([]);
   const char_limit = 150;
+  (0, import_react.useEffect)(() => {
+    getUsername().then((res) => res.message ? setName(null) : setName(res.username));
+  }, []);
+  const loadPosts = (res) => {
+    setPosts(res);
+    setFiltered(res);
+  };
   (0, import_react.useEffect)(() => {
     const url = "/api/v1/posts/index";
     fetch(url).then((res) => {
@@ -35322,10 +35369,7 @@ var PostList = () => {
         return res.json();
       }
       throw new Error("Network response was not ok.");
-    }).then((res) => {
-      setPosts(res);
-      setFiltered(res);
-    }).catch(() => navigate("/"));
+    }).then((res) => loadPosts(res.reverse())).catch(() => navigate("/"));
   }, []);
   (0, import_react.useEffect)(() => {
     posts.forEach((post) => {
@@ -35334,23 +35378,26 @@ var PostList = () => {
       }
     });
   }, [posts, categories]);
+  (0, import_react.useEffect)(() => {
+    const url = `/api/v1/comments/count`;
+    fetch(url).then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      throw new Error("Network response was not ok.");
+    }).then((res) => setCount(res)).catch(() => navigate("/"));
+  }, [posts]);
   const addHtmlEntities = (str) => {
     return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
   };
-  const content = (index) => {
-    return addHtmlEntities(posts[index].content.substring(0, char_limit));
+  const content = (post_content) => {
+    return addHtmlEntities(post_content.substring(0, char_limit));
   };
   const deletePost = (event, id) => {
     event.preventDefault();
     const url = `/api/v1/destroy/${id}`;
     const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content");
-    fetch(url, {
-      method: "DELETE",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json"
-      }
-    }).then((response) => {
+    del2(url, token).then((response) => {
       if (response.ok) {
         return response.json();
       }
@@ -35358,30 +35405,24 @@ var PostList = () => {
     }).then((response) => location.reload()).catch((error2) => console.log(error2.message));
   };
   const deleteButton = (id) => {
-    return (
-      // <div className="col">
-      /* @__PURE__ */ import_react.default.createElement(
-        "button",
-        {
-          type: "button",
-          className: "btn btn-outline-danger card-link",
-          onClick: (e) => deletePost(e, id)
-        },
-        "Delete Post"
-      )
+    return /* @__PURE__ */ import_react.default.createElement(
+      "button",
+      {
+        type: "button",
+        className: "btn btn-outline-danger card-link",
+        onClick: (e) => deletePost(e, id)
+      },
+      "Delete Post"
     );
   };
   const editButton = (id) => {
-    return (
-      // <div className="col">
-      /* @__PURE__ */ import_react.default.createElement(Link, { to: `/posts/${id}/edit`, className: "btn btn-outline-warning card-link" }, "Edit Post")
-    );
+    return /* @__PURE__ */ import_react.default.createElement(Link, { to: `/posts/${id}/edit`, className: "btn btn-outline-warning card-link" }, "Edit Post");
   };
-  const allPosts = filtered.map((post, index) => /* @__PURE__ */ import_react.default.createElement("div", { key: String(index), className: "col-md-6 col-lg-4" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "card border-dark mb-4 h-100 shadow" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "card-header" }, /* @__PURE__ */ import_react.default.createElement("h5", { className: "card-title pt-2" }, post.title), /* @__PURE__ */ import_react.default.createElement("h6", { className: "card-subtitle mb-2 text-muted" }, post.category)), /* @__PURE__ */ import_react.default.createElement("div", { className: "card-body" }, post.content.length > char_limit ? /* @__PURE__ */ import_react.default.createElement("p", { className: "card-text" }, content(index), "... ", /* @__PURE__ */ import_react.default.createElement("a", { href: `/posts/${post.id}`, className: "fst-italic link-dark" }, "Read more")) : /* @__PURE__ */ import_react.default.createElement("p", { className: "card-text" }, content(index))), /* @__PURE__ */ import_react.default.createElement("div", { className: "card-footer d-flex justify-content-center bg-body border-0" }, /* @__PURE__ */ import_react.default.createElement(Link, { to: `/posts/${post.id}`, className: "btn btn-outline-primary card-link" }, "View Post"), post.author == localStorage.getItem("username") ? deleteButton(post.id) : "", post.author == localStorage.getItem("username") ? editButton(post.id) : ""))));
+  const allPosts = filtered.map((post, index) => /* @__PURE__ */ import_react.default.createElement("div", { key: String(index), className: "col-md-6 col-lg-4" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "card border-dark mb-4 h-100 shadow" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "card-header" }, /* @__PURE__ */ import_react.default.createElement("h5", { className: "card-title pt-2" }, post.title, " (", count[post.id], " comments)"), /* @__PURE__ */ import_react.default.createElement("h6", { className: "card-subtitle mb-2 text-muted" }, post.category)), /* @__PURE__ */ import_react.default.createElement("div", { className: "card-body" }, post.content.length > char_limit ? /* @__PURE__ */ import_react.default.createElement("p", { className: "card-text" }, content(post.content), "... ", /* @__PURE__ */ import_react.default.createElement("a", { href: `/posts/${post.id}`, className: "fst-italic link-dark" }, "Read more")) : /* @__PURE__ */ import_react.default.createElement("p", { className: "card-text" }, content(post.content))), /* @__PURE__ */ import_react.default.createElement("div", { className: "card-footer d-flex justify-content-center bg-body border-0" }, /* @__PURE__ */ import_react.default.createElement(Link, { to: `/posts/${post.id}`, className: "btn btn-outline-primary card-link" }, "View Post"), post.author == name ? deleteButton(post.id) : "", post.author == name ? editButton(post.id) : ""))));
   const noPosts = /* @__PURE__ */ import_react.default.createElement("div", { className: "vw-100 vh-50 d-flex align-items-center justify-content-center" }, /* @__PURE__ */ import_react.default.createElement("h4", null, "No posts yet. Why not ", /* @__PURE__ */ import_react.default.createElement(Link, { to: "/new_post" }, "create one"), "?"));
   const Categories = () => {
     if (categories.length > 0) {
-      return categories.map((category2, index) => /* @__PURE__ */ import_react.default.createElement("option", { key: index, value: category2 }, category2));
+      return categories.map((category2, index) => /* @__PURE__ */ import_react.default.createElement("option", { key: index, value: category2 }, category2 ? category2 : "No Category"));
     }
   };
   const onChange = (event, setFunction) => {
@@ -35389,13 +35430,12 @@ var PostList = () => {
   };
   const filterCategories = (event) => {
     event.preventDefault();
-    console.log(category);
     const filtered_posts = category == "remove" ? posts : posts.filter((post) => post.category == category);
     setFiltered(filtered_posts);
   };
   const sortPosts = (event) => {
     event.preventDefault();
-    const sorted_posts = [...posts];
+    const sorted_posts = [...filtered];
     if (sort == "upvote") {
       sorted_posts.sort((a, b) => b.upvote - a.upvote);
     } else if (sort == "downvote") {
@@ -35404,11 +35444,13 @@ var PostList = () => {
       sorted_posts.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
     } else if (sort == "category") {
       sorted_posts.sort((a, b) => a.category.localeCompare(b.category));
+    } else if (sort == "comments") {
+      sorted_posts.sort((a, b) => count[b.id] - count[a.id]);
     }
-    setPosts(sorted_posts);
+    setFiltered(sorted_posts);
   };
   const createButton = /* @__PURE__ */ import_react.default.createElement("div", { className: "col offset-md-3 d-flex flex-row justify-content-end mb-3" }, /* @__PURE__ */ import_react.default.createElement(Link, { to: "/new_post", className: "btn fs-5 btn-outline-dark border-3 shadow-lg rounded-3" }, "Create New Post"));
-  return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement("section", { className: "jumbotron jumbotron-fluid text-center" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "container py-5" }, /* @__PURE__ */ import_react.default.createElement("h1", { className: "display-4" }, "Web Forum"), /* @__PURE__ */ import_react.default.createElement("p", { className: "lead text-muted" }, "What posts are you interested in today?"))), /* @__PURE__ */ import_react.default.createElement("div", { className: "pb-5" }, /* @__PURE__ */ import_react.default.createElement("main", { className: "container" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "row d-flex flex-row justify-content-center" }, /* @__PURE__ */ import_react.default.createElement("form", { onSubmit: sortPosts, className: "row gx-3 gy-2 align-items-center" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "col-11" }, /* @__PURE__ */ import_react.default.createElement("select", { className: "form-select form-select-lg ml-5", "aria-label": "Large select example", onChange: (event) => onChange(event, setSort) }, /* @__PURE__ */ import_react.default.createElement("option", { defaultValue: "" }, "Sort by ..."), /* @__PURE__ */ import_react.default.createElement("option", { value: "date" }, "Date Created"), /* @__PURE__ */ import_react.default.createElement("option", { value: "category" }, "Category of Post"), /* @__PURE__ */ import_react.default.createElement("option", { value: "upvote" }, "Upvotes"), /* @__PURE__ */ import_react.default.createElement("option", { value: "downvote" }, "Downvotes"))), /* @__PURE__ */ import_react.default.createElement("div", { className: "col-sm-1 d-flex flex-row justify-content-end mr-5 pl-0" }, /* @__PURE__ */ import_react.default.createElement("button", { type: "submit", className: "btn btn-outline-success btn-lg" }, "Sort")))), /* @__PURE__ */ import_react.default.createElement("div", { className: "row d-flex flex-row justify-content-center mb-5" }, /* @__PURE__ */ import_react.default.createElement("form", { onSubmit: filterCategories, className: "row gx-3 gy-2 align-items-center" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "col-11" }, /* @__PURE__ */ import_react.default.createElement("select", { className: "form-select form-select-lg ml-5", "aria-label": "Large select example", onChange: (event) => onChange(event, setCategory) }, /* @__PURE__ */ import_react.default.createElement("option", { defaultValue: "" }, "Filter by Categories"), Categories(), /* @__PURE__ */ import_react.default.createElement("option", { value: "remove" }, "Remove Filter"))), /* @__PURE__ */ import_react.default.createElement("div", { className: "col-sm-1 d-flex flex-row justify-content-end mr-5 pl-0" }, /* @__PURE__ */ import_react.default.createElement("button", { type: "submit", className: "btn btn-outline-success btn-lg" }, "Filter")))), /* @__PURE__ */ import_react.default.createElement("div", { className: "row" }, localStorage.getItem("username") && posts.length > 0 ? createButton : ""), /* @__PURE__ */ import_react.default.createElement("div", { className: "row" }, posts.length > 0 ? /* @__PURE__ */ import_react.default.createElement("div", { className: "row row-cols-1 row-cols-md-4 g-4" }, allPosts) : noPosts))));
+  return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement("section", { className: "jumbotron jumbotron-fluid text-center" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "container py-5" }, /* @__PURE__ */ import_react.default.createElement("h1", { className: "display-4" }, "Web Forum"), /* @__PURE__ */ import_react.default.createElement("p", { className: "lead text-muted" }, "What posts are you interested in today?"))), /* @__PURE__ */ import_react.default.createElement("div", { className: "pb-5" }, /* @__PURE__ */ import_react.default.createElement("main", { className: "container" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "row d-flex flex-row justify-content-center" }, /* @__PURE__ */ import_react.default.createElement("form", { onSubmit: sortPosts, className: "row gx-3 gy-2 align-items-center" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "col-11" }, /* @__PURE__ */ import_react.default.createElement("select", { className: "form-select form-select-lg ml-5", "aria-label": "Large select example", onChange: (event) => onChange(event, setSort) }, /* @__PURE__ */ import_react.default.createElement("option", { defaultValue: "" }, "Sort by ..."), /* @__PURE__ */ import_react.default.createElement("option", { value: "date" }, "Date Created"), /* @__PURE__ */ import_react.default.createElement("option", { value: "category" }, "Category of Post"), /* @__PURE__ */ import_react.default.createElement("option", { value: "upvote" }, "Upvotes"), /* @__PURE__ */ import_react.default.createElement("option", { value: "downvote" }, "Downvotes"), /* @__PURE__ */ import_react.default.createElement("option", { value: "comments" }, "Comment Count"))), /* @__PURE__ */ import_react.default.createElement("div", { className: "col-sm-1 d-flex flex-row justify-content-end mr-5 pl-0" }, /* @__PURE__ */ import_react.default.createElement("button", { type: "submit", className: "btn btn-outline-success btn-lg" }, "Sort")))), /* @__PURE__ */ import_react.default.createElement("div", { className: "row d-flex flex-row justify-content-center mb-5" }, /* @__PURE__ */ import_react.default.createElement("form", { onSubmit: filterCategories, className: "row gx-3 gy-2 align-items-center" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "col-11" }, /* @__PURE__ */ import_react.default.createElement("select", { className: "form-select form-select-lg ml-5", "aria-label": "Large select example", onChange: (event) => onChange(event, setCategory) }, /* @__PURE__ */ import_react.default.createElement("option", { defaultValue: "" }, "Filter by Categories"), Categories(), /* @__PURE__ */ import_react.default.createElement("option", { value: "remove" }, "Remove Filter"))), /* @__PURE__ */ import_react.default.createElement("div", { className: "col-sm-1 d-flex flex-row justify-content-end mr-5 pl-0" }, /* @__PURE__ */ import_react.default.createElement("button", { type: "submit", className: "btn btn-outline-success btn-lg" }, "Filter")))), /* @__PURE__ */ import_react.default.createElement("div", { className: "row" }, name && posts.length > 0 ? createButton : ""), /* @__PURE__ */ import_react.default.createElement("div", { className: "row" }, posts.length > 0 ? /* @__PURE__ */ import_react.default.createElement("div", { className: "row row-cols-1 row-cols-md-4 g-4" }, allPosts) : noPosts))));
 };
 var PostList_default = PostList;
 
@@ -35457,11 +35499,15 @@ var NewComment_default = NewComment;
 
 // app/javascript/components/Comment.tsx
 var import_react3 = __toESM(require_react());
-var Comment = ({ comment, author }) => {
+var Comment = ({ comment, author, pinned }) => {
   const navigate = useNavigate();
   const [replies, setReplies] = (0, import_react3.useState)([]);
   const [body, setBody] = (0, import_react3.useState)("");
   const [editComment, setEditComment] = (0, import_react3.useState)(false);
+  const [name, setName] = (0, import_react3.useState)(null);
+  (0, import_react3.useEffect)(() => {
+    getUsername().then((res) => res.message ? setName(null) : setName(res.username));
+  }, [comment.id]);
   (0, import_react3.useEffect)(() => {
     const url = `/api/v1/comments/show/${String(comment.id)}`;
     fetch(url).then((res) => {
@@ -35478,46 +35524,19 @@ var Comment = ({ comment, author }) => {
     }
     const url = action == "create" ? `/api/v1/comments/create` : `/api/v1/comments/${action}/${String(comment2.id)}`;
     const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
-    const create = () => {
-      const request_body = {
-        body,
-        post_id: Number(comment2.post_id),
-        parent_id: Number(comment2.id),
-        author: localStorage.getItem("username")
-      };
-      return fetch(url, {
-        method: "POST",
-        headers: {
-          "X-CSRF-Token": token,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(request_body)
-      });
+    const new_comment = {
+      body,
+      post_id: Number(comment2.post_id),
+      parent_id: Number(comment2.id),
+      author: name
     };
-    const del2 = () => fetch(url, {
-      method: "DELETE",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json"
-      }
-    });
-    const update = () => {
-      const request_body = {
-        body,
-        parent_id: Number(comment2.parent_id),
-        post_id: Number(comment2.post_id),
-        author: localStorage.getItem("username")
-      };
-      return fetch(url, {
-        method: "PUT",
-        headers: {
-          "X-CSRF-Token": token,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(request_body)
-      });
+    const existing_comment = {
+      body,
+      parent_id: Number(comment2.parent_id),
+      post_id: Number(comment2.post_id),
+      author: name
     };
-    let request = action === "create" ? create() : action === "update" ? update() : del2();
+    let request = action === "create" ? create(url, token, new_comment) : action === "update" ? update(url, token, existing_comment) : del2(url, token);
     request.then((response) => {
       if (response.ok) {
         return response.json();
@@ -35534,27 +35553,19 @@ var Comment = ({ comment, author }) => {
     },
     "Delete Comment"
   ));
-  const allReplies = replies.map((reply, index) => /* @__PURE__ */ import_react3.default.createElement("div", { key: index, className: "row" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "col" }, /* @__PURE__ */ import_react3.default.createElement("p", { className: "text-muted d-flex flex-row justify-content-center p-0" }, /* @__PURE__ */ import_react3.default.createElement(NewComment_default, { text: "add a reply", onSubmit: (e) => changeComment(e, reply, "create"), setBody }))), /* @__PURE__ */ import_react3.default.createElement(Comment, { comment: reply, author })));
+  const allReplies = replies.map((reply, index) => /* @__PURE__ */ import_react3.default.createElement("div", { key: index, className: "row" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "col" }, /* @__PURE__ */ import_react3.default.createElement("p", { className: "text-muted d-flex flex-row justify-content-center p-0" }, /* @__PURE__ */ import_react3.default.createElement(NewComment_default, { text: "add a reply", onSubmit: (e) => changeComment(e, reply, "create"), setBody }))), /* @__PURE__ */ import_react3.default.createElement(Comment, { comment: reply, author, pinned })));
   const noReplies = /* @__PURE__ */ import_react3.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react3.default.createElement("span", { className: "text-muted fs-6" }, "No replies yet. Why not ", /* @__PURE__ */ import_react3.default.createElement(NewComment_default, { text: "add one", onSubmit: (e) => changeComment(e, comment, "create"), setBody }), "?"));
   const edit = /* @__PURE__ */ import_react3.default.createElement("form", { id: comment.id, onSubmit: (e) => changeComment(e, comment, "update") }, /* @__PURE__ */ import_react3.default.createElement("textarea", { className: "form-control m-3", id: "exampleFormControlTextarea1", rows: 3, defaultValue: comment.body, onChange: (e) => setBody(e.target.value) }), /* @__PURE__ */ import_react3.default.createElement("div", { className: "d-flex flex-row justify-content-end mb-2" }, /* @__PURE__ */ import_react3.default.createElement("button", { className: "btn btn-link border-primary border-3 border-opacity-50", type: "submit" }, "Edit Comment")));
   const normal = /* @__PURE__ */ import_react3.default.createElement("div", null, /* @__PURE__ */ import_react3.default.createElement("p", { className: "lead" }, comment.body), /* @__PURE__ */ import_react3.default.createElement("div", { className: "d-flex flex-row justify-content-end mb-1" }, /* @__PURE__ */ import_react3.default.createElement("button", { className: "btn btn-link", onClick: () => setEditComment(true) }, "Edit Comment")));
   const changePin = (event) => {
     event.preventDefault();
-    const pinned = localStorage.getItem(`pin_${comment.id}`) == "true";
-    localStorage.setItem(`pin_${comment.id}`, String(!(localStorage.getItem(`pin_${comment.id}`) == "true")));
+    const pinned_comment = pinned == comment.id;
     const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
     const url = `/api/v1/update/${comment.post_id}`;
     const request_body = {
-      comment_id: !pinned ? comment.id : 0
+      comment_id: !pinned_comment ? comment.id : 0
     };
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(request_body)
-    }).then((response) => {
+    create(url, token, request_body).then((response) => {
       if (response.ok) {
         return response.json();
       }
@@ -35562,13 +35573,13 @@ var Comment = ({ comment, author }) => {
     }).then((response) => location.reload()).catch((error2) => console.log(error2.message));
   };
   const pin = () => {
-    if (localStorage.getItem(`pin_${comment.id}`) == "true") {
+    if (pinned == comment.id) {
       return /* @__PURE__ */ import_react3.default.createElement("div", { className: "col px-3 d-flex justify-content-end" }, /* @__PURE__ */ import_react3.default.createElement("form", { onSubmit: changePin, className: "m-0 pt-0" }, /* @__PURE__ */ import_react3.default.createElement("button", { className: "btn fs-4", type: "submit" }, /* @__PURE__ */ import_react3.default.createElement("img", { width: "50", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAURJREFUaEPtWUEOwjAM814GvAx4GfwMiLRJVWFT7SbaKtILl6ax46RLyoTB1zQ4fiSBvRX0UOAG4CoSeQK4A7BfafUQOAN4SF6/jWQcsuEM3kh4LFPBlKRXD4EX7W3bQMIiGc04kkAliBRMySgV+F0LUjAlo5VaZGvCxbfLIWJKufh2OSQJdHxQUoEieFnESiZlCmUKKXlT2GQKzcFQxkp5iClF61VAAV7633Um7gVfE7ko5aAo4DnM15iNBPVCoRCwlwivYb4mYOApJRQCbMvAZgaFidosts1JYCsCf6nA8EVsN5A95nrfRNJHTUmh1qKsb6sQXyGHrtxWIb5CDk0CrUn6+XckFdgI1vBFXLbbdJPWmkWRKVQSoNvkIxAwDEbixLbIreBtX6QCCwFLH2pIORIBBou0N1oBCRRjlASYaEXsfQMvZDcxoe1figAAAABJRU5ErkJggg==" }))));
     } else {
       return /* @__PURE__ */ import_react3.default.createElement("div", { className: "col px-3 d-flex justify-content-end" }, /* @__PURE__ */ import_react3.default.createElement("form", { onSubmit: changePin, className: "m-0 pt-0" }, /* @__PURE__ */ import_react3.default.createElement("button", { className: "btn fs-4", type: "submit" }, /* @__PURE__ */ import_react3.default.createElement("img", { width: "50", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAYZJREFUaEPtmFEOAiEMRLsnU0+mnkxvptawCSHgzrSAu0n3y49S5rUFWhc5+LccXL8EwL8z6MnATUSuHQCeycddRNbfsFsLwFlEHvAOnCGth16QxCvEiE+zoJmFv70BqHBKE2WcwvIqwmPxkbtw+bNs7tqwUhsufwHA1uweMwDfGKAhVRWUceMQg7pgM0oTZZwk6CM26h3Ql/gCoxrrV8VrC9EbQsXT7YQlA2uAXNffJwje9V8dAZDVKxuMyECUkLOpixLylFBtnPQeYnqYsQLUxNMvaGOyoyHYqLUGeX3+2YG85YuCYABawzy1YXHw3QFhAGpNnEf8ylKDgP0yAOW1B28CdJfmS8EDwKwFGGzNHSOizAAiymMDaYOMJk1iJSykDTKaMImV4uF3hQEYNYnVxMOTGQPA1nOXZm1r0wD4EaHIwFb5WLtRxK/aRAaQSI08xHl/A9/riOjcZhaAZV6AWEYCqADNwon9vxNSnoxmAGj5sNMazDAaABZiNQwAa+R6rTt8Bt5AwVAx/JQL5QAAAABJRU5ErkJggg==" }))));
     }
   };
-  return /* @__PURE__ */ import_react3.default.createElement("div", { className: "border rounded-4 shadow p-4 flex flex-column" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "col px-3 d-flex align-items-center" }, /* @__PURE__ */ import_react3.default.createElement("p", { className: "fw-bold align-self-center" }, comment.author, " said ...")), author == localStorage.getItem("username") && comment.parent_id == 0 ? pin() : null), /* @__PURE__ */ import_react3.default.createElement("div", { className: "row d-flex justify-content-start" }, comment.author == localStorage.getItem("username") && editComment ? edit : comment.author == localStorage.getItem("username") && !editComment ? normal : /* @__PURE__ */ import_react3.default.createElement("p", { className: "lead" }, comment.body)), comment.author == localStorage.getItem("username") ? deleteButton(comment) : null, /* @__PURE__ */ import_react3.default.createElement("hr", { className: "border-1" }), replies.length > 0 ? allReplies : noReplies);
+  return /* @__PURE__ */ import_react3.default.createElement("div", { className: "border rounded-4 shadow p-4 flex flex-column" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "col px-3 d-flex align-items-center" }, /* @__PURE__ */ import_react3.default.createElement("p", { className: "fw-bold align-self-center" }, comment.author, " said ...")), author == name && comment.parent_id == 0 ? pin() : null), /* @__PURE__ */ import_react3.default.createElement("div", { className: "row d-flex justify-content-start" }, comment.author == name && editComment ? edit : comment.author == name && !editComment ? normal : /* @__PURE__ */ import_react3.default.createElement("p", { className: "lead" }, comment.body)), comment.author == name ? deleteButton(comment) : null, /* @__PURE__ */ import_react3.default.createElement("hr", { className: "border-1" }), replies.length > 0 ? allReplies : noReplies);
 };
 var Comment_default = Comment;
 
@@ -35588,18 +35599,13 @@ var Post = () => {
   });
   const [comments, setComments] = (0, import_react4.useState)([]);
   const [body, setBody] = (0, import_react4.useState)("");
-  let [upvoted, setUpvoted] = (0, import_react4.useState)(localStorage.getItem(`upvote_${params.id}`) !== null ? JSON.parse(localStorage.getItem(`upvote_${params.id}`)) : false);
-  let [downvoted, setDownvoted] = (0, import_react4.useState)(localStorage.getItem(`downvote_${params.id}`) !== null ? JSON.parse(localStorage.getItem(`downvote_${params.id}`)) : false);
-  let [starred, setStarred] = (0, import_react4.useState)(localStorage.getItem(`star_${params.id}`) !== null ? JSON.parse(localStorage.getItem(`star_${params.id}`)) : false);
+  const [upvoted, setUpvoted] = (0, import_react4.useState)(false);
+  const [downvoted, setDownvoted] = (0, import_react4.useState)(false);
+  const [starred, setStarred] = (0, import_react4.useState)(false);
+  const [name, setName] = (0, import_react4.useState)(null);
   (0, import_react4.useEffect)(() => {
-    localStorage.setItem(`upvote_${params.id}`, String(upvoted));
-  }, [upvoted]);
-  (0, import_react4.useEffect)(() => {
-    localStorage.setItem(`downvote_${params.id}`, String(downvoted));
-  }, [downvoted]);
-  (0, import_react4.useEffect)(() => {
-    localStorage.setItem(`star_${params.id}`, String(starred));
-  }, [starred]);
+    getUsername().then((res) => res.message ? setName(null) : setName(res.username));
+  }, [params.id]);
   (0, import_react4.useEffect)(() => {
     const url_p = `/api/v1/show/${params.id}`;
     fetch(url_p).then((response) => {
@@ -35618,12 +35624,29 @@ var Post = () => {
       throw new Error("Network response was not ok.");
     }).then((res) => setComments(res.sort((a, b) => post.pinned == a.id ? -1 : post.pinned == b.id ? 1 : a.id - b.id))).catch(() => navigate("/"));
   }, [post.pinned]);
+  (0, import_react4.useEffect)(() => {
+    const url_f = `/api/v1/fields/${params.id}`;
+    fetch(url_f).then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      throw new Error("Network response was not ok.");
+    }).then((res) => {
+      if (!res.message) {
+        setUpvoted(res.upvoted);
+        setDownvoted(res.downvoted);
+        setStarred(res.starred);
+      }
+    }).catch(() => navigate("/"));
+  }, [params.id]);
   const addHtmlEntities = (str) => {
     return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
   };
   const postContent = addHtmlEntities(post.content);
   const changePost = (event, action, change = "upvote", direction = "plus") => {
     event.preventDefault();
+    if (!name)
+      return;
     let url = `/api/v1/${action}/${params.id}`;
     const destination = action == "destroy" ? "/" : `/posts/${params.id}`;
     const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content");
@@ -35632,28 +35655,20 @@ var Post = () => {
     let request_body = post;
     const changeField = (val) => {
       change == "upvote" ? setUpvoted(!upvoted) : setDownvoted(!downvoted);
+      const url_f = "api/v1/fields/create";
+      const field_body = {
+        username: name,
+        post_id: params.id,
+        starred,
+        upvoted: change == "upvote" ? !upvoted : upvoted,
+        downvoted: change == "downvote" ? !downvoted : downvoted
+      };
+      create(url_f, token, field_body);
       return direction == "plus" ? addOne(val) : val >= 1 ? minusOne(val) : val;
     };
     request_body = change == "upvote" ? { ...post, upvote: changeField(post.upvote) } : { ...post, downvote: changeField(post.downvote) };
     setPost(request_body);
-    console.log(request_body);
-    const del2 = () => fetch(url, {
-      method: "DELETE",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json"
-      }
-    });
-    const update = () => fetch(url, {
-      method: "PUT",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(request_body)
-    });
-    let request = action === "update" ? update() : del2();
-    console.log(request_body);
+    let request = action === "update" ? update(url, token, request_body) : del2(url, token);
     request.then((response) => {
       if (response.ok) {
         return response.json();
@@ -35663,43 +35678,21 @@ var Post = () => {
   };
   const changeStar = (event) => {
     event.preventDefault();
-    const username = localStorage.getItem("username");
     const request_body = {
-      username,
-      post_id: params.id
+      username: name,
+      post_id: params.id,
+      starred: !starred,
+      upvoted,
+      downvoted
     };
     const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content");
-    if (!starred) {
-      const url = `/api/v1/stars/create`;
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "X-CSRF-Token": token,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(request_body)
-      }).then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error("Network response was not ok.");
-      }).then((response) => navigate(`/posts/${params.id}`)).catch((error2) => console.log(error2.message));
-    } else {
-      const url = `/api/v1/stars/destroy`;
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "X-CSRF-Token": token,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(request_body)
-      }).then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error("Network response was not ok.");
-      }).then((response) => navigate(`/posts/${params.id}`)).catch((error2) => console.log(error2.message));
-    }
+    const url = `/api/v1/fields/create`;
+    create(url, token, request_body).then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error("Network response was not ok.");
+    }).then((response) => navigate(`/posts/${params.id}`)).catch((error2) => console.log(error2.message));
     setStarred(!starred);
   };
   const onSubmit = (event) => {
@@ -35711,41 +35704,34 @@ var Post = () => {
       body,
       post_id: Number(params.id),
       parent_id: 0,
-      author: localStorage.getItem("username")
+      author: name
     };
     const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(request_body)
-    }).then((response) => {
+    create(url, token, request_body).then((response) => {
       if (response.ok) {
         return response.json();
       }
       throw new Error("Network response was not ok.");
     }).then((data2) => location.reload()).catch((error2) => console.log(error2.message));
   };
-  const allComments = comments.filter((comment) => comment.id !== void 0 && comment.parent_id === 0).map((comment, index) => /* @__PURE__ */ import_react4.default.createElement("div", { key: String(index), className: "row" }, /* @__PURE__ */ import_react4.default.createElement(Comment_default, { comment, author: post.author })));
-  const noComments = /* @__PURE__ */ import_react4.default.createElement("div", { className: "d-flex align-items-center justify-content-center" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "fst-italic fs-5" }, "No comments yet. Why not ", /* @__PURE__ */ import_react4.default.createElement(NewComment_default, { text: "add one", onSubmit, setBody }), "?"));
+  const allComments = comments.filter((comment) => comment.id !== void 0 && comment.parent_id === 0).map((comment, index) => /* @__PURE__ */ import_react4.default.createElement("div", { key: String(index), className: "row" }, /* @__PURE__ */ import_react4.default.createElement(Comment_default, { comment, author: post.author, pinned: post.pinned })));
+  const noComments = /* @__PURE__ */ import_react4.default.createElement("div", { className: "d-flex align-items-center justify-content-center mt-4" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "fst-italic fs-5" }, "No comments yet. Why not ", /* @__PURE__ */ import_react4.default.createElement(NewComment_default, { text: "add one", onSubmit, setBody }), "?"));
   const star = () => {
-    if (!starred) {
+    if (!starred || name == null) {
       return /* @__PURE__ */ import_react4.default.createElement("form", { onSubmit: changeStar, className: "m-0 pt-0" }, /* @__PURE__ */ import_react4.default.createElement("button", { className: "btn fs-4", type: "submit" }, "\u2606"));
     } else {
       return /* @__PURE__ */ import_react4.default.createElement("form", { onSubmit: changeStar, className: "m-0 pt-0" }, /* @__PURE__ */ import_react4.default.createElement("button", { className: "btn fs-4", type: "submit" }, "\u2605"));
     }
   };
   const downVote = () => {
-    if (!downvoted) {
+    if (!downvoted || name == null) {
       return /* @__PURE__ */ import_react4.default.createElement("form", { onSubmit: (event) => changePost(event, "update", "downvote"), className: "m-0 pt-0" }, /* @__PURE__ */ import_react4.default.createElement("button", { className: "btn fs-4", type: "submit" }, /* @__PURE__ */ import_react4.default.createElement("img", { width: "30", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAaVJREFUaEPtWUFuAzEIJD9rX5b2ZWleli5SHVkOGANjVRvhyx7iDTMDA3ZyoZOvy8nxUxH47wwiMvBBRFci4qdn/RDR9/EeP8MLQeAWAN8AM/jPMPpDAQSBRwZAFkMROOp/zIAlinf/NMFWsJXq8ALy7i8CVha8inr3VwYqA4MCVUK9INVGa5Alz2NvXULRc74lSuT0ykdu8d4wCxYJxA1iBwH13jALFr2o7CCgCjMLxiXEJLxrBwG+en5JQKxg/BLfd/ulfpmXqbDfHc8iwDGkUtpBwg1+xXBNJImE2hkCmdDK1RTY3PAHRgqQ/kWhIyp1vCWBVglwLCnFCBKh0mnkPQQ0Ehk/pMB7PNCXNcrUafBRAlpnWqrZiadCeLwl1DKRNXXYtGOHixLImBpSOlETjwJ4wXj3myMlk4HZkJM6Exx8yDSKJNakDk9aKwWIDHAMy9Qw0yJNvOIHntT3nSdaVAYaGanOR6KZyf1SUWgC2pBrgaHgkSYeldGuo3DB4F84OSp4jhpW83l+votAP6khf6dqjHYSWFYxs7EIZNRDvHv6DPwC/GVtMYS+tZ0AAAAASUVORK5CYII=" })));
     } else {
       return /* @__PURE__ */ import_react4.default.createElement("form", { onSubmit: (event) => changePost(event, "update", "downvote", "minus"), className: "m-0 pt-0" }, /* @__PURE__ */ import_react4.default.createElement("button", { className: "btn fs-4", type: "submit" }, /* @__PURE__ */ import_react4.default.createElement("img", { width: "30", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAVxJREFUaEPtmVEOwiAQRLc305OpJ9ObaVdtQpqywM5QrFl++mEhM7vzKMRJDj6mg+uXMDC6g4wOnETkIiL6bBkPEbnN8/TpHgwDd4f4RbCKP7vVzxVgGHgiAlANYWDOf3QAiWBEKCIE7oQRoYhQRAjZhD9z40OG1PCvdyHvOR8paG6uHrk37w1WB9BsM41k7w2WAeSiwhS/rLWp1TKgEVITvzD06nndElKCWCfpfXfkyIpXUSUD+s7IKJniaw2MNFEscPGFb3ZG8JDdOtM81xrQOXvyUIyOuTUZxO5holp8CwOpp55QN4n3GugJdUuk30VtntAR6ipo1/H2GmBD3RwdL8TrAjCgdotHIsSCGhLPMoBAjUQYgngdJc+X2gUtE2KEBzg6LIg9JmjimQzUQk0V38uABTUMbU8G0rW3oKZAu5eB9EtN+Ts1d0Kmt9Q4inf5KQx0KWvDoofvwAs3Lj8xV3Zs/gAAAABJRU5ErkJggg==" })));
     }
   };
   const upVote = () => {
-    if (!upvoted) {
+    if (!upvoted || name == null) {
       return /* @__PURE__ */ import_react4.default.createElement("form", { onSubmit: (event) => changePost(event, "update", "upvote"), className: "m-0 pt-0" }, /* @__PURE__ */ import_react4.default.createElement("button", { className: "btn fs-4", type: "submit" }, /* @__PURE__ */ import_react4.default.createElement("img", { width: "30", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAZpJREFUaEPtmeFuwyAMhN0nW/dkW5+s3ZNttRTUlBkOzLlVJPOrUgjcB3fETU5y8HY6uH5JgHfvYOQOnEXkS0R+NsjvCNgoABV/rQR/isiNDREF8GsIVfEKQW0RAGoVtY7V6BBsgJ74AnS5/6DlgQlgiVexH3fvayb2jQbBArBCq4LL+BroGoISahaAFdq9QAuQkgcGQMs6tc+tfssQqwCj4ov/Z/vDI3cFwCvGyoM71F4AFFq0crRQewFQaBEALdQeAK91aihKqGcBWOJpoZ4BYIsvEEuhHgVYDS3KhDvUowCroUUA7lCPAERZhxJqBPAq8e5Q9wBGanvLGmhRLDsiizUr195knon2JXRLlGfcZtHXA7BOBrRSUQDNcXsAraMTQbAtpKuvxZ75RgNNhsTq9doSaMzZ/l0NaLIEMFYgd2C/KGmhDPHj3dHIgfGvT1ooLZQWckXn6abZB9Ns/5eXErNLsnSQLN28KfXU97SHKQPA+79BId7+dlpFlM+p9QcMZKVunY9uLtcZOzA6V0i/BAhZ1olBD78Df9sqbTFsV3baAAAAAElFTkSuQmCC" })));
     } else {
       return /* @__PURE__ */ import_react4.default.createElement("form", { onSubmit: (event) => changePost(event, "update", "upvote", "minus"), className: "m-0 pt-0" }, /* @__PURE__ */ import_react4.default.createElement("button", { className: "btn fs-4", type: "submit" }, /* @__PURE__ */ import_react4.default.createElement("img", { width: "30", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAVJJREFUaEPtmUESgjAMRcPN9GTqydSTKZmBDdM2afJDgUlXLkD/a//rWJjo5GM6eX5KgNErGLkCNyJ6ENF3gXxGwEYBcPj3JvCdiD5oiCiAXyEoh2cI6IgA4KpwdUoDDoEGaIVfgV7zB5gPSABNeDgECqAkrdR1iNQogJK0EgDEBwRAT3W2UG4IL4AnPMQHDwAivBvCCmCRVnLCJLUVwCKtBGDywQKArI5b6l6AyPAmH3oA9gjfDaEFiJBWckIltRYgQloJQCW1BmDP6nRLLQGMDK/yoQVwhPArRNWHFsCI3te8qPrQAuBDOe8+RxnFrC2AEVtn7RzNx9DiEw1JYs3se6vmyuC6eaFLAM0y167JFZgfYmWFskKeGcgKke8tUe5CWaGskHMLukKFPOcG1cG9NceIXWh9ndp7+OHw1f/52mIgALS/FXJdAoRMa8eXnn4F/pNfQzEzutmhAAAAAElFTkSuQmCC" })));
@@ -35762,7 +35748,6 @@ var Post = () => {
       "Delete Post"
     )), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-auto w-50" }, /* @__PURE__ */ import_react4.default.createElement(Link, { to: `/posts/${post.id}/edit`, className: "btn btn-warning w-100 " }, "Edit Post")));
   };
-  console.log(comments);
   return /* @__PURE__ */ import_react4.default.createElement("div", { className: "" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "hero position-relative d-flex align-items-center justify-content-center" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "overlay bg-dark position-absolute" }), /* @__PURE__ */ import_react4.default.createElement("h1", { className: "display-4 position-relative mt-4" }, post.title)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "container py-4" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-flex justify-content-center border border-3 border-black pt-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead" }, "Author: ", post.author)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead" }, "Category: ", post.category)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-inline-flex flex-row" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-8 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead mb-0" }, "Upvotes: ", post.upvote)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-2 pt-1 d-flex justify-content-center" }, upVote()))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-inline-flex flex-row" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-8 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead mb-0" }, "Downvotes: ", post.downvote)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-2 pt-1 d-flex justify-content-center" }, downVote()))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-4 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead mb-0" }, "Starred: ")), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-4 pt-2" }, star())))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "row p-4 border border-3 border-top-0 border-black" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "mb-2 h3" }, "Post Content: "), /* @__PURE__ */ import_react4.default.createElement(
     "div",
     {
@@ -35770,7 +35755,7 @@ var Post = () => {
         __html: `${postContent}`
       }
     }
-  )), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col d-flex flex-column align-self-start" }, post.author === localStorage.getItem("username") ? buttons() : "", /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-flex justify-content-end mt-3" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "lead fw-medium" }, "Comments:")), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col d-flex justify-content-end" }, /* @__PURE__ */ import_react4.default.createElement(NewComment_default, { text: "Add Comment", onSubmit, setBody })), comments.length === 0 ? noComments : allComments))), /* @__PURE__ */ import_react4.default.createElement(Link, { to: "/", className: "btn btn-outline-dark mt-3" }, "Back to Posts")));
+  )), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col d-flex flex-column align-self-start" }, post.author === name ? buttons() : "", /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-flex justify-content-end mt-3 " }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "lead fw-medium" }, "Comments:")), name != null ? /* @__PURE__ */ import_react4.default.createElement("div", { className: "col d-flex justify-content-end" }, /* @__PURE__ */ import_react4.default.createElement(NewComment_default, { text: "Add Comment", onSubmit, setBody })) : "", comments.length === 0 ? noComments : allComments))), /* @__PURE__ */ import_react4.default.createElement(Link, { to: "/", className: "btn btn-outline-dark mt-3" }, "Back to Posts")));
 };
 var Post_default = Post;
 
@@ -35781,6 +35766,10 @@ var NewPost = () => {
   const [title, setTitle] = (0, import_react5.useState)("");
   const [category, setCategory] = (0, import_react5.useState)("");
   const [content, setContent] = (0, import_react5.useState)("");
+  const [name, setName] = (0, import_react5.useState)(null);
+  (0, import_react5.useEffect)(() => {
+    getUsername().then((res) => res.message ? setName(null) : setName(res.username));
+  }, []);
   const stripHtmlEntities = (str) => {
     return String(str).replace(/\n/g, "<br> <br>").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   };
@@ -35790,25 +35779,25 @@ var NewPost = () => {
   const onSubmit = (event) => {
     event.preventDefault();
     const url = "/api/v1/posts/create";
-    if (title.length == 0 || content.length == 0)
+    if (title.length == 0 || content.length == 0) {
+      alert("Please fill in all fields!");
       return;
+    }
+    if (name == null) {
+      alert("You must be logged in to create a post!");
+      navigate("/login");
+      return;
+    }
     const body = {
       title,
-      "author": localStorage.getItem("username"),
+      "author": name,
       category,
       "upvote": 0,
       "downvote": 0,
       content: stripHtmlEntities(content)
     };
     const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
-    }).then((response) => {
+    create(url, token, body).then((response) => {
       if (response.ok) {
         return response.json();
       }
@@ -35850,13 +35839,30 @@ var NewPost_default = NewPost;
 
 // app/javascript/components/Profile.tsx
 var import_react6 = __toESM(require_react());
+
+// app/javascript/functions/logout.ts
+var logout = (event) => {
+  event.preventDefault();
+  const url = "/api/v1/sessions/destroy";
+  const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
+  del2(url, token).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error("Network response was not ok.");
+  }).then((response) => location.href = "/").catch((error2) => console.log(error2.message));
+};
+
+// app/javascript/components/Profile.tsx
 var Profile = () => {
-  const navigate = useNavigate();
   const [posts, setPosts] = (0, import_react6.useState)([]);
   const [stars, setStars] = (0, import_react6.useState)([]);
+  const [upvotes, setUpvotes] = (0, import_react6.useState)([]);
+  const [downvotes, setDownvotes] = (0, import_react6.useState)([]);
   const [comments, setComments] = (0, import_react6.useState)([]);
   const [parent, setParent] = (0, import_react6.useState)([]);
   const char_limit = 100;
+  const [name, setName] = (0, import_react6.useState)("");
   const addHtmlEntities = (str) => {
     return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
   };
@@ -35871,54 +35877,45 @@ var Profile = () => {
   };
   const date_created = (date) => date.substring(0, 10);
   (0, import_react6.useEffect)(() => {
+    getUsername().then((res) => res.message == "User not found" ? setName(null) : setName(res.username));
+  }, []);
+  (0, import_react6.useEffect)(() => {
     const url = "/api/v1/search/posts";
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')?.getAttribute("content"),
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        query: localStorage.getItem("username")
-      })
-    }).then((response) => {
+    const body = {
+      query: name
+    };
+    const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
+    create(url, token, body).then((response) => {
       if (response.ok) {
         return response.json();
       }
       throw new Error("Network response was not ok.");
     }).then((response) => setPosts(response.user)).catch((error2) => console.log(error2.message));
-  }, []);
+  }, [name]);
   (0, import_react6.useEffect)(() => {
-    const url = "/api/v1/stars/index";
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')?.getAttribute("content"),
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        username: localStorage.getItem("username")
-      })
-    }).then((response) => {
+    const url = `/api/v1/fields/index`;
+    const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
+    const body = {
+      username: name
+    };
+    create(url, token, body).then((response) => {
       if (response.ok) {
         return response.json();
       }
       throw new Error("Network response was not ok.");
-    }).then((response) => setStars(response)).catch((error2) => console.log(error2.message));
-  }, []);
-  (0, import_react6.useEffect)(() => {
-    const url = "/api/v1/comments/all";
-    const request_body = {
-      author: localStorage.getItem("username")
-    };
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')?.getAttribute("content"),
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(request_body)
     }).then((response) => {
+      setStars(response.starred);
+      setUpvotes(response.upvoted);
+      setDownvotes(response.downvoted);
+    }).catch((error2) => console.log(error2.message));
+  }, [name]);
+  (0, import_react6.useEffect)(() => {
+    const url = `/api/v1/comments`;
+    const body = {
+      username: name
+    };
+    const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
+    create(url, token, body).then((response) => {
       if (response.ok) {
         return response.json();
       }
@@ -35927,17 +35924,10 @@ var Profile = () => {
       setParent(response.posts);
       setComments(response.comments);
     }).catch((error2) => console.log(error2.message));
-  }, []);
+  }, [name]);
   const myPosts = posts.map((post, index) => /* @__PURE__ */ import_react6.default.createElement("div", { key: index }, /* @__PURE__ */ import_react6.default.createElement("a", { href: `/posts/${post.id}`, className: "list-group-item list-group-item-action" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "d-flex w-100 justify-content-between" }, /* @__PURE__ */ import_react6.default.createElement("h5", { className: "mb-1 lead fw-bold" }, post.title), /* @__PURE__ */ import_react6.default.createElement("small", { className: "text-body-secondary" }, "Created on ", date_created(post.created_at))), /* @__PURE__ */ import_react6.default.createElement("p", { className: "mb-1" }, content(index)), /* @__PURE__ */ import_react6.default.createElement("small", { className: "text-body-secondary" }, "Category: ", post.category))));
   const myStars = stars.map((star, index) => /* @__PURE__ */ import_react6.default.createElement("li", { key: index, className: "list-group-item lead" }, /* @__PURE__ */ import_react6.default.createElement(Link, { to: `/posts/${star.id}`, className: "link-opacity-50-hover d-flex flex-column" }, star.title), /* @__PURE__ */ import_react6.default.createElement("p", { className: "h6" }, "by ", star.author), /* @__PURE__ */ import_react6.default.createElement("p", { className: "" }, "Category: ", star.category)));
   const myComments = comments.map((comment, index) => /* @__PURE__ */ import_react6.default.createElement("tr", { key: index }, /* @__PURE__ */ import_react6.default.createElement("td", null, comment.body), /* @__PURE__ */ import_react6.default.createElement("td", null, /* @__PURE__ */ import_react6.default.createElement(Link, { to: `/posts/${parent[index].id}`, className: "text-dark" }, parent[index].title))));
-  const logout = (event) => {
-    event.preventDefault();
-    sessionStorage.clear();
-    localStorage.clear();
-    navigate("/");
-    location.reload();
-  };
   return /* @__PURE__ */ import_react6.default.createElement("div", { className: "container mt-4" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "row d-flex flex-row" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "col-8" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "display-6 bg-body-tertiary p-3 rounded border" }, "My Posts: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-danger" }, posts.length)), /* @__PURE__ */ import_react6.default.createElement("div", { className: "list-group mt-4" }, posts.length > 0 ? myPosts : "")), /* @__PURE__ */ import_react6.default.createElement("div", { className: "col-4 d-flex flex-column" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "row-" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "card" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "card-header display-6" }, "Starred Posts:", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-danger mx-3" }, stars.length)), /* @__PURE__ */ import_react6.default.createElement("ul", { className: "list-group list-group-flush" }, stars.length > 0 ? myStars : ""))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "row-cols mt-3" }, /* @__PURE__ */ import_react6.default.createElement("table", { className: "table table-bordered border-primary shadow" }, /* @__PURE__ */ import_react6.default.createElement("thead", null, /* @__PURE__ */ import_react6.default.createElement("tr", null, /* @__PURE__ */ import_react6.default.createElement("th", { scope: "col" }, "Comment"), /* @__PURE__ */ import_react6.default.createElement("th", { scope: "col" }, "Post"))), /* @__PURE__ */ import_react6.default.createElement("tbody", null, comments.length > 0 ? myComments : ""))))), /* @__PURE__ */ import_react6.default.createElement("form", { onSubmit: logout }, /* @__PURE__ */ import_react6.default.createElement("button", { type: "submit", className: "btn btn-danger position-absolute bottom-0 start-0 mb-5 mx-5" }, "Logout")));
 };
 var Profile_default = Profile;
@@ -35965,29 +35955,14 @@ var Login = () => {
       if (response.message) {
         alert(response.message);
       } else {
-        localStorage.setItem("username", username);
-        fetch(url_session, {
-          method: "POST",
-          headers: {
-            "X-CSRF-Token": token,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(body)
-        }).then((response2) => {
+        create(url_session, token, body).then((response2) => {
           navigate("/");
           location.reload();
         }).catch((error2) => console.log(error2.message));
       }
     };
     const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
-    fetch(url_user, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
-    }).then((response) => {
+    create(url_user, token, body).then((response) => {
       if (response.ok) {
         return response.json();
       }
@@ -36049,29 +36024,14 @@ var Register = () => {
       if (response.message) {
         alert(response.message);
       } else {
-        localStorage.setItem("username", username);
-        fetch(url_session, {
-          method: "POST",
-          headers: {
-            "X-CSRF-Token": token,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(body)
-        }).then((response2) => {
+        create(url_session, token, body).then((response2) => {
           navigate("/");
           location.reload();
         }).catch((error2) => console.log(error2.message));
       }
     };
     const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
-    fetch(url_new_user, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
-    }).then((response) => {
+    create(url_new_user, token, body).then((response) => {
       if (response.ok) {
         return response.json();
       }
@@ -36162,6 +36122,10 @@ var EditPost = () => {
   const [content_def, setContent_def] = (0, import_react10.useState)("");
   const [upvotes, setUpvotes] = (0, import_react10.useState)(0);
   const [downvotes, setDownvotes] = (0, import_react10.useState)(0);
+  const [name, setName] = (0, import_react10.useState)(null);
+  (0, import_react10.useEffect)(() => {
+    getUsername().then((res) => res.message ? setName(null) : setName(res.username));
+  }, []);
   (0, import_react10.useEffect)(() => {
     const url_p = `/api/v1/show/${params.id}`;
     fetch(url_p).then((response) => {
@@ -36191,24 +36155,16 @@ var EditPost = () => {
     const url = `/api/v1/update/${params.id}`;
     if (title.length == 0 || content.length == 0)
       return;
-    console.log(upvotes);
     const body = {
       title,
-      "author": localStorage.getItem("username"),
+      "author": name,
       category,
       "upvote": upvotes,
       "downvote": downvotes,
       content: stripHtmlEntities(content)
     };
     const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
-    fetch(url, {
-      method: "PUT",
-      headers: {
-        "X-CSRF-Token": token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
-    }).then((response) => {
+    update(url, token, body).then((response) => {
       if (response.ok) {
         return response.json();
       }
@@ -36262,6 +36218,10 @@ var import_react13 = __toESM(require_react());
 var Navbar = () => {
   const navigate = useNavigate();
   const [body, setBody] = import_react13.default.useState("");
+  const [name, setName] = import_react13.default.useState(null);
+  (0, import_react13.useEffect)(() => {
+    getUsername().then((res) => res.message ? setName(null) : setName(res.username));
+  }, []);
   const destination = (response) => {
     sessionStorage.setItem("search", JSON.stringify(response));
     navigate("/results");
@@ -36273,14 +36233,8 @@ var Navbar = () => {
     const request_body = {
       query: body
     };
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')?.getAttribute("content"),
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(request_body)
-    }).then((response) => {
+    const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
+    create(url, token, request_body).then((response) => {
       if (response.ok) {
         return response.json();
       }
@@ -36289,17 +36243,10 @@ var Navbar = () => {
   };
   const notLoggedIn = /* @__PURE__ */ import_react13.default.createElement(import_react13.default.Fragment, null, /* @__PURE__ */ import_react13.default.createElement("li", { className: "nav-item mx-2" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "fs-5 btn btn-outline-dark border-0", "aria-current": "page", href: "/login" }, "Login")), /* @__PURE__ */ import_react13.default.createElement("li", { className: "nav-item mx-2" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "fs-5 btn btn-outline-dark border-0", "aria-current": "page", href: "/register" }, "Register")));
   const logoutButton = () => {
-    const logout = (event) => {
-      event.preventDefault();
-      sessionStorage.clear();
-      localStorage.clear();
-      navigate("/");
-      location.reload();
-    };
     return /* @__PURE__ */ import_react13.default.createElement("ul", { className: "nav mb-2 mb-lg-0" }, /* @__PURE__ */ import_react13.default.createElement("li", { className: "nav-item mx-2" }, /* @__PURE__ */ import_react13.default.createElement("form", { onSubmit: logout }, /* @__PURE__ */ import_react13.default.createElement("button", { type: "submit", className: "btn btn-danger fs-6" }, "Logout"))));
   };
   const loggedIn = /* @__PURE__ */ import_react13.default.createElement(import_react13.default.Fragment, null, /* @__PURE__ */ import_react13.default.createElement("li", { className: "nav-item mx-2" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "fs-5 btn btn-outline-dark border-0", "aria-current": "page", href: "/profile" }, "Profile")), /* @__PURE__ */ import_react13.default.createElement("li", { className: "nav-item mx-2" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "fs-5 btn btn-outline-dark border-0", "aria-current": "page", href: "/new_post" }, "Create")));
-  return /* @__PURE__ */ import_react13.default.createElement("nav", { className: "navbar", style: { backgroundColor: "#e3f2fd" } }, /* @__PURE__ */ import_react13.default.createElement("div", { className: "container-fluid" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "navbar-brand", href: "/" }, /* @__PURE__ */ import_react13.default.createElement("img", { src: "/images/logo.png", alt: "Logo", className: "d-inline-block align-text-top mx-2" }), "Forum"), /* @__PURE__ */ import_react13.default.createElement("ul", { className: "nav me-auto mb-2 mb-lg-0" }, /* @__PURE__ */ import_react13.default.createElement("li", { className: "nav-item mx-2" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "fs-5 btn btn-outline-dark border-0", "aria-current": "page", href: "/" }, "Posts")), localStorage.getItem("username") == null ? notLoggedIn : loggedIn), /* @__PURE__ */ import_react13.default.createElement("form", { className: "d-flex w-25", role: "search", onSubmit: searchPosts }, /* @__PURE__ */ import_react13.default.createElement("input", { className: "form-control me-2", name: "query", id: "query", type: "search", placeholder: "Search Posts", "aria-label": "Search", onChange: (event) => setBody(event.target.value) }), /* @__PURE__ */ import_react13.default.createElement("button", { className: "btn btn-outline-primary", type: "submit" }, "Search")), localStorage.getItem("username") != null ? logoutButton() : ""));
+  return /* @__PURE__ */ import_react13.default.createElement("nav", { className: "navbar", style: { backgroundColor: "#e3f2fd" } }, /* @__PURE__ */ import_react13.default.createElement("div", { className: "container-fluid" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "navbar-brand", href: "/" }, /* @__PURE__ */ import_react13.default.createElement("img", { src: "/images/logo.png", alt: "Logo", className: "d-inline-block align-text-top mx-2" }), "Forum"), /* @__PURE__ */ import_react13.default.createElement("ul", { className: "nav me-auto mb-2 mb-lg-0" }, /* @__PURE__ */ import_react13.default.createElement("li", { className: "nav-item mx-2" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "fs-5 btn btn-outline-dark border-0", "aria-current": "page", href: "/" }, "Posts")), name == null ? notLoggedIn : loggedIn), /* @__PURE__ */ import_react13.default.createElement("form", { className: "d-flex w-25", role: "search", onSubmit: searchPosts }, /* @__PURE__ */ import_react13.default.createElement("input", { className: "form-control me-2", name: "query", id: "query", type: "search", placeholder: "Search Posts", "aria-label": "Search", onChange: (event) => setBody(event.target.value) }), /* @__PURE__ */ import_react13.default.createElement("button", { className: "btn btn-outline-primary", type: "submit" }, "Search")), name != null ? logoutButton() : ""));
 };
 var Navbar_default = Navbar;
 

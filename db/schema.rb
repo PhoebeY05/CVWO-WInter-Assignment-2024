@@ -20,6 +20,16 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_18_080848) do
     t.string "author"
   end
 
+  create_table "fields", force: :cascade do |t|
+    t.string "username"
+    t.integer "post_id"
+    t.boolean "starred"
+    t.boolean "upvoted"
+    t.boolean "downvoted"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "posts", force: :cascade do |t|
     t.string "title"
     t.string "author"
@@ -30,14 +40,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_18_080848) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "pinned"
-  end
-
-  create_table "stars", force: :cascade do |t|
-    t.string "username"
-    t.string "string"
-    t.integer "post_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|

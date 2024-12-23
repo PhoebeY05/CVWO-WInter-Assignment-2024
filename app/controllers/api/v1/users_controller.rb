@@ -22,8 +22,12 @@ class Api::V1::UsersController < ApplicationController
 
 
   def show
-    @user = User.find(session[:user_id])
-    render json: @user
+    @user = User.find_by(id: session[:user_id])
+    if @user.nil?
+      render json: { message: "User not found" }
+    else
+      render json: @user
+    end
   end
 
   def update

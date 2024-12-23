@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import NewComment from "./NewComment";
+import { create, update, del } from "../functions/requests"
+import { getUsername } from "../functions/username"
 
-const Comment = ({ comment, author }) => {
+const Comment = ({ comment, author, pinned }) => {
     const navigate = useNavigate();
     const [replies, setReplies] = useState([]);
     const [body, setBody] = useState("");
     const[editComment, setEditComment] = useState(false);
+    const [name, setName] = useState(null);
 
+    useEffect(() => {
+        getUsername().then((res) => res.message ? setName(null) : setName(res.username))  
+    }, [comment.id])
+
+    
     // Loading all replies
     useEffect(() => {
         const url = `/api/v1/comments/show/${String(comment.id)}`;
@@ -30,48 +38,19 @@ const Comment = ({ comment, author }) => {
         }
         const url = action == "create" ? `/api/v1/comments/create` : `/api/v1/comments/${action}/${String(comment.id)}`;
         const token = document.getElementsByName("csrf-token")[0].getAttribute('content')!;
-        const create = () => {
-            const request_body = {
-                body,
-                post_id: Number(comment.post_id), 
-                parent_id: Number(comment.id),
-                author: localStorage.getItem("username") 
-              };
-            return fetch(url, {
-                method: "POST",
-                headers: {
-                "X-CSRF-Token": token,
-                "Content-Type": "application/json",
-                },
-                body: JSON.stringify(request_body),
-            });
+        const new_comment = {
+            body,
+            post_id: Number(comment.post_id), 
+            parent_id: Number(comment.id),
+            author: name 
+          };
+        const existing_comment = {
+            body: body,
+            parent_id: Number(comment.parent_id),
+            post_id: Number(comment.post_id),
+            author: name,
         }
-        const del = () => fetch(url, {
-            method: "DELETE",
-            headers: {
-              "X-CSRF-Token": token,
-              "Content-Type": "application/json",
-            },
-          });
-        // Function to send PUT request
-        const update = () => {
-            const request_body = {
-                body: body,
-                parent_id: Number(comment.parent_id),
-                post_id: Number(comment.post_id),
-                author: localStorage.getItem("username"),
-            }
-            return fetch(url, {
-                method: "PUT",
-                headers: {
-                "X-CSRF-Token": token,
-                "Content-Type": "application/json",
-                },
-                body: JSON.stringify(request_body),
-            });
-        }
-        let request = action === "create" ? create() : action === "update" ? update() : del();
-        // Processing DELETE/PUT request
+        let request = action === "create" ? create(url, token, new_comment) : action === "update" ? update(url, token, existing_comment) : del(url, token);
         request
         .then((response) => {
         if (response.ok) {
@@ -101,7 +80,7 @@ const Comment = ({ comment, author }) => {
             <div className="col">
                 <p className="text-muted d-flex flex-row justify-content-center p-0"><NewComment text="add a reply" onSubmit={(e: React.FormEvent<HTMLFormElement>) => changeComment(e, reply, "create")} setBody={setBody}/></p>
             </div>
-            <Comment comment={reply} author = {author} />
+            <Comment comment={reply} author = {author} pinned={pinned} />
         </div>
     ));
     const noReplies = (
@@ -128,21 +107,13 @@ const Comment = ({ comment, author }) => {
 
     const changePin = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>| React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        const pinned = localStorage.getItem(`pin_${comment.id}`) == "true"
-        localStorage.setItem(`pin_${comment.id}`, String(!(localStorage.getItem(`pin_${comment.id}`) == "true")))
+        const pinned_comment = pinned == comment.id
         const token = document.getElementsByName("csrf-token")[0].getAttribute('content')!;
         const url = `/api/v1/update/${comment.post_id}`;
         const request_body = {
-            comment_id: !pinned ? comment.id : 0
+            comment_id: !pinned_comment ? comment.id : 0
         }
-        fetch(url, {
-            method: "POST",
-            headers: {
-            "X-CSRF-Token": token,
-            "Content-Type": "application/json",
-            },
-            body: JSON.stringify(request_body),
-        })
+        create(url, token, request_body)
         .then((response) => {
             if (response.ok) {
             return response.json();
@@ -154,7 +125,7 @@ const Comment = ({ comment, author }) => {
 
     }
     const pin = () => {
-        if (localStorage.getItem(`pin_${comment.id}`) == "true") {
+        if (pinned == comment.id) {
             return (
                 <div className="col px-3 d-flex justify-content-end">
                     <form onSubmit={changePin} className="m-0 pt-0">
@@ -179,13 +150,12 @@ const Comment = ({ comment, author }) => {
                 <div className="col px-3 d-flex align-items-center">
                     <p className="fw-bold align-self-center">{comment.author} said ...</p> 
                 </div>
-                {author == localStorage.getItem("username") && comment.parent_id == 0 ? pin() : null}
-                
+                {author == name && comment.parent_id == 0 ? pin() : null}
             </div>
             <div className="row d-flex justify-content-start">
-                {comment.author == localStorage.getItem("username") && editComment? edit : comment.author == localStorage.getItem("username") && !editComment ? normal : <p className="lead">{comment.body}</p>}
+                {comment.author == name && editComment? edit : comment.author == name && !editComment ? normal : <p className="lead">{comment.body}</p>}
             </div>
-            {comment.author == localStorage.getItem("username") ? deleteButton(comment) : null}
+            {comment.author == name ? deleteButton(comment) : null}
             <hr className="border-1"></hr>
             {replies.length > 0 ? allReplies : noReplies}
             
