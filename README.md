@@ -11,9 +11,9 @@ Deployed Website: [Web Forum](https://webforum-ydus.onrender.com/)
 5. Upvote/Downvote posts
 6. Pin comments
 7. Filter by category
-8. Sort by 4 different criteria
+8. Sort by 5 different criteria (ascending/descending)
 9. Search for posts (by title, content, user, category)
-10. See user profile (Starred posts + Created posts & comments)
+10. See user profile (Starred, upvoted & downvoted posts + Created posts & comments)
 11. Login/Register by username
 12. Logout
 ## Dependencies
