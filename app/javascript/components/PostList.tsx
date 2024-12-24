@@ -9,9 +9,10 @@ const PostList = () => {
   const [filtered, setFiltered] = useState<{ title: string, author: string, category: string, content: string, id: number }[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [category, setCategory] = useState<string>("");
-  const [sort, setSort] = useState<string>("");
+  const [sort, setSort] = useState<string>(sessionStorage.getItem("sort") || "");
   const [name, setName] = useState(null);
   const [count, setCount] = useState<number[]>([])
+  const [ascending, setAscending] = useState<boolean>(sessionStorage.getItem("ascending") === "true"|| false);
   const char_limit = 150;
 
   useEffect(() => {
@@ -106,8 +107,8 @@ const PostList = () => {
     <div key={String(index)} className="col-md-6 col-lg-4">
       <div className="card border-dark mb-4 h-100 shadow">
         <div className="card-header">
-          <h5 className="card-title pt-2">{post.title} ({count[post.id]} comments)</h5>
-          <h6 className="card-subtitle mb-2 text-muted">{post.category}</h6>
+          <h5 className="card-title pt-2">{post.title}</h5>
+          <h6 className="card-subtitle mb-2 text-muted">{post.category || "Uncategorised"}</h6>
         </div>
         <div className="card-body">
           {post.content.length > char_limit ? <p className="card-text">{content(post.content)}... <a href={`/posts/${post.id}`} className="fst-italic link-dark">Read more</a></p> : <p className="card-text">{content(post.content)}</p>}
@@ -135,13 +136,13 @@ const PostList = () => {
     if (categories.length > 0) {
       return (
         categories.map((category: any, index: number) => (
-          <option key={index} value={category}>{category ? category : "No Category"}</option>
+          <option key={index} value={category}>{category || "No Category"}</option>
         ))
       )
     }
   }
 
-  const onChange = (event: React.ChangeEvent<HTMLSelectElement>, setFunction: Function) => {
+  const onChange = (event: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>, setFunction: Function) => {
     setFunction(event.target.value);
   };
 
@@ -154,16 +155,25 @@ const PostList = () => {
   const sortPosts = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const sorted_posts = [...filtered]
-    if (sort == "upvote") {
-      sorted_posts.sort((a: any, b: any) => b.upvote - a.upvote);
-    } else if (sort == "downvote") {
-      sorted_posts.sort((a: any, b: any) => b.downvote - a.downvote);
-    } else if (sort == "date") {
-      sorted_posts.sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
-    } else if (sort == "category") {
-      sorted_posts.sort((a: any, b: any) => a.category.localeCompare(b.category));
-    } else if (sort == "comments") {
-      sorted_posts.sort((a: any, b: any) => count[b.id] - count[a.id]);
+    const sort_helper = (a: any, b:any) => {
+      sessionStorage.setItem("sort", sort);
+      sessionStorage.setItem("ascending", ascending.toString());
+      if (sort == "upvote") {
+        return b.upvote - a.upvote;
+      } else if (sort == "downvote") {
+        return b.downvote - a.downvote;
+      } else if (sort == "date") {
+        return  new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      } else if (sort == "category") {
+        return a.category.localeCompare(b.category);
+      } else if (sort == "comments") {
+        return count[b.id] - count[a.id];
+      }
+    }
+    if (!ascending) {
+      sorted_posts.sort(sort_helper);
+    } else {
+      sorted_posts.sort(sort_helper).reverse();
     }
     setFiltered(sorted_posts)
   }
@@ -189,7 +199,7 @@ const PostList = () => {
         <main className="container">
           <div className="row d-flex flex-row justify-content-center">
             <form onSubmit={sortPosts} className="row gx-3 gy-2 align-items-center">
-              <div className="col-11">
+              <div className="col-9">
                 <select className="form-select form-select-lg ml-5" aria-label="Large select example" onChange={(event) => onChange(event, setSort)}>
                   <option defaultValue={""}>Sort by ...</option>
                   <option value="date">Date Created</option>
@@ -198,6 +208,12 @@ const PostList = () => {
                   <option value="downvote">Downvotes</option>
                   <option value="comments">Comment Count</option>
                 </select>
+              </div>
+              <div className="col-1 mx-auto">
+                <div className="form-check form-switch">
+                  <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onChange={(event) => setAscending(!ascending)}></input>
+                  <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Ascending</label>
+                </div>
               </div>
               <div className="col-sm-1 d-flex flex-row justify-content-end mr-5 pl-0">
                 <button type="submit" className="btn btn-outline-success btn-lg">Sort</button>

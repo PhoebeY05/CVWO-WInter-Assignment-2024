@@ -13,8 +13,8 @@ class Api::V1::CommentsController < ApplicationController
   end
 
   def all
-    @comments = Comment.where(author: params[:author])
-    @posts = @comments.map{ |comment| Post.find(comment.post_id) }
+    @comments = Comment.where(author: params[:username])
+    @posts = @comments.map { |comment| Post.find(comment.post_id) }
     render json: { comments: @comments, posts: @posts }
   end
 

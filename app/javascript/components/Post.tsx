@@ -97,7 +97,7 @@ const Post = () => {
     let request_body = post;
     const changeField = (val : number) => {
       change == "upvote" ? setUpvoted(!upvoted) : setDownvoted(!downvoted)
-      const url_f = "api/v1/fields/create";
+      const url_f = "/api/v1/fields/create";
       const field_body = {
         username: name,
         post_id: params.id,

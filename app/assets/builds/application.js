@@ -35351,9 +35351,10 @@ var PostList = () => {
   const [filtered, setFiltered] = (0, import_react.useState)([]);
   const [categories, setCategories] = (0, import_react.useState)([]);
   const [category, setCategory] = (0, import_react.useState)("");
-  const [sort, setSort] = (0, import_react.useState)("");
+  const [sort, setSort] = (0, import_react.useState)(sessionStorage.getItem("sort") || "");
   const [name, setName] = (0, import_react.useState)(null);
   const [count, setCount] = (0, import_react.useState)([]);
+  const [ascending, setAscending] = (0, import_react.useState)(sessionStorage.getItem("ascending") === "true" || false);
   const char_limit = 150;
   (0, import_react.useEffect)(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username));
@@ -35418,11 +35419,11 @@ var PostList = () => {
   const editButton = (id) => {
     return /* @__PURE__ */ import_react.default.createElement(Link, { to: `/posts/${id}/edit`, className: "btn btn-outline-warning card-link" }, "Edit Post");
   };
-  const allPosts = filtered.map((post, index) => /* @__PURE__ */ import_react.default.createElement("div", { key: String(index), className: "col-md-6 col-lg-4" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "card border-dark mb-4 h-100 shadow" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "card-header" }, /* @__PURE__ */ import_react.default.createElement("h5", { className: "card-title pt-2" }, post.title, " (", count[post.id], " comments)"), /* @__PURE__ */ import_react.default.createElement("h6", { className: "card-subtitle mb-2 text-muted" }, post.category)), /* @__PURE__ */ import_react.default.createElement("div", { className: "card-body" }, post.content.length > char_limit ? /* @__PURE__ */ import_react.default.createElement("p", { className: "card-text" }, content(post.content), "... ", /* @__PURE__ */ import_react.default.createElement("a", { href: `/posts/${post.id}`, className: "fst-italic link-dark" }, "Read more")) : /* @__PURE__ */ import_react.default.createElement("p", { className: "card-text" }, content(post.content))), /* @__PURE__ */ import_react.default.createElement("div", { className: "card-footer d-flex justify-content-center bg-body border-0" }, /* @__PURE__ */ import_react.default.createElement(Link, { to: `/posts/${post.id}`, className: "btn btn-outline-primary card-link" }, "View Post"), post.author == name ? deleteButton(post.id) : "", post.author == name ? editButton(post.id) : ""))));
+  const allPosts = filtered.map((post, index) => /* @__PURE__ */ import_react.default.createElement("div", { key: String(index), className: "col-md-6 col-lg-4" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "card border-dark mb-4 h-100 shadow" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "card-header" }, /* @__PURE__ */ import_react.default.createElement("h5", { className: "card-title pt-2" }, post.title), /* @__PURE__ */ import_react.default.createElement("h6", { className: "card-subtitle mb-2 text-muted" }, post.category || "Uncategorised")), /* @__PURE__ */ import_react.default.createElement("div", { className: "card-body" }, post.content.length > char_limit ? /* @__PURE__ */ import_react.default.createElement("p", { className: "card-text" }, content(post.content), "... ", /* @__PURE__ */ import_react.default.createElement("a", { href: `/posts/${post.id}`, className: "fst-italic link-dark" }, "Read more")) : /* @__PURE__ */ import_react.default.createElement("p", { className: "card-text" }, content(post.content))), /* @__PURE__ */ import_react.default.createElement("div", { className: "card-footer d-flex justify-content-center bg-body border-0" }, /* @__PURE__ */ import_react.default.createElement(Link, { to: `/posts/${post.id}`, className: "btn btn-outline-primary card-link" }, "View Post"), post.author == name ? deleteButton(post.id) : "", post.author == name ? editButton(post.id) : ""))));
   const noPosts = /* @__PURE__ */ import_react.default.createElement("div", { className: "vw-100 vh-50 d-flex align-items-center justify-content-center" }, /* @__PURE__ */ import_react.default.createElement("h4", null, "No posts yet. Why not ", /* @__PURE__ */ import_react.default.createElement(Link, { to: "/new_post" }, "create one"), "?"));
   const Categories = () => {
     if (categories.length > 0) {
-      return categories.map((category2, index) => /* @__PURE__ */ import_react.default.createElement("option", { key: index, value: category2 }, category2 ? category2 : "No Category"));
+      return categories.map((category2, index) => /* @__PURE__ */ import_react.default.createElement("option", { key: index, value: category2 }, category2 || "No Category"));
     }
   };
   const onChange = (event, setFunction) => {
@@ -35436,21 +35437,30 @@ var PostList = () => {
   const sortPosts = (event) => {
     event.preventDefault();
     const sorted_posts = [...filtered];
-    if (sort == "upvote") {
-      sorted_posts.sort((a, b) => b.upvote - a.upvote);
-    } else if (sort == "downvote") {
-      sorted_posts.sort((a, b) => b.downvote - a.downvote);
-    } else if (sort == "date") {
-      sorted_posts.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
-    } else if (sort == "category") {
-      sorted_posts.sort((a, b) => a.category.localeCompare(b.category));
-    } else if (sort == "comments") {
-      sorted_posts.sort((a, b) => count[b.id] - count[a.id]);
+    const sort_helper = (a, b) => {
+      sessionStorage.setItem("sort", sort);
+      sessionStorage.setItem("ascending", ascending.toString());
+      if (sort == "upvote") {
+        return b.upvote - a.upvote;
+      } else if (sort == "downvote") {
+        return b.downvote - a.downvote;
+      } else if (sort == "date") {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      } else if (sort == "category") {
+        return a.category.localeCompare(b.category);
+      } else if (sort == "comments") {
+        return count[b.id] - count[a.id];
+      }
+    };
+    if (!ascending) {
+      sorted_posts.sort(sort_helper);
+    } else {
+      sorted_posts.sort(sort_helper).reverse();
     }
     setFiltered(sorted_posts);
   };
   const createButton = /* @__PURE__ */ import_react.default.createElement("div", { className: "col offset-md-3 d-flex flex-row justify-content-end mb-3" }, /* @__PURE__ */ import_react.default.createElement(Link, { to: "/new_post", className: "btn fs-5 btn-outline-dark border-3 shadow-lg rounded-3" }, "Create New Post"));
-  return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement("section", { className: "jumbotron jumbotron-fluid text-center" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "container py-5" }, /* @__PURE__ */ import_react.default.createElement("h1", { className: "display-4" }, "Web Forum"), /* @__PURE__ */ import_react.default.createElement("p", { className: "lead text-muted" }, "What posts are you interested in today?"))), /* @__PURE__ */ import_react.default.createElement("div", { className: "pb-5" }, /* @__PURE__ */ import_react.default.createElement("main", { className: "container" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "row d-flex flex-row justify-content-center" }, /* @__PURE__ */ import_react.default.createElement("form", { onSubmit: sortPosts, className: "row gx-3 gy-2 align-items-center" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "col-11" }, /* @__PURE__ */ import_react.default.createElement("select", { className: "form-select form-select-lg ml-5", "aria-label": "Large select example", onChange: (event) => onChange(event, setSort) }, /* @__PURE__ */ import_react.default.createElement("option", { defaultValue: "" }, "Sort by ..."), /* @__PURE__ */ import_react.default.createElement("option", { value: "date" }, "Date Created"), /* @__PURE__ */ import_react.default.createElement("option", { value: "category" }, "Category of Post"), /* @__PURE__ */ import_react.default.createElement("option", { value: "upvote" }, "Upvotes"), /* @__PURE__ */ import_react.default.createElement("option", { value: "downvote" }, "Downvotes"), /* @__PURE__ */ import_react.default.createElement("option", { value: "comments" }, "Comment Count"))), /* @__PURE__ */ import_react.default.createElement("div", { className: "col-sm-1 d-flex flex-row justify-content-end mr-5 pl-0" }, /* @__PURE__ */ import_react.default.createElement("button", { type: "submit", className: "btn btn-outline-success btn-lg" }, "Sort")))), /* @__PURE__ */ import_react.default.createElement("div", { className: "row d-flex flex-row justify-content-center mb-5" }, /* @__PURE__ */ import_react.default.createElement("form", { onSubmit: filterCategories, className: "row gx-3 gy-2 align-items-center" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "col-11" }, /* @__PURE__ */ import_react.default.createElement("select", { className: "form-select form-select-lg ml-5", "aria-label": "Large select example", onChange: (event) => onChange(event, setCategory) }, /* @__PURE__ */ import_react.default.createElement("option", { defaultValue: "" }, "Filter by Categories"), Categories(), /* @__PURE__ */ import_react.default.createElement("option", { value: "remove" }, "Remove Filter"))), /* @__PURE__ */ import_react.default.createElement("div", { className: "col-sm-1 d-flex flex-row justify-content-end mr-5 pl-0" }, /* @__PURE__ */ import_react.default.createElement("button", { type: "submit", className: "btn btn-outline-success btn-lg" }, "Filter")))), /* @__PURE__ */ import_react.default.createElement("div", { className: "row" }, name && posts.length > 0 ? createButton : ""), /* @__PURE__ */ import_react.default.createElement("div", { className: "row" }, posts.length > 0 ? /* @__PURE__ */ import_react.default.createElement("div", { className: "row row-cols-1 row-cols-md-4 g-4" }, allPosts) : noPosts))));
+  return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement("section", { className: "jumbotron jumbotron-fluid text-center" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "container py-5" }, /* @__PURE__ */ import_react.default.createElement("h1", { className: "display-4" }, "Web Forum"), /* @__PURE__ */ import_react.default.createElement("p", { className: "lead text-muted" }, "What posts are you interested in today?"))), /* @__PURE__ */ import_react.default.createElement("div", { className: "pb-5" }, /* @__PURE__ */ import_react.default.createElement("main", { className: "container" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "row d-flex flex-row justify-content-center" }, /* @__PURE__ */ import_react.default.createElement("form", { onSubmit: sortPosts, className: "row gx-3 gy-2 align-items-center" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "col-9" }, /* @__PURE__ */ import_react.default.createElement("select", { className: "form-select form-select-lg ml-5", "aria-label": "Large select example", onChange: (event) => onChange(event, setSort) }, /* @__PURE__ */ import_react.default.createElement("option", { defaultValue: "" }, "Sort by ..."), /* @__PURE__ */ import_react.default.createElement("option", { value: "date" }, "Date Created"), /* @__PURE__ */ import_react.default.createElement("option", { value: "category" }, "Category of Post"), /* @__PURE__ */ import_react.default.createElement("option", { value: "upvote" }, "Upvotes"), /* @__PURE__ */ import_react.default.createElement("option", { value: "downvote" }, "Downvotes"), /* @__PURE__ */ import_react.default.createElement("option", { value: "comments" }, "Comment Count"))), /* @__PURE__ */ import_react.default.createElement("div", { className: "col-1 mx-auto" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "form-check form-switch" }, /* @__PURE__ */ import_react.default.createElement("input", { className: "form-check-input", type: "checkbox", role: "switch", id: "flexSwitchCheckDefault", onChange: (event) => setAscending(!ascending) }), /* @__PURE__ */ import_react.default.createElement("label", { className: "form-check-label", htmlFor: "flexSwitchCheckDefault" }, "Ascending"))), /* @__PURE__ */ import_react.default.createElement("div", { className: "col-sm-1 d-flex flex-row justify-content-end mr-5 pl-0" }, /* @__PURE__ */ import_react.default.createElement("button", { type: "submit", className: "btn btn-outline-success btn-lg" }, "Sort")))), /* @__PURE__ */ import_react.default.createElement("div", { className: "row d-flex flex-row justify-content-center mb-5" }, /* @__PURE__ */ import_react.default.createElement("form", { onSubmit: filterCategories, className: "row gx-3 gy-2 align-items-center" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "col-11" }, /* @__PURE__ */ import_react.default.createElement("select", { className: "form-select form-select-lg ml-5", "aria-label": "Large select example", onChange: (event) => onChange(event, setCategory) }, /* @__PURE__ */ import_react.default.createElement("option", { defaultValue: "" }, "Filter by Categories"), Categories(), /* @__PURE__ */ import_react.default.createElement("option", { value: "remove" }, "Remove Filter"))), /* @__PURE__ */ import_react.default.createElement("div", { className: "col-sm-1 d-flex flex-row justify-content-end mr-5 pl-0" }, /* @__PURE__ */ import_react.default.createElement("button", { type: "submit", className: "btn btn-outline-success btn-lg" }, "Filter")))), /* @__PURE__ */ import_react.default.createElement("div", { className: "row" }, name && posts.length > 0 ? createButton : ""), /* @__PURE__ */ import_react.default.createElement("div", { className: "row" }, posts.length > 0 ? /* @__PURE__ */ import_react.default.createElement("div", { className: "row row-cols-1 row-cols-md-4 g-4" }, allPosts) : noPosts))));
 };
 var PostList_default = PostList;
 
@@ -35655,7 +35665,7 @@ var Post = () => {
     let request_body = post;
     const changeField = (val) => {
       change == "upvote" ? setUpvoted(!upvoted) : setDownvoted(!downvoted);
-      const url_f = "api/v1/fields/create";
+      const url_f = "/api/v1/fields/create";
       const field_body = {
         username: name,
         post_id: params.id,
@@ -35880,55 +35890,29 @@ var Profile = () => {
     getUsername().then((res) => res.message == "User not found" ? setName(null) : setName(res.username));
   }, []);
   (0, import_react6.useEffect)(() => {
-    const url = "/api/v1/search/posts";
-    const body = {
-      query: name
-    };
+    if (!name) return;
     const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
-    create(url, token, body).then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error("Network response was not ok.");
-    }).then((response) => setPosts(response.user)).catch((error2) => console.log(error2.message));
-  }, [name]);
-  (0, import_react6.useEffect)(() => {
-    const url = `/api/v1/fields/index`;
-    const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
-    const body = {
-      username: name
-    };
-    create(url, token, body).then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error("Network response was not ok.");
-    }).then((response) => {
-      setStars(response.starred);
-      setUpvotes(response.upvoted);
-      setDownvotes(response.downvoted);
-    }).catch((error2) => console.log(error2.message));
-  }, [name]);
-  (0, import_react6.useEffect)(() => {
-    const url = `/api/v1/comments`;
-    const body = {
-      username: name
-    };
-    const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
-    create(url, token, body).then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error("Network response was not ok.");
-    }).then((response) => {
-      setParent(response.posts);
-      setComments(response.comments);
-    }).catch((error2) => console.log(error2.message));
+    Promise.all([
+      create("/api/v1/search/posts", token, { query: name }).then((res) => res.json()),
+      create(`/api/v1/comments`, token, { username: name }).then((res) => res.json()),
+      create(`/api/v1/fields/index`, token, { username: name }).then((res) => res.json())
+    ]).then(([postsRes, commentsRes, fieldsRes]) => {
+      setPosts(postsRes.user || []);
+      setParent(commentsRes.posts || []);
+      setComments(commentsRes.comments || []);
+      setStars(fieldsRes.starred || []);
+      setUpvotes(fieldsRes.upvoted || []);
+      setDownvotes(fieldsRes.downvoted || []);
+    }).catch((error2) => {
+      console.log(error2.message);
+    });
   }, [name]);
   const myPosts = posts.map((post, index) => /* @__PURE__ */ import_react6.default.createElement("div", { key: index }, /* @__PURE__ */ import_react6.default.createElement("a", { href: `/posts/${post.id}`, className: "list-group-item list-group-item-action" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "d-flex w-100 justify-content-between" }, /* @__PURE__ */ import_react6.default.createElement("h5", { className: "mb-1 lead fw-bold" }, post.title), /* @__PURE__ */ import_react6.default.createElement("small", { className: "text-body-secondary" }, "Created on ", date_created(post.created_at))), /* @__PURE__ */ import_react6.default.createElement("p", { className: "mb-1" }, content(index)), /* @__PURE__ */ import_react6.default.createElement("small", { className: "text-body-secondary" }, "Category: ", post.category))));
   const myStars = stars.map((star, index) => /* @__PURE__ */ import_react6.default.createElement("li", { key: index, className: "list-group-item lead" }, /* @__PURE__ */ import_react6.default.createElement(Link, { to: `/posts/${star.id}`, className: "link-opacity-50-hover d-flex flex-column" }, star.title), /* @__PURE__ */ import_react6.default.createElement("p", { className: "h6" }, "by ", star.author), /* @__PURE__ */ import_react6.default.createElement("p", { className: "" }, "Category: ", star.category)));
+  const myUpvotes = upvotes.map((upvote, index) => /* @__PURE__ */ import_react6.default.createElement("li", { key: index, className: "list-group-item lead" }, /* @__PURE__ */ import_react6.default.createElement(Link, { to: `/posts/${upvote.id}`, className: "link-opacity-50-hover d-flex flex-column" }, upvote.title), /* @__PURE__ */ import_react6.default.createElement("p", { className: "h6" }, "by ", upvote.author), /* @__PURE__ */ import_react6.default.createElement("p", { className: "" }, "Category: ", upvote.category)));
+  const myDownvotes = downvotes.map((downvote, index) => /* @__PURE__ */ import_react6.default.createElement("li", { key: index, className: "list-group-item lead" }, /* @__PURE__ */ import_react6.default.createElement(Link, { to: `/posts/${downvote.id}`, className: "link-opacity-50-hover d-flex flex-column" }, downvote.title), /* @__PURE__ */ import_react6.default.createElement("p", { className: "h6" }, "by ", downvote.author), /* @__PURE__ */ import_react6.default.createElement("p", { className: "" }, "Category: ", downvote.category)));
   const myComments = comments.map((comment, index) => /* @__PURE__ */ import_react6.default.createElement("tr", { key: index }, /* @__PURE__ */ import_react6.default.createElement("td", null, comment.body), /* @__PURE__ */ import_react6.default.createElement("td", null, /* @__PURE__ */ import_react6.default.createElement(Link, { to: `/posts/${parent[index].id}`, className: "text-dark" }, parent[index].title))));
-  return /* @__PURE__ */ import_react6.default.createElement("div", { className: "container mt-4" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "row d-flex flex-row" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "col-8" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "display-6 bg-body-tertiary p-3 rounded border" }, "My Posts: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-danger" }, posts.length)), /* @__PURE__ */ import_react6.default.createElement("div", { className: "list-group mt-4" }, posts.length > 0 ? myPosts : "")), /* @__PURE__ */ import_react6.default.createElement("div", { className: "col-4 d-flex flex-column" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "row-" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "card" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "card-header display-6" }, "Starred Posts:", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-danger mx-3" }, stars.length)), /* @__PURE__ */ import_react6.default.createElement("ul", { className: "list-group list-group-flush" }, stars.length > 0 ? myStars : ""))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "row-cols mt-3" }, /* @__PURE__ */ import_react6.default.createElement("table", { className: "table table-bordered border-primary shadow" }, /* @__PURE__ */ import_react6.default.createElement("thead", null, /* @__PURE__ */ import_react6.default.createElement("tr", null, /* @__PURE__ */ import_react6.default.createElement("th", { scope: "col" }, "Comment"), /* @__PURE__ */ import_react6.default.createElement("th", { scope: "col" }, "Post"))), /* @__PURE__ */ import_react6.default.createElement("tbody", null, comments.length > 0 ? myComments : ""))))), /* @__PURE__ */ import_react6.default.createElement("form", { onSubmit: logout }, /* @__PURE__ */ import_react6.default.createElement("button", { type: "submit", className: "btn btn-danger position-absolute bottom-0 start-0 mb-5 mx-5" }, "Logout")));
+  return /* @__PURE__ */ import_react6.default.createElement("div", { className: "container mt-4" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "row d-flex flex-row" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "col-8" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion", id: "accordionExample" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-item" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "accordion-header" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "accordion-button collapsed", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#collapseOne", "aria-expanded": "false", "aria-controls": "collapseOne" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "display-6" }, "My Posts: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-danger" }, posts.length)))), /* @__PURE__ */ import_react6.default.createElement("div", { id: "collapseOne", className: "accordion-collapse collapse" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-body" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "list-group mt-4" }, posts.length > 0 ? myPosts : "")))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-item" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "accordion-header" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "accordion-button collapsed", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#collapseTwo", "aria-expanded": "false", "aria-controls": "collapseTwo" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "display-6" }, "My Comments: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-danger" }, comments.length)))), /* @__PURE__ */ import_react6.default.createElement("div", { id: "collapseTwo", className: "accordion-collapse collapse" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-body" }, /* @__PURE__ */ import_react6.default.createElement("table", { className: "table table-bordered border-primary shadow" }, /* @__PURE__ */ import_react6.default.createElement("thead", null, /* @__PURE__ */ import_react6.default.createElement("tr", null, /* @__PURE__ */ import_react6.default.createElement("th", { scope: "col" }, "Comment"), /* @__PURE__ */ import_react6.default.createElement("th", { scope: "col" }, "Post"))), /* @__PURE__ */ import_react6.default.createElement("tbody", null, comments.length > 0 ? myComments : ""))))))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "col-4 d-flex flex-column" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "row-" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion", id: "accordionExample2" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-item" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "accordion-header" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "accordion-button collapsed", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#collapseThree", "aria-expanded": "false", "aria-controls": "collapseThree" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "display-6" }, "Starred Posts: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-danger" }, stars.length)))), /* @__PURE__ */ import_react6.default.createElement("div", { id: "collapseThree", className: "accordion-collapse collapse" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-body" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "card" }, /* @__PURE__ */ import_react6.default.createElement("ul", { className: "list-group list-group-flush" }, stars.length > 0 ? myStars : ""))))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-item" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "accordion-header" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "accordion-button collapsed", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#collapseFour", "aria-expanded": "false", "aria-controls": "collapseFour" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "display-6" }, "My Upvotes: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-danger" }, upvotes.length)))), /* @__PURE__ */ import_react6.default.createElement("div", { id: "collapseFour", className: "accordion-collapse collapse" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-body" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "card" }, /* @__PURE__ */ import_react6.default.createElement("ul", { className: "list-group list-group-flush" }, upvotes.length > 0 ? myUpvotes : ""))))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-item" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "accordion-header" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "accordion-button collapsed", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#collapseFive", "aria-expanded": "false", "aria-controls": "collapseFour" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "display-6" }, "My Downvotes: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-danger" }, downvotes.length)))), /* @__PURE__ */ import_react6.default.createElement("div", { id: "collapseFive", className: "accordion-collapse collapse" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-body" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "card" }, /* @__PURE__ */ import_react6.default.createElement("ul", { className: "list-group list-group-flush" }, downvotes.length > 0 ? myDownvotes : ""))))))))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "rowx" }, /* @__PURE__ */ import_react6.default.createElement("form", { onSubmit: logout }, /* @__PURE__ */ import_react6.default.createElement("button", { type: "submit", className: "btn btn-danger my-3" }, "Logout"))));
 };
 var Profile_default = Profile;
 

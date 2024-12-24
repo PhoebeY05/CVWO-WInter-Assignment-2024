@@ -22,7 +22,7 @@ Rails.application.routes.draw do
 
       post "/fields/index", to: "fields#index"
       post "/fields/destroy", to: "fields#destroy"
-      post "fields/create", to: "fields#create"
+      post "/fields/create", to: "fields#create"
       get "fields/:id", to: "fields#post"
 
       post "search/posts", to: "search#index"
