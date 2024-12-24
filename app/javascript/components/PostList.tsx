@@ -6,7 +6,7 @@ import { getUsername } from "../functions/username"
 const PostList = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<{ title: string, author: string, category: string, content: string, id: number, pinned:number, upvote: number, downvote: number }[]>([]);
-  const [filtered, setFiltered] = useState<{ title: string, author: string, category: string, content: string, id: number }[]>([]);
+  const [filtered, setFiltered] = useState<{ title: string, author: string, category: string, content: string, id: number, pinned:number, upvote: number, downvote: number }[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [category, setCategory] = useState<string>("");
   const [sort, setSort] = useState<string>(sessionStorage.getItem("sort") || "");
@@ -19,7 +19,7 @@ const PostList = () => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username))
   }, [])
 
-  const loadPosts = (res: { title: string, author: string, category: string, content: string, id: number, pinned:number }[]) => {
+  const loadPosts = (res: { title: string, author: string, category: string, content: string, id: number, pinned: number, upvote: number, downvote: number }[]) => {
     setPosts(res);
     setFiltered(res);
   }

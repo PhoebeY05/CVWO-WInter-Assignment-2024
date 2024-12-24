@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 const Results = () => {
     const results = sessionStorage.getItem("search") ? JSON.parse(sessionStorage.getItem("search")!) : [];
+    console.log(results)
     const by_title = results.title ? results.title : []
     const by_content = results.content ? results.content : []
     const by_user = results.user ? results.user : []
@@ -63,6 +64,7 @@ const Results = () => {
     }
     return (
         <div className="container mt-3">
+            {by_title.length == 0 && by_content.length == 0 && by_category.length == 0 && by_user.length == 0 ? <h2 className="display-1 position-absolute top-50 start-50 translate-middle">No results found!</h2>: ""}
             {by_title.length > 0 ? sections("Title", resultsTable(by_title)): ""}
             {by_content.length > 0 ? sections("Content", resultsTable(by_content)): ""}
             {by_category.length > 0 ? sections("Category", resultsTable(by_category)): ""}

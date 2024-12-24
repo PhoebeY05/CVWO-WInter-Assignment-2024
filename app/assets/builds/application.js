@@ -36065,6 +36065,7 @@ var Register_default = Register;
 var import_react9 = __toESM(require_react());
 var Results = () => {
   const results = sessionStorage.getItem("search") ? JSON.parse(sessionStorage.getItem("search")) : [];
+  console.log(results);
   const by_title = results.title ? results.title : [];
   const by_content = results.content ? results.content : [];
   const by_user = results.user ? results.user : [];
@@ -36089,7 +36090,7 @@ var Results = () => {
   const sections = (text, results_table) => {
     return /* @__PURE__ */ import_react9.default.createElement("div", { className: "py-3 px-4 mb-3 border border-3 border-dark rounded shadow" }, /* @__PURE__ */ import_react9.default.createElement("p", { className: "display-6 my-3" }, "By ", text, ":"), /* @__PURE__ */ import_react9.default.createElement("table", { className: "table" }, /* @__PURE__ */ import_react9.default.createElement("thead", null, /* @__PURE__ */ import_react9.default.createElement("tr", null, /* @__PURE__ */ import_react9.default.createElement("th", { scope: "col", className: "h4" }, "Title"), /* @__PURE__ */ import_react9.default.createElement("th", { scope: "col", className: "h4 text-center" }, "Author"), /* @__PURE__ */ import_react9.default.createElement("th", { scope: "col", className: "h4 text-center" }, "Date Created"), /* @__PURE__ */ import_react9.default.createElement("th", { scope: "col", className: "h4" }, "Content"), /* @__PURE__ */ import_react9.default.createElement("th", { scope: "col", className: "h4" }))), /* @__PURE__ */ import_react9.default.createElement("tbody", null, results_table)));
   };
-  return /* @__PURE__ */ import_react9.default.createElement("div", { className: "container mt-3" }, by_title.length > 0 ? sections("Title", resultsTable(by_title)) : "", by_content.length > 0 ? sections("Content", resultsTable(by_content)) : "", by_category.length > 0 ? sections("Category", resultsTable(by_category)) : "", by_user.length > 0 ? sections("User", resultsTable(by_user)) : "");
+  return /* @__PURE__ */ import_react9.default.createElement("div", { className: "container mt-3" }, by_title.length == 0 && by_content.length == 0 && by_category.length == 0 && by_user.length == 0 ? /* @__PURE__ */ import_react9.default.createElement("h2", { className: "display-1 position-absolute top-50 start-50 translate-middle" }, "No results found!") : "", by_title.length > 0 ? sections("Title", resultsTable(by_title)) : "", by_content.length > 0 ? sections("Content", resultsTable(by_content)) : "", by_category.length > 0 ? sections("Category", resultsTable(by_category)) : "", by_user.length > 0 ? sections("User", resultsTable(by_user)) : "");
 };
 var Results_default = Results;
 
