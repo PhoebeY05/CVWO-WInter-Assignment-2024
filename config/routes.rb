@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       post "users/index", to: "users#index"
       post "users/create"
       get "/users/show", to: "users#show"
+      delete "/users/destroy", to: "users#destroy"
 
       post "/fields/index", to: "fields#index"
       post "/fields/destroy", to: "fields#destroy"

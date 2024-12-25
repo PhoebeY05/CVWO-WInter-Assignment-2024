@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :set_user, only: %i[ update destroy]
+  before_action :set_user, only: %i[ update]
 
   def index
     @user = User.find_by(username: params[:username])
@@ -36,6 +36,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def destroy
+    @user = User.find(session[:user_id])
     @user.destroy!
     render json: { message: "User deleted!" }
   end

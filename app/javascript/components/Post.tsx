@@ -160,7 +160,7 @@ const Post = () => {
   const noComments = (
     <div className="d-flex align-items-center justify-content-center mt-4">
       <span className="fst-italic fs-5">
-        No comments yet. Why not <NewComment identifier={post.id} text="be the first" post_id={post.id} parent_id={0}/>?
+        No comments yet. Why not <NewComment identifier={`comment_${post.id}`} text="be the first" post_id={post.id} parent_id={0}/>?
       </span>
     </div>
   );
@@ -239,7 +239,7 @@ const Post = () => {
   }
   const addComment = (
     <div className="col d-flex justify-content-end">
-      <NewComment identifier={post.id}  text="Add Comment" post_id={post.id} parent_id={0}/>
+      <NewComment identifier={`comment_${post.id}`}  text="Add Comment" post_id={post.id} parent_id={0}/>
     </div>
   )
 

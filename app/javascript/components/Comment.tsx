@@ -71,14 +71,14 @@ const Comment = ({ comment, author, pinned }) => {
     const allReplies = replies.map((reply: any, index: number) => (
         <div key={index} className="row">
             <div className="col">
-                <p className="text-muted d-flex flex-row justify-content-center p-0"><NewComment identifier={comment.id} text="add a reply" post_id={Number(comment.post_id)} parent_id={Number(comment.id)}/></p>
+                <p className="text-muted d-flex flex-row justify-content-center p-0"><NewComment identifier={`reply_${comment.id}`} text="add a reply" post_id={Number(comment.post_id)} parent_id={Number(comment.id)}/></p>
             </div>
             <Comment comment={reply} author={author} pinned={pinned} />
         </div>
     ));
     const noReplies = (
         <div className="row">
-            <span className="text-muted fs-6">No replies yet. Why not <NewComment identifier={comment.id} text="add one" post_id={Number(comment.post_id)} parent_id={Number(comment.id)}/>?</span>
+            <span className="text-muted fs-6">No replies yet. Why not <NewComment identifier={`reply_${comment.id}`} text="add one" post_id={Number(comment.post_id)} parent_id={Number(comment.id)}/>?</span>
         </div>
     )
     const edit = (

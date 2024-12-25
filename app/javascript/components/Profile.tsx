@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { create } from "../functions/requests"
+import { create, del } from "../functions/requests"
 import { getUsername } from "../functions/username"
 import { logout } from "../functions/logout"
 
@@ -107,6 +107,18 @@ const Profile = () => {
       </tr>
     ))
 
+    const deleteAccount = () => {
+      const token = document.getElementsByName("csrf-token")[0].getAttribute('content')!;
+      const url = `/api/v1/users/destroy`;
+      del(url, token)
+        .then((response) => {
+          if (response.ok) {
+            window.location.href = "/";
+          } 
+        })
+        .catch((error) => console.log(error.message));
+    }
+
     return (
         <div className="container mt-4">
           <div className="row d-flex flex-row">
@@ -115,7 +127,7 @@ const Profile = () => {
                 <div className="accordion-item">
                   <h2 className="accordion-header">
                     <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                      <span className="display-6" >My Posts: <span className="badge rounded-pill text-bg-danger">{posts.length}</span></span>
+                      <span className="h2" >My Posts: <span className="badge rounded-pill text-bg-secondary">{posts.length}</span></span>
                     </button>
                   </h2>
                   <div id="collapseOne" className="accordion-collapse collapse">
@@ -129,7 +141,7 @@ const Profile = () => {
                 <div className="accordion-item">
                   <h2 className="accordion-header">
                     <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                      <span className="display-6" >My Comments: <span className="badge rounded-pill text-bg-danger">{comments.length}</span></span>
+                      <span className="h2" >My Comments: <span className="badge rounded-pill text-bg-secondary">{comments.length}</span></span>
                     </button>
                   </h2>
                   <div id="collapseTwo" className="accordion-collapse collapse" >
@@ -156,7 +168,7 @@ const Profile = () => {
                   <div className="accordion-item">
                     <h2 className="accordion-header">
                       <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        <span className="display-6" >Starred Posts: <span className="badge rounded-pill text-bg-danger">{stars.length}</span></span>
+                        <span className="h2" >Starred Posts: <span className="badge rounded-pill text-bg-secondary">{stars.length}</span></span>
                       </button>
                     </h2>
                     <div id="collapseThree" className="accordion-collapse collapse">
@@ -172,7 +184,7 @@ const Profile = () => {
                   <div className="accordion-item">
                     <h2 className="accordion-header">
                       <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                        <span className="display-6" >My Upvotes: <span className="badge rounded-pill text-bg-danger">{upvotes.length}</span></span>
+                        <span className="h2" >My Upvotes: <span className="badge rounded-pill text-bg-secondary">{upvotes.length}</span></span>
                       </button>
                     </h2>
                     <div id="collapseFour" className="accordion-collapse collapse">
@@ -188,7 +200,7 @@ const Profile = () => {
                   <div className="accordion-item">
                     <h2 className="accordion-header">
                       <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFour">
-                        <span className="display-6" >My Downvotes: <span className="badge rounded-pill text-bg-danger">{downvotes.length}</span></span>
+                        <span className="h2" >My Downvotes: <span className="badge rounded-pill text-bg-secondary">{downvotes.length}</span></span>
                       </button>
                     </h2>
                     <div id="collapseFive" className="accordion-collapse collapse">
@@ -205,9 +217,12 @@ const Profile = () => {
               </div>
             </div>
           </div>
-          <div className="rowx">
-            <form onSubmit={logout}>
-              <button type="submit" className="btn btn-danger my-3">Logout</button>
+          <div className="row">
+            <form className="col" onSubmit={logout}>
+              <button type="submit" className="btn btn-outline-danger btn-lg my-3">Logout</button>
+            </form>
+            <form className="col d-flex justify-content-end" onSubmit={deleteAccount}>
+              <button type="submit" className="btn btn-outline-danger btn-lg my-3">Delete Account</button>
             </form>
           </div>
       </div>
