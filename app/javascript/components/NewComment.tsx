@@ -1,20 +1,45 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { create } from "../functions/requests"
+import { getUsername } from "../functions/username"
 
-interface NewCommentProps {
-  text: string;
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-  setBody: (value: string) => void;
-}
+const NewComment =({ identifier, text, post_id, parent_id }) => {
+  console.log({ text, post_id, parent_id });
+  const [anonymous, setAnonymous] = useState(false);
+  const [body, setBody] = useState("");
+  const [name, setName] = useState(null);
 
-const NewComment: React.FC<NewCommentProps> = ({ text, onSubmit, setBody }) => {
-  const handleSubmit = (event) => {
-    event.preventDefault(); 
-    event.stopPropagation(); // Prevent bubbling to parent elements
-    onSubmit(event); 
+  useEffect(() => {
+      getUsername().then((res) => res.message ? setName(null) : setName(res.username));
+    }, [post_id])
+
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const url = `/api/v1/comments/create`;
+    if (body.length == 0)
+      return;
+    const request_body = {
+      body,
+      post_id: post_id, 
+      parent_id: parent_id,
+      author: name,
+      anonymous
+    };
+
+    const token = document.getElementsByName("csrf-token")[0].getAttribute('content')!;
+
+    create(url, token, request_body)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((data) => location.reload())
+      .catch((error) => console.log(error.message));
   };
   useEffect(() => {
-    const myModal = document.getElementById('Modal');
-    const myInput = document.getElementById('body');
+    const myModal = document.getElementById(`Modal${identifier}`);
+    const myInput = document.getElementById(`body${identifier}`)
     if (myModal) {
       myModal.addEventListener('shown.bs.modal', () => {
         myInput?.focus();
@@ -28,28 +53,35 @@ const NewComment: React.FC<NewCommentProps> = ({ text, onSubmit, setBody }) => {
         type="button"
         className="btn btn-link fst-italic fs-5 pt-0 px-0 text-reset"
         data-bs-toggle="modal"
-        data-bs-target="#Modal"
+        data-bs-target={`#Modal${identifier}`}
       >
         {text}
       </button>
 
-      <div className="modal fade" id="Modal" tabIndex={-1} aria-labelledby="modalTitle" aria-hidden="true">
+      <div className="modal fade" id={`Modal${identifier}`} tabIndex={-1} aria-labelledby={`modalTitle_${identifier}`} aria-hidden="true">
         <div className="modal-dialog modal-dialog-scrollable">
           <div className="modal-content">
             <div className="modal-header">
-              <p className="modal-title fs-5 h1" id="modalTitle">Comment</p>
+              <p className="modal-title fs-5 h1" id={`modalTitle_${identifier}`}>Comment</p>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={onSubmit}>
               <div className="modal-body">
                 <textarea
                   className="form-control"
-                  id="body"
-                  name="body"
+                  id={`body${identifier}`}
+                  name={`body${identifier}`}
                   rows={5}
                   required
+                  value={body}
                   onChange={(event) => setBody(event.target.value)}
                 />
+                <div className="form-check mt-3">
+                <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" onChange ={(event: React.ChangeEvent<HTMLInputElement>) => {setAnonymous(!anonymous)}}></input>
+                <label className="form-check-label" htmlFor="flexCheckDefault">
+                  Comment Anonymously
+                </label>
+              </div>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>

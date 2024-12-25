@@ -10,6 +10,7 @@ const Comment = ({ comment, author, pinned }) => {
     const [body, setBody] = useState("");
     const[editComment, setEditComment] = useState(false);
     const [name, setName] = useState(null);
+    const [anonymous, setAnonymous] = useState(false);
 
     useEffect(() => {
         getUsername().then((res) => res.message ? setName(null) : setName(res.username))  
@@ -33,24 +34,17 @@ const Comment = ({ comment, author, pinned }) => {
     
     const changeComment = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>| React.FormEvent<HTMLFormElement>, comment: any, action: string = "create") => {
         event.preventDefault();
-        if (action == "create" && body.length == 0) {
-            return;
-        }
-        const url = action == "create" ? `/api/v1/comments/create` : `/api/v1/comments/${action}/${String(comment.id)}`;
+        event.stopPropagation();
+        const url = `/api/v1/comments/${action}/${String(comment.id)}`;
         const token = document.getElementsByName("csrf-token")[0].getAttribute('content')!;
-        const new_comment = {
-            body,
-            post_id: Number(comment.post_id), 
-            parent_id: Number(comment.id),
-            author: name 
-          };
         const existing_comment = {
             body: body,
             parent_id: Number(comment.parent_id),
             post_id: Number(comment.post_id),
             author: name,
+            anonymous: comment.anonymous
         }
-        let request = action === "create" ? create(url, token, new_comment) : action === "update" ? update(url, token, existing_comment) : del(url, token);
+        let request = action === "update" ? update(url, token, existing_comment) : del(url, token);
         request
         .then((response) => {
         if (response.ok) {
@@ -74,18 +68,17 @@ const Comment = ({ comment, author, pinned }) => {
         </div>
     )
 
-
     const allReplies = replies.map((reply: any, index: number) => (
         <div key={index} className="row">
             <div className="col">
-                <p className="text-muted d-flex flex-row justify-content-center p-0"><NewComment text="add a reply" onSubmit={(e: React.FormEvent<HTMLFormElement>) => changeComment(e, reply, "create")} setBody={setBody}/></p>
+                <p className="text-muted d-flex flex-row justify-content-center p-0"><NewComment identifier={comment.id} text="add a reply" post_id={Number(comment.post_id)} parent_id={Number(comment.id)}/></p>
             </div>
-            <Comment comment={reply} author = {author} pinned={pinned} />
+            <Comment comment={reply} author={author} pinned={pinned} />
         </div>
     ));
     const noReplies = (
         <div className="row">
-            <span className="text-muted fs-6">No replies yet. Why not <NewComment text="add one" onSubmit={(e: React.FormEvent<HTMLFormElement>) => changeComment(e, comment, "create")} setBody={setBody}/>?</span>
+            <span className="text-muted fs-6">No replies yet. Why not <NewComment identifier={comment.id} text="add one" post_id={Number(comment.post_id)} parent_id={Number(comment.id)}/>?</span>
         </div>
     )
     const edit = (
@@ -145,10 +138,10 @@ const Comment = ({ comment, author, pinned }) => {
     }
 
     return (
-        <div className="border rounded-4 shadow p-4 flex flex-column">
+        <div className="border rounded-4 shadow p-4 d-flex flex-column">
             <div className="row">
                 <div className="col px-3 d-flex align-items-center">
-                    <p className="fw-bold align-self-center">{comment.author} said ...</p> 
+                    <p className="fw-bold align-self-center">{comment.anonymous ? "Anonymous" : comment.author} said ...</p> 
                 </div>
                 {author == name && comment.parent_id == 0 ? pin() : null}
             </div>
@@ -158,7 +151,6 @@ const Comment = ({ comment, author, pinned }) => {
             {comment.author == name ? deleteButton(comment) : null}
             <hr className="border-1"></hr>
             {replies.length > 0 ? allReplies : noReplies}
-            
         </div>
     );
 };

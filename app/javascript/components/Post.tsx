@@ -8,7 +8,7 @@ import { getUsername } from "../functions/username"
 const Post = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const [post, setPost] = useState<{ title: string, author: string, category: string, content: string, upvote: number, downvote: number, id: number, pinned:number }>({
+  const [post, setPost] = useState<{ title: string, author: string, category: string, content: string, upvote: number, downvote: number, id: number, pinned:number, anonymous: boolean }>({
     title: '',
     author: '',
     category: '',
@@ -16,7 +16,8 @@ const Post = () => {
     upvote: 0,
     downvote: 0,
     id: 0,
-    pinned: 0
+    pinned: 0,
+    anonymous: false
   });
   const [comments, setComments] = useState<{ id: number, body: string, post_id: number, parent_id: number }[]>([]);
   const [body, setBody] = useState("");
@@ -24,6 +25,7 @@ const Post = () => {
   const [downvoted, setDownvoted] = useState(false) 
   const [starred, setStarred] = useState(false)
   const [name, setName] = useState(null)
+  const [anonymous, setAnonymous] = useState(false)
 
   useEffect(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username));
@@ -145,48 +147,20 @@ const Post = () => {
       .then((response) => navigate(`/posts/${params.id}`))
       .catch((error) => console.log(error.message));
     setStarred(!starred);
-  }
-
-  // Creating a new comment
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const url = `/api/v1/comments/create`;
-
-    if (body.length == 0)
-      return;
-
-    const request_body = {
-      body,
-      post_id: Number(params.id), 
-      parent_id: 0,
-      author: name
-    };
-
-    const token = document.getElementsByName("csrf-token")[0].getAttribute('content')!;
-
-    create(url, token, request_body)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error("Network response was not ok.");
-      })
-      .then((data) => location.reload())
-      .catch((error) => console.log(error.message));
-  };
+  } 
 
 
   // Rendering comments
   const allComments = comments.filter((comment) => comment.id !== undefined && comment.parent_id === 0).map((comment: any, index: number) => (
     <div key={String(index)} className="row">
-      <Comment comment={comment} author = {post.author} pinned={post.pinned} />
+      <Comment comment={comment} author={post.author} pinned={post.pinned} />
     </div>
   ));
 
   const noComments = (
     <div className="d-flex align-items-center justify-content-center mt-4">
       <span className="fst-italic fs-5">
-        No comments yet. Why not <NewComment text="add one" onSubmit={onSubmit} setBody={setBody}/>?
+        No comments yet. Why not <NewComment identifier={post.id} text="be the first" post_id={post.id} parent_id={0}/>?
       </span>
     </div>
   );
@@ -263,6 +237,11 @@ const Post = () => {
       </div>
     )
   }
+  const addComment = (
+    <div className="col d-flex justify-content-end">
+      <NewComment identifier={post.id}  text="Add Comment" post_id={post.id} parent_id={0}/>
+    </div>
+  )
 
   // Rendering post
   return (
@@ -276,7 +255,7 @@ const Post = () => {
       <div className="container py-4">
         <div className="row d-flex justify-content-center border border-3 border-black pt-2">
           <div className="col col-sm-2 pt-3">
-            <p className="lead">Author: {post.author}</p>
+            <p className="lead">Author: {post.anonymous ? "Anonymous" : post.author }</p>
           </div>
           <div className="col col-sm-2 pt-3">
             <p className="lead">Category: {post.category}</p>
@@ -316,6 +295,7 @@ const Post = () => {
           <div className="col">
             <p className="mb-2 h3">Post Content: </p>
             <div
+              className="lead"
               dangerouslySetInnerHTML={{
                 __html: `${postContent}`,
               }}
@@ -327,15 +307,11 @@ const Post = () => {
               <div className="col">
                 <span className="lead fw-medium">Comments:</span>
               </div>
-              {name != null ?
-               (<div className="col d-flex justify-content-end">
-                  <NewComment text="Add Comment" onSubmit={onSubmit} setBody={setBody}/>
-                </div>) :""
-              }
+              {name != null ? addComment : ""}
               {comments.length === 0 ? noComments : allComments}
             </div>
           </div>
-        </div>
+        </div> 
         <Link to="/" className="btn btn-outline-dark mt-3">
           Back to Posts
         </Link>

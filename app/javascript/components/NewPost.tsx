@@ -9,6 +9,7 @@ const NewPost = () => {
   const [category, setCategory] = useState("");
   const [content, setContent] = useState("");
   const [name, setName] = useState(null);
+  const [anonymous, setAnonymous] = useState(false);
 
   useEffect(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username))
@@ -41,6 +42,7 @@ const NewPost = () => {
       navigate("/login");
       return;
     }
+    console.log(anonymous)
     const body = {
       title,
       "author": name,
@@ -48,6 +50,7 @@ const NewPost = () => {
       "upvote": 0,
       "downvote": 0,
       content: stripHtmlEntities(content),
+      anonymous: anonymous
     };
 
     const token = document.getElementsByName("csrf-token")[0].getAttribute('content')!;
@@ -101,6 +104,12 @@ const NewPost = () => {
               required
               onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => onChange(event, setContent)}
             />
+            <div className="form-check mt-3">
+              <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" onChange ={(event: React.ChangeEvent<HTMLInputElement>) => setAnonymous(!anonymous)}></input>
+              <label className="form-check-label" htmlFor="flexCheckDefault">
+                Post Anonymously
+              </label>
+            </div>
             <button type="submit" className="btn mt-3">
               Create Post
             </button>

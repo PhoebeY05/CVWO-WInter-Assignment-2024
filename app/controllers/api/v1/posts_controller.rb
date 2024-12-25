@@ -38,7 +38,7 @@ class Api::V1::PostsController < ApplicationController
   private
 
   def post_params
-    params.permit(:title, :author, :category, :upvote, :downvote, :starred, :content, :pinned)
+    params.permit(:title, :author, :category, :upvote, :downvote, :content, :pinned, :anonymous)
   end
 
   def set_post

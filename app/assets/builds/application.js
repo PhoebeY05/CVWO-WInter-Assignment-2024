@@ -35351,10 +35351,10 @@ var PostList = () => {
   const [filtered, setFiltered] = (0, import_react.useState)([]);
   const [categories, setCategories] = (0, import_react.useState)([]);
   const [category, setCategory] = (0, import_react.useState)("");
-  const [sort, setSort] = (0, import_react.useState)(sessionStorage.getItem("sort") || "");
+  const [sort, setSort] = (0, import_react.useState)("");
   const [name, setName] = (0, import_react.useState)(null);
   const [count, setCount] = (0, import_react.useState)([]);
-  const [ascending, setAscending] = (0, import_react.useState)(sessionStorage.getItem("ascending") === "true" || false);
+  const [ascending, setAscending] = (0, import_react.useState)(false);
   const char_limit = 150;
   (0, import_react.useEffect)(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username));
@@ -35419,7 +35419,7 @@ var PostList = () => {
   const editButton = (id) => {
     return /* @__PURE__ */ import_react.default.createElement(Link, { to: `/posts/${id}/edit`, className: "btn btn-outline-warning card-link" }, "Edit Post");
   };
-  const allPosts = filtered.map((post, index) => /* @__PURE__ */ import_react.default.createElement("div", { key: String(index), className: "col-md-6 col-lg-4" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "card border-dark mb-4 h-100 shadow" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "card-header" }, /* @__PURE__ */ import_react.default.createElement("h5", { className: "card-title pt-2" }, post.title), /* @__PURE__ */ import_react.default.createElement("div", { className: "d-flex justify-content-between mt-2" }, /* @__PURE__ */ import_react.default.createElement("small", { className: "card-subtitle text-muted" }, /* @__PURE__ */ import_react.default.createElement("img", { width: "20", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAYVJREFUaEPtllGuAiEMRZmd6crUlenOdJpIMpkUem+HaTWBn/ciBc4pUGYpf96WP+cvUyB7B39hBy6llJc3EVkCAn1bweVvbVePSIbA/QuvJf2x/ij9cIsW6MFXaEoiUgCBpyWiBFrwkm25wE/lzEA7ESHQg6/nXS6zJmHymQHwbdIDEfg6UpMwK9OZAmy10eLTBJALuz3jrXgzwWaA4wgh8NtqI//Lo7ZvZvZlwGgBT7U59KCNFEAubKvabCWg8lkHjBJA4HvVhn7ARgow8LIuG9+9hkd3gIVh480ackSAhWHjTfgjVYiFYeMheK8AC8PGw/AeARaGjafgWQEWho2n4RkBFoaNd8GjAiwMG++GRwXeygqt5z4U3ivwM/BeAe3xC8888y20P0J7gTT4ETuQCu8VsKoG9T1vTWb1Ix9zWhVqzRsKP3oHwuFHCqTAowLWMUztR+5AKqC1+BSwMnR2P7IDTBk9g7fLOAXOSPluzrkDAUn2L4HcAf/sASOnQECSu0t8AG1ZazGSy339AAAAAElFTkSuQmCC" }), ": ", post.author), /* @__PURE__ */ import_react.default.createElement("small", { className: "card-subtitle text-muted" }, /* @__PURE__ */ import_react.default.createElement("img", { width: "20", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAZtJREFUaEPtWAFOwzAM9F4GvAx4GfAy2KFGiqwkZy+p24IjTa02z/H5rrHrm1x83S4evySAoxlMBs7MwLOIvIoIrp71KSLv9//hWq/V/n59jyT08UDwJWAE/6IArPZHAXx70t6w1clZ7e//AWAnls4wY2DWn5uB2Q0ZQK1Ck/0oKJODaldmz35PAA9lIBnon9UmyeUzcCUJeQszqwOz/tx1YHbD8FZidfO12h9lYHX7u9ofBeCVzCH2rL85JCjPpgnAk609bEcM7PLQVSDgH5+n7Tvc410a680KNvKduI4JAWJgMFoAQ4F4eiFrUopdz7cl+OKDgogG4AneBMIDgJ1YlvZX25QZEoLFfQ8gRjR6zkQLmSWgWlbMvhVcLym67ehKKZIBDWCkb5xIAFFWa1AWzgBjqGbzlAC0LLq63pCYAEdKyAPALLdIADqorq7vRU5n/xQPsda1PufLGL810u8m2sPAikp8aCFbAaA0aqwPMlVhGP3pZm7vdrpum8FIaRW+tvtm66BlwPobr2zC7RNAeMrVhslAMjCZgR/NQIkxpyQ+7QAAAABJRU5ErkJggg==" }), ": ", post.category || "Uncategorised"), /* @__PURE__ */ import_react.default.createElement("small", { className: "card-subtitle text-muted" }, /* @__PURE__ */ import_react.default.createElement("img", { width: "20", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAZpJREFUaEPtmeFuwyAMhN0nW/dkW5+s3ZNttRTUlBkOzLlVJPOrUgjcB3fETU5y8HY6uH5JgHfvYOQOnEXkS0R+NsjvCNgoABV/rQR/isiNDREF8GsIVfEKQW0RAGoVtY7V6BBsgJ74AnS5/6DlgQlgiVexH3fvayb2jQbBArBCq4LL+BroGoISahaAFdq9QAuQkgcGQMs6tc+tfssQqwCj4ov/Z/vDI3cFwCvGyoM71F4AFFq0crRQewFQaBEALdQeAK91aihKqGcBWOJpoZ4BYIsvEEuhHgVYDS3KhDvUowCroUUA7lCPAERZhxJqBPAq8e5Q9wBGanvLGmhRLDsiizUr195knon2JXRLlGfcZtHXA7BOBrRSUQDNcXsAraMTQbAtpKuvxZ75RgNNhsTq9doSaMzZ/l0NaLIEMFYgd2C/KGmhDPHj3dHIgfGvT1ooLZQWckXn6abZB9Ns/5eXErNLsnSQLN28KfXU97SHKQPA+79BId7+dlpFlM+p9QcMZKVunY9uLtcZOzA6V0i/BAhZ1olBD78Df9sqbTFsV3baAAAAAElFTkSuQmCC" }), ": ", post.upvote), /* @__PURE__ */ import_react.default.createElement("small", { className: "card-subtitle text-muted" }, /* @__PURE__ */ import_react.default.createElement("img", { width: "20", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAaVJREFUaEPtWUFuAzEIJD9rX5b2ZWleli5SHVkOGANjVRvhyx7iDTMDA3ZyoZOvy8nxUxH47wwiMvBBRFci4qdn/RDR9/EeP8MLQeAWAN8AM/jPMPpDAQSBRwZAFkMROOp/zIAlinf/NMFWsJXq8ALy7i8CVha8inr3VwYqA4MCVUK9INVGa5Alz2NvXULRc74lSuT0ykdu8d4wCxYJxA1iBwH13jALFr2o7CCgCjMLxiXEJLxrBwG+en5JQKxg/BLfd/ulfpmXqbDfHc8iwDGkUtpBwg1+xXBNJImE2hkCmdDK1RTY3PAHRgqQ/kWhIyp1vCWBVglwLCnFCBKh0mnkPQQ0Ehk/pMB7PNCXNcrUafBRAlpnWqrZiadCeLwl1DKRNXXYtGOHixLImBpSOlETjwJ4wXj3myMlk4HZkJM6Exx8yDSKJNakDk9aKwWIDHAMy9Qw0yJNvOIHntT3nSdaVAYaGanOR6KZyf1SUWgC2pBrgaHgkSYeldGuo3DB4F84OSp4jhpW83l+votAP6khf6dqjHYSWFYxs7EIZNRDvHv6DPwC/GVtMYS+tZ0AAAAASUVORK5CYII=" }), ": ", post.downvote), /* @__PURE__ */ import_react.default.createElement("small", { className: "card-subtitle text-muted" }, /* @__PURE__ */ import_react.default.createElement("img", { width: "20", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAl1JREFUaEPtmT1OBDEMhb0NFRUXAg4EVwAaLsCBgANBRUUDsjRBweOf58Qzy0pMA8sm8ftsx5mYA534czhx/fQPcOwIVkbgiojuBBD/rT0vyy+vy8/7CvhZgCa6F5rRxVAMNAwzAjAr2gJ8GAHJArCnZJpkPI6MTYFkAJ6JyEuVluMsgJ/2uYnmuW3+ZbAWDIECWOJZJBuTYhFP8xgvorzmdbRQBODlO+ylSIQDEjooAtA8D3kGEK0N0SLi2vMAtMUqvW4xpuxaAKlFBr3tTdPs835Y7TUUYMu0sUBk+qoaLIAvsWqUOudEdLbM+SSiD0MVOo6ncwFhiP5ZRUEDkOGLxF8sVeRmsfS0fH4XxtFx/TQZBQhATvIA2KOPRNTEN+MMcdspQcfJwMkorNJIi0BI3Vlhr74Z6dKvjY4rAZD575VaVBg6TvOFq0cTlwFAUwMdVwKQSSE2iG5OdFwPUbIHoiq0wTn2s6SsiNAmDqm3VCzWDku6tgegA2QHCO11YqXXqjDQMb4xBHQeWQBaFPbcC/DLpFfjtbvAHhCweM6Av3ahSV+gIgCGtO7DldGw7sbhazwC4EHwdzMg3p07FI+kUF9oop5Q5IzWUml9pahFE3YksgA83oOQABGwVYVTEY28ZhmJDpkR8a2/lOoxjQIwmPbWmu2bhn2f6LCsBGAPen3T3rMz3bxfTJUAmrOmPbxnBKSt1GaMhFrfbxWBXcSPlNHeEXIT83ebp4yMRGUEdvN6D1EFcBTxFSm0e8pUphCftsP/XRytOpUAVRqm1pnZA1OGqyb/A1R5cnSdb21TpDFhL4sxAAAAAElFTkSuQmCC" }), ": ", count[post.id]))), /* @__PURE__ */ import_react.default.createElement("div", { className: "card-body" }, post.content.length > char_limit ? /* @__PURE__ */ import_react.default.createElement("p", { className: "card-text" }, content(post.content), "... ", /* @__PURE__ */ import_react.default.createElement("a", { href: `/posts/${post.id}`, className: "fst-italic link-dark" }, "Read more")) : /* @__PURE__ */ import_react.default.createElement("p", { className: "card-text" }, content(post.content))), /* @__PURE__ */ import_react.default.createElement("div", { className: "card-footer d-flex justify-content-center bg-body border-0" }, /* @__PURE__ */ import_react.default.createElement(Link, { to: `/posts/${post.id}`, className: "btn btn-outline-primary card-link" }, "View Post"), post.author == name ? deleteButton(post.id) : "", post.author == name ? editButton(post.id) : ""))));
+  const allPosts = filtered.map((post, index) => /* @__PURE__ */ import_react.default.createElement("div", { key: String(index), className: "col-md-6 col-lg-4" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "card border-dark mb-4 h-100 shadow" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "card-header" }, /* @__PURE__ */ import_react.default.createElement("h5", { className: "card-title pt-2" }, post.title), /* @__PURE__ */ import_react.default.createElement("div", { className: "d-flex justify-content-between mt-2" }, /* @__PURE__ */ import_react.default.createElement("small", { className: "card-subtitle text-muted" }, /* @__PURE__ */ import_react.default.createElement("img", { width: "20", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAYVJREFUaEPtllGuAiEMRZmd6crUlenOdJpIMpkUem+HaTWBn/ciBc4pUGYpf96WP+cvUyB7B39hBy6llJc3EVkCAn1bweVvbVePSIbA/QuvJf2x/ij9cIsW6MFXaEoiUgCBpyWiBFrwkm25wE/lzEA7ESHQg6/nXS6zJmHymQHwbdIDEfg6UpMwK9OZAmy10eLTBJALuz3jrXgzwWaA4wgh8NtqI//Lo7ZvZvZlwGgBT7U59KCNFEAubKvabCWg8lkHjBJA4HvVhn7ARgow8LIuG9+9hkd3gIVh480ackSAhWHjTfgjVYiFYeMheK8AC8PGw/AeARaGjafgWQEWho2n4RkBFoaNd8GjAiwMG++GRwXeygqt5z4U3ivwM/BeAe3xC8888y20P0J7gTT4ETuQCu8VsKoG9T1vTWb1Ix9zWhVqzRsKP3oHwuFHCqTAowLWMUztR+5AKqC1+BSwMnR2P7IDTBk9g7fLOAXOSPluzrkDAUn2L4HcAf/sASOnQECSu0t8AG1ZazGSy339AAAAAElFTkSuQmCC" }), ": ", post.anonymous ? "Anonymous" : post.author), /* @__PURE__ */ import_react.default.createElement("small", { className: "card-subtitle text-muted" }, /* @__PURE__ */ import_react.default.createElement("img", { width: "20", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAZtJREFUaEPtWAFOwzAM9F4GvAx4GfAy2KFGiqwkZy+p24IjTa02z/H5rrHrm1x83S4evySAoxlMBs7MwLOIvIoIrp71KSLv9//hWq/V/n59jyT08UDwJWAE/6IArPZHAXx70t6w1clZ7e//AWAnls4wY2DWn5uB2Q0ZQK1Ck/0oKJODaldmz35PAA9lIBnon9UmyeUzcCUJeQszqwOz/tx1YHbD8FZidfO12h9lYHX7u9ofBeCVzCH2rL85JCjPpgnAk609bEcM7PLQVSDgH5+n7Tvc410a680KNvKduI4JAWJgMFoAQ4F4eiFrUopdz7cl+OKDgogG4AneBMIDgJ1YlvZX25QZEoLFfQ8gRjR6zkQLmSWgWlbMvhVcLym67ehKKZIBDWCkb5xIAFFWa1AWzgBjqGbzlAC0LLq63pCYAEdKyAPALLdIADqorq7vRU5n/xQPsda1PufLGL810u8m2sPAikp8aCFbAaA0aqwPMlVhGP3pZm7vdrpum8FIaRW+tvtm66BlwPobr2zC7RNAeMrVhslAMjCZgR/NQIkxpyQ+7QAAAABJRU5ErkJggg==" }), ": ", post.category || "Uncategorised"), /* @__PURE__ */ import_react.default.createElement("small", { className: "card-subtitle text-muted" }, /* @__PURE__ */ import_react.default.createElement("img", { width: "20", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAZpJREFUaEPtmeFuwyAMhN0nW/dkW5+s3ZNttRTUlBkOzLlVJPOrUgjcB3fETU5y8HY6uH5JgHfvYOQOnEXkS0R+NsjvCNgoABV/rQR/isiNDREF8GsIVfEKQW0RAGoVtY7V6BBsgJ74AnS5/6DlgQlgiVexH3fvayb2jQbBArBCq4LL+BroGoISahaAFdq9QAuQkgcGQMs6tc+tfssQqwCj4ov/Z/vDI3cFwCvGyoM71F4AFFq0crRQewFQaBEALdQeAK91aihKqGcBWOJpoZ4BYIsvEEuhHgVYDS3KhDvUowCroUUA7lCPAERZhxJqBPAq8e5Q9wBGanvLGmhRLDsiizUr195knon2JXRLlGfcZtHXA7BOBrRSUQDNcXsAraMTQbAtpKuvxZ75RgNNhsTq9doSaMzZ/l0NaLIEMFYgd2C/KGmhDPHj3dHIgfGvT1ooLZQWckXn6abZB9Ns/5eXErNLsnSQLN28KfXU97SHKQPA+79BId7+dlpFlM+p9QcMZKVunY9uLtcZOzA6V0i/BAhZ1olBD78Df9sqbTFsV3baAAAAAElFTkSuQmCC" }), ": ", post.upvote), /* @__PURE__ */ import_react.default.createElement("small", { className: "card-subtitle text-muted" }, /* @__PURE__ */ import_react.default.createElement("img", { width: "20", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAaVJREFUaEPtWUFuAzEIJD9rX5b2ZWleli5SHVkOGANjVRvhyx7iDTMDA3ZyoZOvy8nxUxH47wwiMvBBRFci4qdn/RDR9/EeP8MLQeAWAN8AM/jPMPpDAQSBRwZAFkMROOp/zIAlinf/NMFWsJXq8ALy7i8CVha8inr3VwYqA4MCVUK9INVGa5Alz2NvXULRc74lSuT0ykdu8d4wCxYJxA1iBwH13jALFr2o7CCgCjMLxiXEJLxrBwG+en5JQKxg/BLfd/ulfpmXqbDfHc8iwDGkUtpBwg1+xXBNJImE2hkCmdDK1RTY3PAHRgqQ/kWhIyp1vCWBVglwLCnFCBKh0mnkPQQ0Ehk/pMB7PNCXNcrUafBRAlpnWqrZiadCeLwl1DKRNXXYtGOHixLImBpSOlETjwJ4wXj3myMlk4HZkJM6Exx8yDSKJNakDk9aKwWIDHAMy9Qw0yJNvOIHntT3nSdaVAYaGanOR6KZyf1SUWgC2pBrgaHgkSYeldGuo3DB4F84OSp4jhpW83l+votAP6khf6dqjHYSWFYxs7EIZNRDvHv6DPwC/GVtMYS+tZ0AAAAASUVORK5CYII=" }), ": ", post.downvote), /* @__PURE__ */ import_react.default.createElement("small", { className: "card-subtitle text-muted" }, /* @__PURE__ */ import_react.default.createElement("img", { width: "20", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAl1JREFUaEPtmT1OBDEMhb0NFRUXAg4EVwAaLsCBgANBRUUDsjRBweOf58Qzy0pMA8sm8ftsx5mYA534czhx/fQPcOwIVkbgiojuBBD/rT0vyy+vy8/7CvhZgCa6F5rRxVAMNAwzAjAr2gJ8GAHJArCnZJpkPI6MTYFkAJ6JyEuVluMsgJ/2uYnmuW3+ZbAWDIECWOJZJBuTYhFP8xgvorzmdbRQBODlO+ylSIQDEjooAtA8D3kGEK0N0SLi2vMAtMUqvW4xpuxaAKlFBr3tTdPs835Y7TUUYMu0sUBk+qoaLIAvsWqUOudEdLbM+SSiD0MVOo6ncwFhiP5ZRUEDkOGLxF8sVeRmsfS0fH4XxtFx/TQZBQhATvIA2KOPRNTEN+MMcdspQcfJwMkorNJIi0BI3Vlhr74Z6dKvjY4rAZD575VaVBg6TvOFq0cTlwFAUwMdVwKQSSE2iG5OdFwPUbIHoiq0wTn2s6SsiNAmDqm3VCzWDku6tgegA2QHCO11YqXXqjDQMb4xBHQeWQBaFPbcC/DLpFfjtbvAHhCweM6Av3ahSV+gIgCGtO7DldGw7sbhazwC4EHwdzMg3p07FI+kUF9oop5Q5IzWUml9pahFE3YksgA83oOQABGwVYVTEY28ZhmJDpkR8a2/lOoxjQIwmPbWmu2bhn2f6LCsBGAPen3T3rMz3bxfTJUAmrOmPbxnBKSt1GaMhFrfbxWBXcSPlNHeEXIT83ebp4yMRGUEdvN6D1EFcBTxFSm0e8pUphCftsP/XRytOpUAVRqm1pnZA1OGqyb/A1R5cnSdb21TpDFhL4sxAAAAAElFTkSuQmCC" }), ": ", count[post.id]))), /* @__PURE__ */ import_react.default.createElement("div", { className: "card-body" }, post.content.length > char_limit ? /* @__PURE__ */ import_react.default.createElement("p", { className: "card-text" }, content(post.content), "... ", /* @__PURE__ */ import_react.default.createElement("a", { href: `/posts/${post.id}`, className: "fst-italic link-dark" }, "Read more")) : /* @__PURE__ */ import_react.default.createElement("p", { className: "card-text" }, content(post.content))), /* @__PURE__ */ import_react.default.createElement("div", { className: "card-footer d-flex justify-content-center bg-body border-0" }, /* @__PURE__ */ import_react.default.createElement(Link, { to: `/posts/${post.id}`, className: "btn btn-outline-primary card-link" }, "View Post"), post.author == name ? deleteButton(post.id) : "", post.author == name ? editButton(post.id) : ""))));
   const noPosts = /* @__PURE__ */ import_react.default.createElement("div", { className: "vw-100 vh-50 d-flex align-items-center justify-content-center" }, /* @__PURE__ */ import_react.default.createElement("h4", null, "No posts yet. Why not ", /* @__PURE__ */ import_react.default.createElement(Link, { to: "/new_post" }, "create one"), "?"));
   const Categories = () => {
     if (categories.length > 0) {
@@ -35438,8 +35438,6 @@ var PostList = () => {
     event.preventDefault();
     const sorted_posts = [...filtered];
     const sort_helper = (a, b) => {
-      sessionStorage.setItem("sort", sort);
-      sessionStorage.setItem("ascending", ascending.toString());
       if (sort == "upvote") {
         return b.upvote - a.upvote;
       } else if (sort == "downvote") {
@@ -35469,15 +35467,37 @@ var import_react4 = __toESM(require_react());
 
 // app/javascript/components/NewComment.tsx
 var import_react2 = __toESM(require_react());
-var NewComment = ({ text, onSubmit, setBody }) => {
-  const handleSubmit = (event) => {
+var NewComment = ({ identifier, text, post_id, parent_id }) => {
+  console.log({ text, post_id, parent_id });
+  const [anonymous, setAnonymous] = (0, import_react2.useState)(false);
+  const [body, setBody] = (0, import_react2.useState)("");
+  const [name, setName] = (0, import_react2.useState)(null);
+  (0, import_react2.useEffect)(() => {
+    getUsername().then((res) => res.message ? setName(null) : setName(res.username));
+  }, [post_id]);
+  const onSubmit = (event) => {
     event.preventDefault();
-    event.stopPropagation();
-    onSubmit(event);
+    const url = `/api/v1/comments/create`;
+    if (body.length == 0)
+      return;
+    const request_body = {
+      body,
+      post_id,
+      parent_id,
+      author: name,
+      anonymous
+    };
+    const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
+    create(url, token, request_body).then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error("Network response was not ok.");
+    }).then((data2) => location.reload()).catch((error2) => console.log(error2.message));
   };
   (0, import_react2.useEffect)(() => {
-    const myModal = document.getElementById("Modal");
-    const myInput = document.getElementById("body");
+    const myModal = document.getElementById(`Modal${identifier}`);
+    const myInput = document.getElementById(`body${identifier}`);
     if (myModal) {
       myModal.addEventListener("shown.bs.modal", () => {
         myInput?.focus();
@@ -35490,20 +35510,23 @@ var NewComment = ({ text, onSubmit, setBody }) => {
       type: "button",
       className: "btn btn-link fst-italic fs-5 pt-0 px-0 text-reset",
       "data-bs-toggle": "modal",
-      "data-bs-target": "#Modal"
+      "data-bs-target": `#Modal${identifier}`
     },
     text
-  ), /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal fade", id: "Modal", tabIndex: -1, "aria-labelledby": "modalTitle", "aria-hidden": "true" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal-dialog modal-dialog-scrollable" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal-content" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal-header" }, /* @__PURE__ */ import_react2.default.createElement("p", { className: "modal-title fs-5 h1", id: "modalTitle" }, "Comment"), /* @__PURE__ */ import_react2.default.createElement("button", { type: "button", className: "btn-close", "data-bs-dismiss": "modal", "aria-label": "Close" })), /* @__PURE__ */ import_react2.default.createElement("form", { onSubmit: handleSubmit }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal-body" }, /* @__PURE__ */ import_react2.default.createElement(
+  ), /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal fade", id: `Modal${identifier}`, tabIndex: -1, "aria-labelledby": `modalTitle_${identifier}`, "aria-hidden": "true" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal-dialog modal-dialog-scrollable" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal-content" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal-header" }, /* @__PURE__ */ import_react2.default.createElement("p", { className: "modal-title fs-5 h1", id: `modalTitle_${identifier}` }, "Comment"), /* @__PURE__ */ import_react2.default.createElement("button", { type: "button", className: "btn-close", "data-bs-dismiss": "modal", "aria-label": "Close" })), /* @__PURE__ */ import_react2.default.createElement("form", { onSubmit }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal-body" }, /* @__PURE__ */ import_react2.default.createElement(
     "textarea",
     {
       className: "form-control",
-      id: "body",
-      name: "body",
+      id: `body${identifier}`,
+      name: `body${identifier}`,
       rows: 5,
       required: true,
+      value: body,
       onChange: (event) => setBody(event.target.value)
     }
-  )), /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal-footer" }, /* @__PURE__ */ import_react2.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-bs-dismiss": "modal" }, "Close"), /* @__PURE__ */ import_react2.default.createElement("button", { type: "submit", className: "btn btn-success" }, "Comment")))))));
+  ), /* @__PURE__ */ import_react2.default.createElement("div", { className: "form-check mt-3" }, /* @__PURE__ */ import_react2.default.createElement("input", { className: "form-check-input", type: "checkbox", value: "", id: "flexCheckDefault", onChange: (event) => {
+    setAnonymous(!anonymous);
+  } }), /* @__PURE__ */ import_react2.default.createElement("label", { className: "form-check-label", htmlFor: "flexCheckDefault" }, "Comment Anonymously"))), /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal-footer" }, /* @__PURE__ */ import_react2.default.createElement("button", { type: "button", className: "btn btn-secondary", "data-bs-dismiss": "modal" }, "Close"), /* @__PURE__ */ import_react2.default.createElement("button", { type: "submit", className: "btn btn-success" }, "Comment")))))));
 };
 var NewComment_default = NewComment;
 
@@ -35515,6 +35538,7 @@ var Comment = ({ comment, author, pinned }) => {
   const [body, setBody] = (0, import_react3.useState)("");
   const [editComment, setEditComment] = (0, import_react3.useState)(false);
   const [name, setName] = (0, import_react3.useState)(null);
+  const [anonymous, setAnonymous] = (0, import_react3.useState)(false);
   (0, import_react3.useEffect)(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username));
   }, [comment.id]);
@@ -35529,24 +35553,17 @@ var Comment = ({ comment, author, pinned }) => {
   }, [comment.id]);
   const changeComment = (event, comment2, action = "create") => {
     event.preventDefault();
-    if (action == "create" && body.length == 0) {
-      return;
-    }
-    const url = action == "create" ? `/api/v1/comments/create` : `/api/v1/comments/${action}/${String(comment2.id)}`;
+    event.stopPropagation();
+    const url = `/api/v1/comments/${action}/${String(comment2.id)}`;
     const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
-    const new_comment = {
-      body,
-      post_id: Number(comment2.post_id),
-      parent_id: Number(comment2.id),
-      author: name
-    };
     const existing_comment = {
       body,
       parent_id: Number(comment2.parent_id),
       post_id: Number(comment2.post_id),
-      author: name
+      author: name,
+      anonymous: comment2.anonymous
     };
-    let request = action === "create" ? create(url, token, new_comment) : action === "update" ? update(url, token, existing_comment) : del2(url, token);
+    let request = action === "update" ? update(url, token, existing_comment) : del2(url, token);
     request.then((response) => {
       if (response.ok) {
         return response.json();
@@ -35563,8 +35580,8 @@ var Comment = ({ comment, author, pinned }) => {
     },
     "Delete Comment"
   ));
-  const allReplies = replies.map((reply, index) => /* @__PURE__ */ import_react3.default.createElement("div", { key: index, className: "row" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "col" }, /* @__PURE__ */ import_react3.default.createElement("p", { className: "text-muted d-flex flex-row justify-content-center p-0" }, /* @__PURE__ */ import_react3.default.createElement(NewComment_default, { text: "add a reply", onSubmit: (e) => changeComment(e, reply, "create"), setBody }))), /* @__PURE__ */ import_react3.default.createElement(Comment, { comment: reply, author, pinned })));
-  const noReplies = /* @__PURE__ */ import_react3.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react3.default.createElement("span", { className: "text-muted fs-6" }, "No replies yet. Why not ", /* @__PURE__ */ import_react3.default.createElement(NewComment_default, { text: "add one", onSubmit: (e) => changeComment(e, comment, "create"), setBody }), "?"));
+  const allReplies = replies.map((reply, index) => /* @__PURE__ */ import_react3.default.createElement("div", { key: index, className: "row" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "col" }, /* @__PURE__ */ import_react3.default.createElement("p", { className: "text-muted d-flex flex-row justify-content-center p-0" }, /* @__PURE__ */ import_react3.default.createElement(NewComment_default, { identifier: comment.id, text: "add a reply", post_id: Number(comment.post_id), parent_id: Number(comment.id) }))), /* @__PURE__ */ import_react3.default.createElement(Comment, { comment: reply, author, pinned })));
+  const noReplies = /* @__PURE__ */ import_react3.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react3.default.createElement("span", { className: "text-muted fs-6" }, "No replies yet. Why not ", /* @__PURE__ */ import_react3.default.createElement(NewComment_default, { identifier: comment.id, text: "add one", post_id: Number(comment.post_id), parent_id: Number(comment.id) }), "?"));
   const edit = /* @__PURE__ */ import_react3.default.createElement("form", { id: comment.id, onSubmit: (e) => changeComment(e, comment, "update") }, /* @__PURE__ */ import_react3.default.createElement("textarea", { className: "form-control m-3", id: "exampleFormControlTextarea1", rows: 3, defaultValue: comment.body, onChange: (e) => setBody(e.target.value) }), /* @__PURE__ */ import_react3.default.createElement("div", { className: "d-flex flex-row justify-content-end mb-2" }, /* @__PURE__ */ import_react3.default.createElement("button", { className: "btn btn-link border-primary border-3 border-opacity-50", type: "submit" }, "Edit Comment")));
   const normal = /* @__PURE__ */ import_react3.default.createElement("div", null, /* @__PURE__ */ import_react3.default.createElement("p", { className: "lead" }, comment.body), /* @__PURE__ */ import_react3.default.createElement("div", { className: "d-flex flex-row justify-content-end mb-1" }, /* @__PURE__ */ import_react3.default.createElement("button", { className: "btn btn-link", onClick: () => setEditComment(true) }, "Edit Comment")));
   const changePin = (event) => {
@@ -35589,7 +35606,7 @@ var Comment = ({ comment, author, pinned }) => {
       return /* @__PURE__ */ import_react3.default.createElement("div", { className: "col px-3 d-flex justify-content-end" }, /* @__PURE__ */ import_react3.default.createElement("form", { onSubmit: changePin, className: "m-0 pt-0" }, /* @__PURE__ */ import_react3.default.createElement("button", { className: "btn fs-4", type: "submit" }, /* @__PURE__ */ import_react3.default.createElement("img", { width: "50", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAYZJREFUaEPtmFEOAiEMRLsnU0+mnkxvptawCSHgzrSAu0n3y49S5rUFWhc5+LccXL8EwL8z6MnATUSuHQCeycddRNbfsFsLwFlEHvAOnCGth16QxCvEiE+zoJmFv70BqHBKE2WcwvIqwmPxkbtw+bNs7tqwUhsufwHA1uweMwDfGKAhVRWUceMQg7pgM0oTZZwk6CM26h3Ql/gCoxrrV8VrC9EbQsXT7YQlA2uAXNffJwje9V8dAZDVKxuMyECUkLOpixLylFBtnPQeYnqYsQLUxNMvaGOyoyHYqLUGeX3+2YG85YuCYABawzy1YXHw3QFhAGpNnEf8ylKDgP0yAOW1B28CdJfmS8EDwKwFGGzNHSOizAAiymMDaYOMJk1iJSykDTKaMImV4uF3hQEYNYnVxMOTGQPA1nOXZm1r0wD4EaHIwFb5WLtRxK/aRAaQSI08xHl/A9/riOjcZhaAZV6AWEYCqADNwon9vxNSnoxmAGj5sNMazDAaABZiNQwAa+R6rTt8Bt5AwVAx/JQL5QAAAABJRU5ErkJggg==" }))));
     }
   };
-  return /* @__PURE__ */ import_react3.default.createElement("div", { className: "border rounded-4 shadow p-4 flex flex-column" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "col px-3 d-flex align-items-center" }, /* @__PURE__ */ import_react3.default.createElement("p", { className: "fw-bold align-self-center" }, comment.author, " said ...")), author == name && comment.parent_id == 0 ? pin() : null), /* @__PURE__ */ import_react3.default.createElement("div", { className: "row d-flex justify-content-start" }, comment.author == name && editComment ? edit : comment.author == name && !editComment ? normal : /* @__PURE__ */ import_react3.default.createElement("p", { className: "lead" }, comment.body)), comment.author == name ? deleteButton(comment) : null, /* @__PURE__ */ import_react3.default.createElement("hr", { className: "border-1" }), replies.length > 0 ? allReplies : noReplies);
+  return /* @__PURE__ */ import_react3.default.createElement("div", { className: "border rounded-4 shadow p-4 d-flex flex-column" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "col px-3 d-flex align-items-center" }, /* @__PURE__ */ import_react3.default.createElement("p", { className: "fw-bold align-self-center" }, comment.anonymous ? "Anonymous" : comment.author, " said ...")), author == name && comment.parent_id == 0 ? pin() : null), /* @__PURE__ */ import_react3.default.createElement("div", { className: "row d-flex justify-content-start" }, comment.author == name && editComment ? edit : comment.author == name && !editComment ? normal : /* @__PURE__ */ import_react3.default.createElement("p", { className: "lead" }, comment.body)), comment.author == name ? deleteButton(comment) : null, /* @__PURE__ */ import_react3.default.createElement("hr", { className: "border-1" }), replies.length > 0 ? allReplies : noReplies);
 };
 var Comment_default = Comment;
 
@@ -35605,7 +35622,8 @@ var Post = () => {
     upvote: 0,
     downvote: 0,
     id: 0,
-    pinned: 0
+    pinned: 0,
+    anonymous: false
   });
   const [comments, setComments] = (0, import_react4.useState)([]);
   const [body, setBody] = (0, import_react4.useState)("");
@@ -35613,6 +35631,7 @@ var Post = () => {
   const [downvoted, setDownvoted] = (0, import_react4.useState)(false);
   const [starred, setStarred] = (0, import_react4.useState)(false);
   const [name, setName] = (0, import_react4.useState)(null);
+  const [anonymous, setAnonymous] = (0, import_react4.useState)(false);
   (0, import_react4.useEffect)(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username));
   }, [params.id]);
@@ -35705,27 +35724,8 @@ var Post = () => {
     }).then((response) => navigate(`/posts/${params.id}`)).catch((error2) => console.log(error2.message));
     setStarred(!starred);
   };
-  const onSubmit = (event) => {
-    event.preventDefault();
-    const url = `/api/v1/comments/create`;
-    if (body.length == 0)
-      return;
-    const request_body = {
-      body,
-      post_id: Number(params.id),
-      parent_id: 0,
-      author: name
-    };
-    const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
-    create(url, token, request_body).then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error("Network response was not ok.");
-    }).then((data2) => location.reload()).catch((error2) => console.log(error2.message));
-  };
   const allComments = comments.filter((comment) => comment.id !== void 0 && comment.parent_id === 0).map((comment, index) => /* @__PURE__ */ import_react4.default.createElement("div", { key: String(index), className: "row" }, /* @__PURE__ */ import_react4.default.createElement(Comment_default, { comment, author: post.author, pinned: post.pinned })));
-  const noComments = /* @__PURE__ */ import_react4.default.createElement("div", { className: "d-flex align-items-center justify-content-center mt-4" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "fst-italic fs-5" }, "No comments yet. Why not ", /* @__PURE__ */ import_react4.default.createElement(NewComment_default, { text: "add one", onSubmit, setBody }), "?"));
+  const noComments = /* @__PURE__ */ import_react4.default.createElement("div", { className: "d-flex align-items-center justify-content-center mt-4" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "fst-italic fs-5" }, "No comments yet. Why not ", /* @__PURE__ */ import_react4.default.createElement(NewComment_default, { identifier: post.id, text: "be the first", post_id: post.id, parent_id: 0 }), "?"));
   const star = () => {
     if (!starred || name == null) {
       return /* @__PURE__ */ import_react4.default.createElement("form", { onSubmit: changeStar, className: "m-0 pt-0" }, /* @__PURE__ */ import_react4.default.createElement("button", { className: "btn fs-4", type: "submit" }, "\u2606"));
@@ -35758,14 +35758,16 @@ var Post = () => {
       "Delete Post"
     )), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-auto w-50" }, /* @__PURE__ */ import_react4.default.createElement(Link, { to: `/posts/${post.id}/edit`, className: "btn btn-warning w-100 " }, "Edit Post")));
   };
-  return /* @__PURE__ */ import_react4.default.createElement("div", { className: "" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "hero position-relative d-flex align-items-center justify-content-center" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "overlay bg-dark position-absolute" }), /* @__PURE__ */ import_react4.default.createElement("h1", { className: "display-4 position-relative mt-4" }, post.title)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "container py-4" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-flex justify-content-center border border-3 border-black pt-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead" }, "Author: ", post.author)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead" }, "Category: ", post.category)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-inline-flex flex-row" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-8 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead mb-0" }, "Upvotes: ", post.upvote)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-2 pt-1 d-flex justify-content-center" }, upVote()))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-inline-flex flex-row" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-8 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead mb-0" }, "Downvotes: ", post.downvote)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-2 pt-1 d-flex justify-content-center" }, downVote()))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-4 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead mb-0" }, "Starred: ")), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-4 pt-2" }, star())))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "row p-4 border border-3 border-top-0 border-black" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "mb-2 h3" }, "Post Content: "), /* @__PURE__ */ import_react4.default.createElement(
+  const addComment = /* @__PURE__ */ import_react4.default.createElement("div", { className: "col d-flex justify-content-end" }, /* @__PURE__ */ import_react4.default.createElement(NewComment_default, { identifier: post.id, text: "Add Comment", post_id: post.id, parent_id: 0 }));
+  return /* @__PURE__ */ import_react4.default.createElement("div", { className: "" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "hero position-relative d-flex align-items-center justify-content-center" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "overlay bg-dark position-absolute" }), /* @__PURE__ */ import_react4.default.createElement("h1", { className: "display-4 position-relative mt-4" }, post.title)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "container py-4" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-flex justify-content-center border border-3 border-black pt-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead" }, "Author: ", post.anonymous ? "Anonymous" : post.author)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead" }, "Category: ", post.category)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-inline-flex flex-row" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-8 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead mb-0" }, "Upvotes: ", post.upvote)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-2 pt-1 d-flex justify-content-center" }, upVote()))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-inline-flex flex-row" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-8 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead mb-0" }, "Downvotes: ", post.downvote)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-2 pt-1 d-flex justify-content-center" }, downVote()))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-4 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead mb-0" }, "Starred: ")), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-4 pt-2" }, star())))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "row p-4 border border-3 border-top-0 border-black" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "mb-2 h3" }, "Post Content: "), /* @__PURE__ */ import_react4.default.createElement(
     "div",
     {
+      className: "lead",
       dangerouslySetInnerHTML: {
         __html: `${postContent}`
       }
     }
-  )), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col d-flex flex-column align-self-start" }, post.author === name ? buttons() : "", /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-flex justify-content-end mt-3 " }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "lead fw-medium" }, "Comments:")), name != null ? /* @__PURE__ */ import_react4.default.createElement("div", { className: "col d-flex justify-content-end" }, /* @__PURE__ */ import_react4.default.createElement(NewComment_default, { text: "Add Comment", onSubmit, setBody })) : "", comments.length === 0 ? noComments : allComments))), /* @__PURE__ */ import_react4.default.createElement(Link, { to: "/", className: "btn btn-outline-dark mt-3" }, "Back to Posts")));
+  )), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col d-flex flex-column align-self-start" }, post.author === name ? buttons() : "", /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-flex justify-content-end mt-3 " }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "lead fw-medium" }, "Comments:")), name != null ? addComment : "", comments.length === 0 ? noComments : allComments))), /* @__PURE__ */ import_react4.default.createElement(Link, { to: "/", className: "btn btn-outline-dark mt-3" }, "Back to Posts")));
 };
 var Post_default = Post;
 
@@ -35777,6 +35779,7 @@ var NewPost = () => {
   const [category, setCategory] = (0, import_react5.useState)("");
   const [content, setContent] = (0, import_react5.useState)("");
   const [name, setName] = (0, import_react5.useState)(null);
+  const [anonymous, setAnonymous] = (0, import_react5.useState)(false);
   (0, import_react5.useEffect)(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username));
   }, []);
@@ -35798,13 +35801,15 @@ var NewPost = () => {
       navigate("/login");
       return;
     }
+    console.log(anonymous);
     const body = {
       title,
       "author": name,
       category,
       "upvote": 0,
       "downvote": 0,
-      content: stripHtmlEntities(content)
+      content: stripHtmlEntities(content),
+      anonymous
     };
     const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
     create(url, token, body).then((response) => {
@@ -35843,7 +35848,7 @@ var NewPost = () => {
       required: true,
       onChange: (event) => onChange(event, setContent)
     }
-  ), /* @__PURE__ */ import_react5.default.createElement("button", { type: "submit", className: "btn mt-3" }, "Create Post"), /* @__PURE__ */ import_react5.default.createElement(Link, { to: "/", className: "btn mt-3" }, "Back to Posts")))));
+  ), /* @__PURE__ */ import_react5.default.createElement("div", { className: "form-check mt-3" }, /* @__PURE__ */ import_react5.default.createElement("input", { className: "form-check-input", type: "checkbox", value: "", id: "flexCheckDefault", onChange: (event) => setAnonymous(!anonymous) }), /* @__PURE__ */ import_react5.default.createElement("label", { className: "form-check-label", htmlFor: "flexCheckDefault" }, "Post Anonymously")), /* @__PURE__ */ import_react5.default.createElement("button", { type: "submit", className: "btn mt-3" }, "Create Post"), /* @__PURE__ */ import_react5.default.createElement(Link, { to: "/", className: "btn mt-3" }, "Back to Posts")))));
 };
 var NewPost_default = NewPost;
 
