@@ -6,20 +6,25 @@ import { getUsername } from "../functions/username"
 const EditPost = () => {
     const params = useParams();
     const navigate = useNavigate();
+    const [name, setName] = useState(null);
+    // New values for post fields
     const [title, setTitle] = useState("");
     const [category, setCategory] = useState("");
     const [content, setContent] = useState("");
+    // Existing values for post fields
     const [title_def, setTitle_def] = useState("");
     const [category_def, setCategory_def] = useState("");
     const [content_def, setContent_def] = useState("");
+    // Original statistics
     const [upvotes, setUpvotes] = useState(0);
     const [downvotes, setDownvotes] = useState(0);
-    const [name, setName] = useState(null);
     
+    // Get username of current user
     useEffect(() => {
         getUsername().then((res) => res.message ? setName(null) : setName(res.username))
     }, [])
 
+    // Loading existing post data
     useEffect(() => {
         const url_p = `/api/v1/show/${params.id}`;
         fetch(url_p)

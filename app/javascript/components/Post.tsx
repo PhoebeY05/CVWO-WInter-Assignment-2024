@@ -4,6 +4,7 @@ import NewComment from "./NewComment";
 import Comment from "./Comment";
 import {del, update, create} from "../functions/requests"
 import { getUsername } from "../functions/username"
+import { addHtmlEntities } from "../functions/prep"
 
 const Post = () => {
   const params = useParams();
@@ -20,13 +21,12 @@ const Post = () => {
     anonymous: false
   });
   const [comments, setComments] = useState<{ id: number, body: string, post_id: number, parent_id: number }[]>([]);
-  const [body, setBody] = useState("");
   const [upvoted, setUpvoted] = useState(false)
   const [downvoted, setDownvoted] = useState(false) 
   const [starred, setStarred] = useState(false)
   const [name, setName] = useState(null)
-  const [anonymous, setAnonymous] = useState(false)
 
+  // Get username of current user
   useEffect(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username));
   }, [params.id])
@@ -45,7 +45,7 @@ const Post = () => {
       .catch(() => navigate("/"));
   }, [params.id]);
 
-  // Loading comments
+  // Loading comments (pinned comments first)
   useEffect(() => {
     const url_c = `/api/v1/index/${params.id}`;
     fetch(url_c)
@@ -80,20 +80,19 @@ const Post = () => {
      
     }, [params.id]);
 
-  // Accounting for HTML's behaviour
-  const addHtmlEntities = (str: string) => {
-    return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
-  };
+  // Adding HTML entities  
   const postContent = addHtmlEntities(post.content);
 
-  // Function to either update (star, upvote, downvote) or delete post
+  // Update(star, upvote, downvote)/Delete post
   const changePost = (event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>, action: string, change: string = "upvote", direction: string = "plus") => {
     event.preventDefault()
+    // Check if user is logged in
     if (!name)
       return;
     let url = `/api/v1/${action}/${params.id}`;
     const destination = action == "destroy" ? "/" : `/posts/${params.id}`
     const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')!;
+    // Updating Fields
     const addOne = (val : number) => val + 1;
     const minusOne = (val: number) => val - 1;
     let request_body = post;
@@ -103,13 +102,13 @@ const Post = () => {
       const field_body = {
         username: name,
         post_id: params.id,
-        starred: starred,
         upvoted: change == "upvote" ? !upvoted : upvoted,
         downvoted: change == "downvote" ? !downvoted : downvoted
       }
       create(url_f, token, field_body)
       return direction == "plus" ? addOne(val) : val >= 1 ? minusOne(val) : val;
     } 
+    // Updating post
     request_body = change == "upvote" ? {...post, upvote: changeField(post.upvote)} : {...post, downvote: changeField(post.downvote)}
     setPost(request_body)
     let request = action === "update" ? update(url, token, request_body) : del(url, token);
@@ -126,6 +125,7 @@ const Post = () => {
     .catch((error) => console.log(error.message));
   };
 
+  // Recording user's stars
   const changeStar = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const request_body = {
@@ -157,6 +157,7 @@ const Post = () => {
     </div>
   ));
 
+  // Rendering prompt if no comments
   const noComments = (
     <div className="d-flex align-items-center justify-content-center mt-4">
       <span className="fst-italic fs-5">
@@ -165,8 +166,6 @@ const Post = () => {
     </div>
   );
 
-  
-  
   // Rendering starred property
   const star = () => {
     if (!starred || name == null) {
@@ -217,6 +216,7 @@ const Post = () => {
     }
   }
   
+  // Buttons available if user is author of post
   const buttons = () => {
     return (
       <div className="row d-flex justify-content-end">
@@ -237,6 +237,7 @@ const Post = () => {
       </div>
     )
   }
+  // Adding new comment to post
   const addComment = (
     <div className="col d-flex justify-content-end">
       <NewComment identifier={`comment_${post.id}`}  text="Add Comment" post_id={post.id} parent_id={0}/>
@@ -252,6 +253,7 @@ const Post = () => {
           {post.title}
         </h1>
       </div>
+      {/* Post information */}
       <div className="container py-4">
         <div className="row d-flex justify-content-center border border-3 border-black pt-2">
           <div className="col col-sm-2 pt-3">
@@ -291,6 +293,7 @@ const Post = () => {
             </div>
           </div>
         </div>
+        {/* Post body */}
         <div className="row p-4 border border-3 border-top-0 border-black">
           <div className="col">
             <p className="mb-2 h3">Post Content: </p>

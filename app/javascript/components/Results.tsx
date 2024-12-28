@@ -1,17 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { addHtmlEntities } from "../functions/prep"
 
 const Results = () => {
     const results = sessionStorage.getItem("search") ? JSON.parse(sessionStorage.getItem("search")!) : [];
-    console.log(results)
     const by_title = results.title ? results.title : []
     const by_content = results.content ? results.content : []
     const by_user = results.user ? results.user : []
     const by_category = results.category ? results.category : []
     const char_limit = 50
-    const addHtmlEntities = (str: string) => {
-        return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
-    };
+    
+    // Function to fit content to list item width
     const content = (array: any, index: number) => {
         const result_content = addHtmlEntities(array[index].content);
         if (result_content.length > char_limit) {
@@ -25,7 +24,8 @@ const Results = () => {
             )
         }
     }
-       
+    
+    // Function to display results
     const resultsTable = (results_array: any) => {
         const date_created = (date:string) => date.substring(0, 10);
         return (
@@ -41,6 +41,7 @@ const Results = () => {
         )
     }
 
+    // Standard section format for results based on different criteria
     const sections = (text: string, results_table) => {
         return (
             <div className="py-3 px-4 mb-3 border border-3 border-dark rounded shadow">

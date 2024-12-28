@@ -4,6 +4,7 @@ import NewComment from "./NewComment";
 import { create, update, del } from "../functions/requests"
 import { getUsername } from "../functions/username"
 
+// Used in the Post component to implement list of comments
 const Comment = ({ comment, author, pinned }) => {
     const navigate = useNavigate();
     const [replies, setReplies] = useState([]);
@@ -12,6 +13,7 @@ const Comment = ({ comment, author, pinned }) => {
     const [name, setName] = useState(null);
     const [anonymous, setAnonymous] = useState(false);
 
+    // Get username of current user
     useEffect(() => {
         getUsername().then((res) => res.message ? setName(null) : setName(res.username))  
     }, [comment.id])
@@ -32,6 +34,7 @@ const Comment = ({ comment, author, pinned }) => {
     }, [comment.id]);
 
     
+    // Edit/Delete Comment
     const changeComment = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>| React.FormEvent<HTMLFormElement>, comment: any, action: string = "create") => {
         event.preventDefault();
         event.stopPropagation();
@@ -44,18 +47,20 @@ const Comment = ({ comment, author, pinned }) => {
             author: name,
             anonymous: comment.anonymous
         }
-        let request = action === "update" ? update(url, token, existing_comment) : del(url, token);
+        let request = action === "update" ? update(url, token, existing_comment) : del(url, token); // Choosing to edit or delete
+        // Processing DELETE/PUT request
         request
-        .then((response) => {
-        if (response.ok) {
-        return response.json();
-        }
-        throw new Error("Network response was not ok.");
-        })
-        .then((response) => location.reload())
-        .catch((error) => console.log(error.message));
-        };
-
+            .then((response) => {
+            if (response.ok) {
+            return response.json();
+            }
+            throw new Error("Network response was not ok.");
+            })
+            .then((response) => location.reload())
+            .catch((error) => console.log(error.message));
+            };
+    
+    // Delete button in comment to send DELETE request
     const deleteButton = (comment: any) => (
         <div className="row">
             <button
@@ -68,6 +73,7 @@ const Comment = ({ comment, author, pinned }) => {
         </div>
     )
 
+    // List of replies when at least 1 exists
     const allReplies = replies.map((reply: any, index: number) => (
         <div key={index} className="row">
             <div className="col">
@@ -76,11 +82,15 @@ const Comment = ({ comment, author, pinned }) => {
             <Comment comment={reply} author={author} pinned={pinned} />
         </div>
     ));
+
+    // Prompt to add comment when no replies exist 
     const noReplies = (
         <div className="row">
             <span className="text-muted fs-6">No replies yet. Why not <NewComment identifier={`reply_${comment.id}`} text="add one" post_id={Number(comment.post_id)} parent_id={Number(comment.id)}/>?</span>
         </div>
     )
+
+    // Form to edit comment when edit mode is on
     const edit = (
         <form id={comment.id} onSubmit={(e: React.FormEvent<HTMLFormElement>) => changeComment(e, comment, "update")}>
             <textarea className="form-control m-3" id="exampleFormControlTextarea1" rows={3} defaultValue={comment.body} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBody(e.target.value)}></textarea>
@@ -89,6 +99,8 @@ const Comment = ({ comment, author, pinned }) => {
             </div>
         </form>
     )
+
+    // Link to trigger edit mode
     const normal = (
         <div>
             <p className="lead">{comment.body}</p>
@@ -97,7 +109,8 @@ const Comment = ({ comment, author, pinned }) => {
             </div>
         </div>
     )
-
+    
+    // Add/Remove Pin
     const changePin = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>| React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         const pinned_comment = pinned == comment.id
@@ -117,6 +130,8 @@ const Comment = ({ comment, author, pinned }) => {
         .catch((error) => console.log(error.message));
 
     }
+
+    // Pin button in comment (filled when pinned, empty when not)
     const pin = () => {
         if (pinned == comment.id) {
             return (
@@ -136,20 +151,24 @@ const Comment = ({ comment, author, pinned }) => {
             )
         }
     }
-
+    
     return (
         <div className="border rounded-4 shadow p-4 d-flex flex-column">
+            {/* Author & Pin section */}
             <div className="row">
                 <div className="col px-3 d-flex align-items-center">
                     <p className="fw-bold align-self-center">{comment.anonymous ? "Anonymous" : comment.author} said ...</p> 
                 </div>
                 {author == name && comment.parent_id == 0 ? pin() : null}
             </div>
+            {/* Body & Edit Comment section */}
             <div className="row d-flex justify-content-start">
                 {comment.author == name && editComment? edit : comment.author == name && !editComment ? normal : <p className="lead">{comment.body}</p>}
             </div>
+            {/* Delete button */}
             {comment.author == name ? deleteButton(comment) : null}
             <hr className="border-1"></hr>
+            {/* Replies section (List/Prompt) */}
             {replies.length > 0 ? allReplies : noReplies}
         </div>
     );

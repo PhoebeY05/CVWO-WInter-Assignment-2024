@@ -11,6 +11,7 @@ const NewPost = () => {
   const [name, setName] = useState(null);
   const [anonymous, setAnonymous] = useState(false);
 
+  // Get username of current user
   useEffect(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username))
   }, [])
@@ -33,6 +34,7 @@ const NewPost = () => {
     event.preventDefault();
     const url = "/api/v1/posts/create";
 
+    // Checking if all fields are filled
     if (title.length == 0 || content.length == 0) {
       alert("Please fill in all fields!");
       return;
@@ -42,7 +44,7 @@ const NewPost = () => {
       navigate("/login");
       return;
     }
-    console.log(anonymous)
+
     const body = {
       title,
       "author": name,

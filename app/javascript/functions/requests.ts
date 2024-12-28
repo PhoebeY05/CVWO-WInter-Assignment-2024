@@ -15,6 +15,7 @@ const update = (url: string, token: string, body:any) => fetch(url, {
                     },
                     body: JSON.stringify(body),
                     });
+// Function to send POST request
 const create = (url: string, token: string, body:any) => fetch(url, {
                     method: "POST",
                     headers: {

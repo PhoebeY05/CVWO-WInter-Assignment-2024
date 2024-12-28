@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { del } from "../functions/requests"
 import { getUsername } from "../functions/username"
+import { addHtmlEntities } from "../functions/prep"
 
 const PostList = () => {
   const navigate = useNavigate();
@@ -15,10 +16,12 @@ const PostList = () => {
   const [ascending, setAscending] = useState<boolean>(false);
   const char_limit = 150;
 
+  // Get username of current user
   useEffect(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username))
   }, [])
-
+  
+  // Function to load all posts into respective variables
   const loadPosts = (res: { title: string, author: string, category: string, content: string, id: number, pinned: number, upvote: number, downvote: number, anonymous: boolean }[]) => {
     setPosts(res);
     setFiltered(res);
@@ -61,13 +64,11 @@ const PostList = () => {
   }, [posts])
 
   // Function to fit content to card height
-  const addHtmlEntities = (str: string) => {
-    return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
-  };
   const content = (post_content:string) => {
     return addHtmlEntities(post_content.substring(0, char_limit));
   }
 
+  // Delete Post functionality & component
   const deletePost = (event:  React.MouseEvent<HTMLButtonElement, MouseEvent>, id:number) => {
     event.preventDefault()
     const url = `/api/v1/destroy/${id}`;
@@ -95,6 +96,7 @@ const PostList = () => {
     )
   }
 
+  // Edit Post component
   const editButton = (id:number) => {
     return (
         <Link to={`/posts/${id}/edit`} className="btn btn-outline-warning card-link">
@@ -102,7 +104,7 @@ const PostList = () => {
         </Link>
     )
   }
-  // Rendering posts
+  // Rendering list of posts
   const allPosts = filtered.map((post: any, index: number) => (
     <div key={String(index)} className="col-md-6 col-lg-4">
       <div className="card border-dark mb-4 h-100 shadow">
@@ -130,6 +132,7 @@ const PostList = () => {
     </div>
   ));
 
+  // Rendering prompt if there are no posts
   const noPosts = (
     <div className="vw-100 vh-50 d-flex align-items-center justify-content-center">
       <h4>
@@ -138,6 +141,12 @@ const PostList = () => {
     </div>
   );
 
+  // Changing variables' values to match input
+  const onChange = (event: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>, setFunction: Function) => {
+    setFunction(event.target.value);
+  };
+
+  // Loading categories as options in filter form
   const Categories = () => {
     if (categories.length > 0) {
       return (
@@ -148,16 +157,14 @@ const PostList = () => {
     }
   }
 
-  const onChange = (event: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>, setFunction: Function) => {
-    setFunction(event.target.value);
-  };
-
+  // Filtering variable that determines which posts are displayed
   const filterCategories = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const filtered_posts = category == "remove" ? posts : posts.filter((post: any) => post.category == category);
     setFiltered(filtered_posts);
   }
 
+  // Sorting variable that determines which posts are displayed
   const sortPosts = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const sorted_posts = [...filtered]
@@ -181,6 +188,8 @@ const PostList = () => {
     }
     setFiltered(sorted_posts)
   }
+
+  // Button to create new post
   const createButton = (
     <div className="col offset-md-3 d-flex flex-row justify-content-end mb-3">
         <Link to="/new_post" className="btn fs-5 btn-outline-dark border-3 shadow-lg rounded-3">
@@ -199,6 +208,7 @@ const PostList = () => {
           </p>
         </div>
       </section>
+      {/* List of posts */}
       <div className="pb-5">
         <main className="container">
           <div className="row d-flex flex-row justify-content-center">
@@ -224,6 +234,7 @@ const PostList = () => {
               </div>
             </form>
           </div>
+          {/* Filter & Sort components */}
           <div className="row d-flex flex-row justify-content-center mb-5">
             <form onSubmit={filterCategories} className="row gx-3 gy-2 align-items-center">
               <div className="col-11">
@@ -241,7 +252,6 @@ const PostList = () => {
           <div className="row">
             {name && posts.length > 0 ? createButton : ""}
           </div>
-          
           <div className="row">
             {posts.length > 0 ? <div className="row row-cols-1 row-cols-md-4 g-4">{allPosts}</div> : noPosts}
           </div>

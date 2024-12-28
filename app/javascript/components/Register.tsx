@@ -13,12 +13,13 @@ const Register = () => {
     setFunction(event.target.value);
   };
 
-  // Sending variables to backend to create a new post
+  // Sending variables to backend to create a new user
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const url_new_user = "/api/v1/users/create";
     const url_session = "/api/v1/sessions/create";
 
+    // Checking if all fields are filled & passwords match
     if (username.length == 0 || password.length == 0)
       return;
     if (password != passwordConfirmation) {
@@ -30,7 +31,8 @@ const Register = () => {
       username,
       password
     };
-
+    
+    // Action after receiving response from backend
     const destination = (response: any) => {
         if (response.message) {
           alert(response.message);

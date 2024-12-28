@@ -12,7 +12,7 @@ const Login = () => {
     setFunction(event.target.value);
   };
 
-  // Sending variables to backend to create a new post
+  // Sending variables to backend to check for existing user
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const url_user = `/api/v1/users/index`;
@@ -26,10 +26,12 @@ const Login = () => {
       password
     };
 
+    // Action after receiving response from backend
     const destination = (response: any) => {
       if (response.message) {
         alert(response.message);
       } else {
+        // Creating new session
         create(url_session, token, body)
           .then((response) => {navigate("/"); location.reload();})
           .catch((error) => console.log(error.message));
@@ -48,7 +50,7 @@ const Login = () => {
       .catch((error) => console.log(error.message));
   };
 
-  // Rendering form to fill in user input fields for a new post
+  // Rendering form to fill in user input fields to login to existing account
   return (
     <div className="container mt-5">
       <div className="row">
