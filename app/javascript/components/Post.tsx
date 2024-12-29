@@ -298,7 +298,7 @@ const Post = () => {
           <div className="col">
             <p className="mb-2 h3">Post Content: </p>
             <div
-              className="lead"
+              className="font-monospace"
               dangerouslySetInnerHTML={{
                 __html: `${postContent}`,
               }}

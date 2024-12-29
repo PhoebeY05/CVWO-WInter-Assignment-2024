@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { update } from "../functions/requests"
 import { getUsername } from "../functions/username"
+import { addHtmlEntities, stripHtmlEntities } from "../functions/prep"
 
 const EditPost = () => {
     const params = useParams();
@@ -39,21 +40,13 @@ const EditPost = () => {
             setTitle(res.title);
             setCategory_def(res.category);
             setCategory(res.category);
-            setContent_def(res.content);
+            setContent_def(addHtmlEntities(res.content));
             setContent(res.content);
             setUpvotes(res.upvote);
             setDownvotes(res.downvote);
         })
         .catch(() => navigate("/"));
     }, []);
-
-    // Accounting for HTML's behaviour
-    const stripHtmlEntities = (str: String) => {
-        return String(str)
-        .replace(/\n/g, "<br> <br>")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-    };
 
     // Changing variables' values to match input
     const onChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>, setFunction: Function) => {

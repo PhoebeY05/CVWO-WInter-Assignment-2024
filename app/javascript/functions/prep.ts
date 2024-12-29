@@ -3,4 +3,10 @@ const addHtmlEntities = (str: string) => {
     return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
 };
 
-export { addHtmlEntities }
+const stripHtmlEntities = (str: String) => {
+    return String(str)
+    .replace(/\n/g, "<br> <br>")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+};
+export { addHtmlEntities, stripHtmlEntities };

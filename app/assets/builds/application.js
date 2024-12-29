@@ -35344,6 +35344,14 @@ var getUsername = () => {
   });
 };
 
+// app/javascript/functions/prep.ts
+var addHtmlEntities = (str) => {
+  return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+};
+var stripHtmlEntities = (str) => {
+  return String(str).replace(/\n/g, "<br> <br>").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+};
+
 // app/javascript/components/PostList.tsx
 var PostList = () => {
   const navigate = useNavigate();
@@ -35388,9 +35396,6 @@ var PostList = () => {
       throw new Error("Network response was not ok.");
     }).then((res) => setCount(res)).catch(() => navigate("/"));
   }, [posts]);
-  const addHtmlEntities = (str) => {
-    return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
-  };
   const content = (post_content) => {
     return addHtmlEntities(post_content.substring(0, char_limit));
   };
@@ -35421,13 +35426,13 @@ var PostList = () => {
   };
   const allPosts = filtered.map((post, index) => /* @__PURE__ */ import_react.default.createElement("div", { key: String(index), className: "col-md-6 col-lg-4" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "card border-dark mb-4 h-100 shadow" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "card-header" }, /* @__PURE__ */ import_react.default.createElement("h5", { className: "card-title pt-2" }, post.title), /* @__PURE__ */ import_react.default.createElement("div", { className: "d-flex justify-content-between mt-2" }, /* @__PURE__ */ import_react.default.createElement("small", { className: "card-subtitle text-muted" }, /* @__PURE__ */ import_react.default.createElement("img", { width: "20", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAYVJREFUaEPtllGuAiEMRZmd6crUlenOdJpIMpkUem+HaTWBn/ciBc4pUGYpf96WP+cvUyB7B39hBy6llJc3EVkCAn1bweVvbVePSIbA/QuvJf2x/ij9cIsW6MFXaEoiUgCBpyWiBFrwkm25wE/lzEA7ESHQg6/nXS6zJmHymQHwbdIDEfg6UpMwK9OZAmy10eLTBJALuz3jrXgzwWaA4wgh8NtqI//Lo7ZvZvZlwGgBT7U59KCNFEAubKvabCWg8lkHjBJA4HvVhn7ARgow8LIuG9+9hkd3gIVh480ackSAhWHjTfgjVYiFYeMheK8AC8PGw/AeARaGjafgWQEWho2n4RkBFoaNd8GjAiwMG++GRwXeygqt5z4U3ivwM/BeAe3xC8888y20P0J7gTT4ETuQCu8VsKoG9T1vTWb1Ix9zWhVqzRsKP3oHwuFHCqTAowLWMUztR+5AKqC1+BSwMnR2P7IDTBk9g7fLOAXOSPluzrkDAUn2L4HcAf/sASOnQECSu0t8AG1ZazGSy339AAAAAElFTkSuQmCC" }), ": ", post.anonymous ? "Anonymous" : post.author), /* @__PURE__ */ import_react.default.createElement("small", { className: "card-subtitle text-muted" }, /* @__PURE__ */ import_react.default.createElement("img", { width: "20", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAZtJREFUaEPtWAFOwzAM9F4GvAx4GfAy2KFGiqwkZy+p24IjTa02z/H5rrHrm1x83S4evySAoxlMBs7MwLOIvIoIrp71KSLv9//hWq/V/n59jyT08UDwJWAE/6IArPZHAXx70t6w1clZ7e//AWAnls4wY2DWn5uB2Q0ZQK1Ck/0oKJODaldmz35PAA9lIBnon9UmyeUzcCUJeQszqwOz/tx1YHbD8FZidfO12h9lYHX7u9ofBeCVzCH2rL85JCjPpgnAk609bEcM7PLQVSDgH5+n7Tvc410a680KNvKduI4JAWJgMFoAQ4F4eiFrUopdz7cl+OKDgogG4AneBMIDgJ1YlvZX25QZEoLFfQ8gRjR6zkQLmSWgWlbMvhVcLym67ehKKZIBDWCkb5xIAFFWa1AWzgBjqGbzlAC0LLq63pCYAEdKyAPALLdIADqorq7vRU5n/xQPsda1PufLGL810u8m2sPAikp8aCFbAaA0aqwPMlVhGP3pZm7vdrpum8FIaRW+tvtm66BlwPobr2zC7RNAeMrVhslAMjCZgR/NQIkxpyQ+7QAAAABJRU5ErkJggg==" }), ": ", post.category || "Uncategorised"), /* @__PURE__ */ import_react.default.createElement("small", { className: "card-subtitle text-muted" }, /* @__PURE__ */ import_react.default.createElement("img", { width: "20", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAZpJREFUaEPtmeFuwyAMhN0nW/dkW5+s3ZNttRTUlBkOzLlVJPOrUgjcB3fETU5y8HY6uH5JgHfvYOQOnEXkS0R+NsjvCNgoABV/rQR/isiNDREF8GsIVfEKQW0RAGoVtY7V6BBsgJ74AnS5/6DlgQlgiVexH3fvayb2jQbBArBCq4LL+BroGoISahaAFdq9QAuQkgcGQMs6tc+tfssQqwCj4ov/Z/vDI3cFwCvGyoM71F4AFFq0crRQewFQaBEALdQeAK91aihKqGcBWOJpoZ4BYIsvEEuhHgVYDS3KhDvUowCroUUA7lCPAERZhxJqBPAq8e5Q9wBGanvLGmhRLDsiizUr195knon2JXRLlGfcZtHXA7BOBrRSUQDNcXsAraMTQbAtpKuvxZ75RgNNhsTq9doSaMzZ/l0NaLIEMFYgd2C/KGmhDPHj3dHIgfGvT1ooLZQWckXn6abZB9Ns/5eXErNLsnSQLN28KfXU97SHKQPA+79BId7+dlpFlM+p9QcMZKVunY9uLtcZOzA6V0i/BAhZ1olBD78Df9sqbTFsV3baAAAAAElFTkSuQmCC" }), ": ", post.upvote), /* @__PURE__ */ import_react.default.createElement("small", { className: "card-subtitle text-muted" }, /* @__PURE__ */ import_react.default.createElement("img", { width: "20", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAaVJREFUaEPtWUFuAzEIJD9rX5b2ZWleli5SHVkOGANjVRvhyx7iDTMDA3ZyoZOvy8nxUxH47wwiMvBBRFci4qdn/RDR9/EeP8MLQeAWAN8AM/jPMPpDAQSBRwZAFkMROOp/zIAlinf/NMFWsJXq8ALy7i8CVha8inr3VwYqA4MCVUK9INVGa5Alz2NvXULRc74lSuT0ykdu8d4wCxYJxA1iBwH13jALFr2o7CCgCjMLxiXEJLxrBwG+en5JQKxg/BLfd/ulfpmXqbDfHc8iwDGkUtpBwg1+xXBNJImE2hkCmdDK1RTY3PAHRgqQ/kWhIyp1vCWBVglwLCnFCBKh0mnkPQQ0Ehk/pMB7PNCXNcrUafBRAlpnWqrZiadCeLwl1DKRNXXYtGOHixLImBpSOlETjwJ4wXj3myMlk4HZkJM6Exx8yDSKJNakDk9aKwWIDHAMy9Qw0yJNvOIHntT3nSdaVAYaGanOR6KZyf1SUWgC2pBrgaHgkSYeldGuo3DB4F84OSp4jhpW83l+votAP6khf6dqjHYSWFYxs7EIZNRDvHv6DPwC/GVtMYS+tZ0AAAAASUVORK5CYII=" }), ": ", post.downvote), /* @__PURE__ */ import_react.default.createElement("small", { className: "card-subtitle text-muted" }, /* @__PURE__ */ import_react.default.createElement("img", { width: "20", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAl1JREFUaEPtmT1OBDEMhb0NFRUXAg4EVwAaLsCBgANBRUUDsjRBweOf58Qzy0pMA8sm8ftsx5mYA534czhx/fQPcOwIVkbgiojuBBD/rT0vyy+vy8/7CvhZgCa6F5rRxVAMNAwzAjAr2gJ8GAHJArCnZJpkPI6MTYFkAJ6JyEuVluMsgJ/2uYnmuW3+ZbAWDIECWOJZJBuTYhFP8xgvorzmdbRQBODlO+ylSIQDEjooAtA8D3kGEK0N0SLi2vMAtMUqvW4xpuxaAKlFBr3tTdPs835Y7TUUYMu0sUBk+qoaLIAvsWqUOudEdLbM+SSiD0MVOo6ncwFhiP5ZRUEDkOGLxF8sVeRmsfS0fH4XxtFx/TQZBQhATvIA2KOPRNTEN+MMcdspQcfJwMkorNJIi0BI3Vlhr74Z6dKvjY4rAZD575VaVBg6TvOFq0cTlwFAUwMdVwKQSSE2iG5OdFwPUbIHoiq0wTn2s6SsiNAmDqm3VCzWDku6tgegA2QHCO11YqXXqjDQMb4xBHQeWQBaFPbcC/DLpFfjtbvAHhCweM6Av3ahSV+gIgCGtO7DldGw7sbhazwC4EHwdzMg3p07FI+kUF9oop5Q5IzWUml9pahFE3YksgA83oOQABGwVYVTEY28ZhmJDpkR8a2/lOoxjQIwmPbWmu2bhn2f6LCsBGAPen3T3rMz3bxfTJUAmrOmPbxnBKSt1GaMhFrfbxWBXcSPlNHeEXIT83ebp4yMRGUEdvN6D1EFcBTxFSm0e8pUphCftsP/XRytOpUAVRqm1pnZA1OGqyb/A1R5cnSdb21TpDFhL4sxAAAAAElFTkSuQmCC" }), ": ", count[post.id]))), /* @__PURE__ */ import_react.default.createElement("div", { className: "card-body" }, post.content.length > char_limit ? /* @__PURE__ */ import_react.default.createElement("p", { className: "card-text" }, content(post.content), "... ", /* @__PURE__ */ import_react.default.createElement("a", { href: `/posts/${post.id}`, className: "fst-italic link-dark" }, "Read more")) : /* @__PURE__ */ import_react.default.createElement("p", { className: "card-text" }, content(post.content))), /* @__PURE__ */ import_react.default.createElement("div", { className: "card-footer d-flex justify-content-center bg-body border-0" }, /* @__PURE__ */ import_react.default.createElement(Link, { to: `/posts/${post.id}`, className: "btn btn-outline-primary card-link" }, "View Post"), post.author == name ? deleteButton(post.id) : "", post.author == name ? editButton(post.id) : ""))));
   const noPosts = /* @__PURE__ */ import_react.default.createElement("div", { className: "vw-100 vh-50 d-flex align-items-center justify-content-center" }, /* @__PURE__ */ import_react.default.createElement("h4", null, "No posts yet. Why not ", /* @__PURE__ */ import_react.default.createElement(Link, { to: "/new_post" }, "create one"), "?"));
+  const onChange = (event, setFunction) => {
+    setFunction(event.target.value);
+  };
   const Categories = () => {
     if (categories.length > 0) {
       return categories.map((category2, index) => /* @__PURE__ */ import_react.default.createElement("option", { key: index, value: category2 }, category2 || "No Category"));
     }
-  };
-  const onChange = (event, setFunction) => {
-    setFunction(event.target.value);
   };
   const filterCategories = (event) => {
     event.preventDefault();
@@ -35468,7 +35473,6 @@ var import_react4 = __toESM(require_react());
 // app/javascript/components/NewComment.tsx
 var import_react2 = __toESM(require_react());
 var NewComment = ({ identifier, text, post_id, parent_id }) => {
-  console.log({ text, post_id, parent_id });
   const [anonymous, setAnonymous] = (0, import_react2.useState)(false);
   const [body, setBody] = (0, import_react2.useState)("");
   const [name, setName] = (0, import_react2.useState)(null);
@@ -35582,8 +35586,8 @@ var Comment = ({ comment, author, pinned }) => {
   ));
   const allReplies = replies.map((reply, index) => /* @__PURE__ */ import_react3.default.createElement("div", { key: index, className: "row" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "col" }, /* @__PURE__ */ import_react3.default.createElement("p", { className: "text-muted d-flex flex-row justify-content-center p-0" }, /* @__PURE__ */ import_react3.default.createElement(NewComment_default, { identifier: `reply_${comment.id}`, text: "add a reply", post_id: Number(comment.post_id), parent_id: Number(comment.id) }))), /* @__PURE__ */ import_react3.default.createElement(Comment, { comment: reply, author, pinned })));
   const noReplies = /* @__PURE__ */ import_react3.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react3.default.createElement("span", { className: "text-muted fs-6" }, "No replies yet. Why not ", /* @__PURE__ */ import_react3.default.createElement(NewComment_default, { identifier: `reply_${comment.id}`, text: "add one", post_id: Number(comment.post_id), parent_id: Number(comment.id) }), "?"));
-  const edit = /* @__PURE__ */ import_react3.default.createElement("form", { id: comment.id, onSubmit: (e) => changeComment(e, comment, "update") }, /* @__PURE__ */ import_react3.default.createElement("textarea", { className: "form-control m-3", id: "exampleFormControlTextarea1", rows: 3, defaultValue: comment.body, onChange: (e) => setBody(e.target.value) }), /* @__PURE__ */ import_react3.default.createElement("div", { className: "d-flex flex-row justify-content-end mb-2" }, /* @__PURE__ */ import_react3.default.createElement("button", { className: "btn btn-link border-primary border-3 border-opacity-50", type: "submit" }, "Edit Comment")));
-  const normal = /* @__PURE__ */ import_react3.default.createElement("div", null, /* @__PURE__ */ import_react3.default.createElement("p", { className: "lead" }, comment.body), /* @__PURE__ */ import_react3.default.createElement("div", { className: "d-flex flex-row justify-content-end mb-1" }, /* @__PURE__ */ import_react3.default.createElement("button", { className: "btn btn-link", onClick: () => setEditComment(true) }, "Edit Comment")));
+  const edit = /* @__PURE__ */ import_react3.default.createElement("form", { id: comment.id, onSubmit: (e) => changeComment(e, comment, "update") }, /* @__PURE__ */ import_react3.default.createElement("textarea", { className: "form-control m-3 font-monospace", id: "exampleFormControlTextarea1", rows: 3, defaultValue: comment.body, onChange: (e) => setBody(e.target.value) }), /* @__PURE__ */ import_react3.default.createElement("div", { className: "d-flex flex-row justify-content-end mb-2" }, /* @__PURE__ */ import_react3.default.createElement("button", { className: "btn btn-link border-primary border-3 border-opacity-50 text-decoration-none", type: "submit" }, "Edit Comment")));
+  const normal = /* @__PURE__ */ import_react3.default.createElement("div", null, /* @__PURE__ */ import_react3.default.createElement("p", { className: "font-monospace" }, comment.body), /* @__PURE__ */ import_react3.default.createElement("div", { className: "d-flex flex-row justify-content-end mb-1" }, /* @__PURE__ */ import_react3.default.createElement("button", { className: "btn btn-link text-decoration-none", onClick: () => setEditComment(true) }, "Edit Comment")));
   const changePin = (event) => {
     event.preventDefault();
     const pinned_comment = pinned == comment.id;
@@ -35606,7 +35610,7 @@ var Comment = ({ comment, author, pinned }) => {
       return /* @__PURE__ */ import_react3.default.createElement("div", { className: "col px-3 d-flex justify-content-end" }, /* @__PURE__ */ import_react3.default.createElement("form", { onSubmit: changePin, className: "m-0 pt-0" }, /* @__PURE__ */ import_react3.default.createElement("button", { className: "btn fs-4", type: "submit" }, /* @__PURE__ */ import_react3.default.createElement("img", { width: "50", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAYZJREFUaEPtmFEOAiEMRLsnU0+mnkxvptawCSHgzrSAu0n3y49S5rUFWhc5+LccXL8EwL8z6MnATUSuHQCeycddRNbfsFsLwFlEHvAOnCGth16QxCvEiE+zoJmFv70BqHBKE2WcwvIqwmPxkbtw+bNs7tqwUhsufwHA1uweMwDfGKAhVRWUceMQg7pgM0oTZZwk6CM26h3Ql/gCoxrrV8VrC9EbQsXT7YQlA2uAXNffJwje9V8dAZDVKxuMyECUkLOpixLylFBtnPQeYnqYsQLUxNMvaGOyoyHYqLUGeX3+2YG85YuCYABawzy1YXHw3QFhAGpNnEf8ylKDgP0yAOW1B28CdJfmS8EDwKwFGGzNHSOizAAiymMDaYOMJk1iJSykDTKaMImV4uF3hQEYNYnVxMOTGQPA1nOXZm1r0wD4EaHIwFb5WLtRxK/aRAaQSI08xHl/A9/riOjcZhaAZV6AWEYCqADNwon9vxNSnoxmAGj5sNMazDAaABZiNQwAa+R6rTt8Bt5AwVAx/JQL5QAAAABJRU5ErkJggg==" }))));
     }
   };
-  return /* @__PURE__ */ import_react3.default.createElement("div", { className: "border rounded-4 shadow p-4 d-flex flex-column" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "col px-3 d-flex align-items-center" }, /* @__PURE__ */ import_react3.default.createElement("p", { className: "fw-bold align-self-center" }, comment.anonymous ? "Anonymous" : comment.author, " said ...")), author == name && comment.parent_id == 0 ? pin() : null), /* @__PURE__ */ import_react3.default.createElement("div", { className: "row d-flex justify-content-start" }, comment.author == name && editComment ? edit : comment.author == name && !editComment ? normal : /* @__PURE__ */ import_react3.default.createElement("p", { className: "lead" }, comment.body)), comment.author == name ? deleteButton(comment) : null, /* @__PURE__ */ import_react3.default.createElement("hr", { className: "border-1" }), replies.length > 0 ? allReplies : noReplies);
+  return /* @__PURE__ */ import_react3.default.createElement("div", { className: "border rounded-4 shadow p-4 d-flex flex-column" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "col px-3 d-flex align-items-center" }, /* @__PURE__ */ import_react3.default.createElement("p", { className: "fw-bold align-self-center lead" }, comment.anonymous ? "Anonymous" : comment.author, " said ...")), author == name && comment.parent_id == 0 ? pin() : null), /* @__PURE__ */ import_react3.default.createElement("div", { className: "row d-flex justify-content-start" }, comment.author == name && editComment ? edit : comment.author == name && !editComment ? normal : /* @__PURE__ */ import_react3.default.createElement("p", { className: "" }, comment.body)), comment.author == name ? deleteButton(comment) : null, /* @__PURE__ */ import_react3.default.createElement("hr", { className: "border-1" }), replies.length > 0 ? allReplies : noReplies);
 };
 var Comment_default = Comment;
 
@@ -35626,12 +35630,10 @@ var Post = () => {
     anonymous: false
   });
   const [comments, setComments] = (0, import_react4.useState)([]);
-  const [body, setBody] = (0, import_react4.useState)("");
   const [upvoted, setUpvoted] = (0, import_react4.useState)(false);
   const [downvoted, setDownvoted] = (0, import_react4.useState)(false);
   const [starred, setStarred] = (0, import_react4.useState)(false);
   const [name, setName] = (0, import_react4.useState)(null);
-  const [anonymous, setAnonymous] = (0, import_react4.useState)(false);
   (0, import_react4.useEffect)(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username));
   }, [params.id]);
@@ -35668,9 +35670,6 @@ var Post = () => {
       }
     }).catch(() => navigate("/"));
   }, [params.id]);
-  const addHtmlEntities = (str) => {
-    return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
-  };
   const postContent = addHtmlEntities(post.content);
   const changePost = (event, action, change = "upvote", direction = "plus") => {
     event.preventDefault();
@@ -35688,7 +35687,6 @@ var Post = () => {
       const field_body = {
         username: name,
         post_id: params.id,
-        starred,
         upvoted: change == "upvote" ? !upvoted : upvoted,
         downvoted: change == "downvote" ? !downvoted : downvoted
       };
@@ -35762,7 +35760,7 @@ var Post = () => {
   return /* @__PURE__ */ import_react4.default.createElement("div", { className: "" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "hero position-relative d-flex align-items-center justify-content-center" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "overlay bg-dark position-absolute" }), /* @__PURE__ */ import_react4.default.createElement("h1", { className: "display-4 position-relative mt-4" }, post.title)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "container py-4" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-flex justify-content-center border border-3 border-black pt-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead" }, "Author: ", post.anonymous ? "Anonymous" : post.author)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead" }, "Category: ", post.category)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-inline-flex flex-row" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-8 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead mb-0" }, "Upvotes: ", post.upvote)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-2 pt-1 d-flex justify-content-center" }, upVote()))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row d-inline-flex flex-row" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-8 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead mb-0" }, "Downvotes: ", post.downvote)), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col-2 pt-1 d-flex justify-content-center" }, downVote()))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-2" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-4 pt-3" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "lead mb-0" }, "Starred: ")), /* @__PURE__ */ import_react4.default.createElement("div", { className: "col col-sm-4 pt-2" }, star())))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "row p-4 border border-3 border-top-0 border-black" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "col" }, /* @__PURE__ */ import_react4.default.createElement("p", { className: "mb-2 h3" }, "Post Content: "), /* @__PURE__ */ import_react4.default.createElement(
     "div",
     {
-      className: "lead",
+      className: "font-monospace",
       dangerouslySetInnerHTML: {
         __html: `${postContent}`
       }
@@ -35783,9 +35781,6 @@ var NewPost = () => {
   (0, import_react5.useEffect)(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username));
   }, []);
-  const stripHtmlEntities = (str) => {
-    return String(str).replace(/\n/g, "<br> <br>").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  };
   const onChange = (event, setFunction) => {
     setFunction(event.target.value);
   };
@@ -35801,7 +35796,6 @@ var NewPost = () => {
       navigate("/login");
       return;
     }
-    console.log(anonymous);
     const body = {
       title,
       "author": name,
@@ -35878,9 +35872,9 @@ var Profile = () => {
   const [parent, setParent] = (0, import_react6.useState)([]);
   const char_limit = 100;
   const [name, setName] = (0, import_react6.useState)("");
-  const addHtmlEntities = (str) => {
-    return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
-  };
+  (0, import_react6.useEffect)(() => {
+    getUsername().then((res) => res.message == "User not found" ? setName(null) : setName(res.username));
+  }, []);
   const content = (index) => {
     const result_content = addHtmlEntities(posts[index].content);
     if (result_content.length > char_limit) {
@@ -35891,9 +35885,6 @@ var Profile = () => {
     }
   };
   const date_created = (date) => date.substring(0, 10);
-  (0, import_react6.useEffect)(() => {
-    getUsername().then((res) => res.message == "User not found" ? setName(null) : setName(res.username));
-  }, []);
   (0, import_react6.useEffect)(() => {
     if (!name) return;
     const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
@@ -35926,7 +35917,7 @@ var Profile = () => {
       }
     }).catch((error2) => console.log(error2.message));
   };
-  return /* @__PURE__ */ import_react6.default.createElement("div", { className: "container mt-4" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "row d-flex flex-row" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "col-8" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion", id: "accordionExample" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-item" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "accordion-header" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "accordion-button collapsed", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#collapseOne", "aria-expanded": "false", "aria-controls": "collapseOne" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "h2" }, "My Posts: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-secondary" }, posts.length)))), /* @__PURE__ */ import_react6.default.createElement("div", { id: "collapseOne", className: "accordion-collapse collapse" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-body" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "list-group mt-4" }, posts.length > 0 ? myPosts : "")))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-item" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "accordion-header" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "accordion-button collapsed", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#collapseTwo", "aria-expanded": "false", "aria-controls": "collapseTwo" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "h2" }, "My Comments: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-secondary" }, comments.length)))), /* @__PURE__ */ import_react6.default.createElement("div", { id: "collapseTwo", className: "accordion-collapse collapse" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-body" }, /* @__PURE__ */ import_react6.default.createElement("table", { className: "table table-bordered border-primary shadow" }, /* @__PURE__ */ import_react6.default.createElement("thead", null, /* @__PURE__ */ import_react6.default.createElement("tr", null, /* @__PURE__ */ import_react6.default.createElement("th", { scope: "col" }, "Comment"), /* @__PURE__ */ import_react6.default.createElement("th", { scope: "col" }, "Post"))), /* @__PURE__ */ import_react6.default.createElement("tbody", null, comments.length > 0 ? myComments : ""))))))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "col-4 d-flex flex-column" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "row-" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion", id: "accordionExample2" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-item" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "accordion-header" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "accordion-button collapsed", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#collapseThree", "aria-expanded": "false", "aria-controls": "collapseThree" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "h2" }, "Starred Posts: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-secondary" }, stars.length)))), /* @__PURE__ */ import_react6.default.createElement("div", { id: "collapseThree", className: "accordion-collapse collapse" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-body" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "card" }, /* @__PURE__ */ import_react6.default.createElement("ul", { className: "list-group list-group-flush" }, stars.length > 0 ? myStars : ""))))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-item" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "accordion-header" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "accordion-button collapsed", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#collapseFour", "aria-expanded": "false", "aria-controls": "collapseFour" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "h2" }, "My Upvotes: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-secondary" }, upvotes.length)))), /* @__PURE__ */ import_react6.default.createElement("div", { id: "collapseFour", className: "accordion-collapse collapse" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-body" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "card" }, /* @__PURE__ */ import_react6.default.createElement("ul", { className: "list-group list-group-flush" }, upvotes.length > 0 ? myUpvotes : ""))))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-item" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "accordion-header" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "accordion-button collapsed", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#collapseFive", "aria-expanded": "false", "aria-controls": "collapseFour" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "h2" }, "My Downvotes: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-secondary" }, downvotes.length)))), /* @__PURE__ */ import_react6.default.createElement("div", { id: "collapseFive", className: "accordion-collapse collapse" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-body" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "card" }, /* @__PURE__ */ import_react6.default.createElement("ul", { className: "list-group list-group-flush" }, downvotes.length > 0 ? myDownvotes : ""))))))))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react6.default.createElement("form", { className: "col", onSubmit: logout }, /* @__PURE__ */ import_react6.default.createElement("button", { type: "submit", className: "btn btn-outline-danger btn-lg my-3" }, "Logout")), /* @__PURE__ */ import_react6.default.createElement("form", { className: "col d-flex justify-content-end", onSubmit: deleteAccount }, /* @__PURE__ */ import_react6.default.createElement("button", { type: "submit", className: "btn btn-outline-danger btn-lg my-3" }, "Delete Account"))));
+  return /* @__PURE__ */ import_react6.default.createElement("div", { className: "container mt-4" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "row d-flex flex-row" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "col-8" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion", id: "accordionExample" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-item" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "accordion-header" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "accordion-button collapsed", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#collapseOne", "aria-expanded": "false", "aria-controls": "collapseOne" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "font-monospace fs-4" }, "My Posts: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-secondary" }, posts.length)))), /* @__PURE__ */ import_react6.default.createElement("div", { id: "collapseOne", className: "accordion-collapse collapse" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-body" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "list-group mt-4" }, posts.length > 0 ? myPosts : "")))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-item" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "accordion-header" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "accordion-button collapsed", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#collapseTwo", "aria-expanded": "false", "aria-controls": "collapseTwo" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "font-monospace fs-4" }, "My Comments: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-secondary" }, comments.length)))), /* @__PURE__ */ import_react6.default.createElement("div", { id: "collapseTwo", className: "accordion-collapse collapse" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-body" }, /* @__PURE__ */ import_react6.default.createElement("table", { className: "table table-bordered border-primary shadow" }, /* @__PURE__ */ import_react6.default.createElement("thead", null, /* @__PURE__ */ import_react6.default.createElement("tr", null, /* @__PURE__ */ import_react6.default.createElement("th", { scope: "col" }, "Comment"), /* @__PURE__ */ import_react6.default.createElement("th", { scope: "col" }, "Post"))), /* @__PURE__ */ import_react6.default.createElement("tbody", null, comments.length > 0 ? myComments : ""))))))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "col-4 d-flex flex-column" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "row-" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion", id: "accordionExample2" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-item" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "accordion-header" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "accordion-button collapsed", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#collapseThree", "aria-expanded": "false", "aria-controls": "collapseThree" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "font-monospace fs-4" }, "Starred Posts: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-secondary" }, stars.length)))), /* @__PURE__ */ import_react6.default.createElement("div", { id: "collapseThree", className: "accordion-collapse collapse" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-body" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "card" }, /* @__PURE__ */ import_react6.default.createElement("ul", { className: "list-group list-group-flush" }, stars.length > 0 ? myStars : ""))))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-item" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "accordion-header" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "accordion-button collapsed", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#collapseFour", "aria-expanded": "false", "aria-controls": "collapseFour" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "font-monospace fs-4" }, "My Upvotes: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-secondary" }, upvotes.length)))), /* @__PURE__ */ import_react6.default.createElement("div", { id: "collapseFour", className: "accordion-collapse collapse" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-body" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "card" }, /* @__PURE__ */ import_react6.default.createElement("ul", { className: "list-group list-group-flush" }, upvotes.length > 0 ? myUpvotes : ""))))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-item" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "accordion-header" }, /* @__PURE__ */ import_react6.default.createElement("button", { className: "accordion-button collapsed", type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#collapseFive", "aria-expanded": "false", "aria-controls": "collapseFour" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "font-monospace fs-4" }, "My Downvotes: ", /* @__PURE__ */ import_react6.default.createElement("span", { className: "badge rounded-pill text-bg-secondary" }, downvotes.length)))), /* @__PURE__ */ import_react6.default.createElement("div", { id: "collapseFive", className: "accordion-collapse collapse" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "accordion-body" }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "card" }, /* @__PURE__ */ import_react6.default.createElement("ul", { className: "list-group list-group-flush" }, downvotes.length > 0 ? myDownvotes : ""))))))))), /* @__PURE__ */ import_react6.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react6.default.createElement("form", { className: "col", onSubmit: logout }, /* @__PURE__ */ import_react6.default.createElement("button", { type: "submit", className: "btn btn-outline-danger btn-lg my-3" }, "Logout")), /* @__PURE__ */ import_react6.default.createElement("form", { className: "col d-flex justify-content-end", onSubmit: deleteAccount }, /* @__PURE__ */ import_react6.default.createElement("button", { type: "submit", className: "btn btn-outline-danger btn-lg my-3" }, "Delete Account"))));
 };
 var Profile_default = Profile;
 
@@ -36079,15 +36070,11 @@ var Register_default = Register;
 var import_react9 = __toESM(require_react());
 var Results = () => {
   const results = sessionStorage.getItem("search") ? JSON.parse(sessionStorage.getItem("search")) : [];
-  console.log(results);
   const by_title = results.title ? results.title : [];
   const by_content = results.content ? results.content : [];
   const by_user = results.user ? results.user : [];
   const by_category = results.category ? results.category : [];
   const char_limit = 50;
-  const addHtmlEntities = (str) => {
-    return String(str).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
-  };
   const content = (array, index) => {
     const result_content = addHtmlEntities(array[index].content);
     if (result_content.length > char_limit) {
@@ -36113,6 +36100,7 @@ var import_react10 = __toESM(require_react());
 var EditPost = () => {
   const params = useParams();
   const navigate = useNavigate();
+  const [name, setName] = (0, import_react10.useState)(null);
   const [title, setTitle] = (0, import_react10.useState)("");
   const [category, setCategory] = (0, import_react10.useState)("");
   const [content, setContent] = (0, import_react10.useState)("");
@@ -36121,7 +36109,6 @@ var EditPost = () => {
   const [content_def, setContent_def] = (0, import_react10.useState)("");
   const [upvotes, setUpvotes] = (0, import_react10.useState)(0);
   const [downvotes, setDownvotes] = (0, import_react10.useState)(0);
-  const [name, setName] = (0, import_react10.useState)(null);
   (0, import_react10.useEffect)(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username));
   }, []);
@@ -36137,15 +36124,12 @@ var EditPost = () => {
       setTitle(res.title);
       setCategory_def(res.category);
       setCategory(res.category);
-      setContent_def(res.content);
+      setContent_def(addHtmlEntities(res.content));
       setContent(res.content);
       setUpvotes(res.upvote);
       setDownvotes(res.downvote);
     }).catch(() => navigate("/"));
   }, []);
-  const stripHtmlEntities = (str) => {
-    return String(str).replace(/\n/g, "<br> <br>").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  };
   const onChange = (event, setFunction) => {
     setFunction(event.target.value);
   };
@@ -36221,16 +36205,16 @@ var Navbar = () => {
   (0, import_react13.useEffect)(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username));
   }, []);
-  const destination = (response) => {
-    sessionStorage.setItem("search", JSON.stringify(response));
-    navigate("/results");
-    location.reload();
-  };
   const searchPosts = (event) => {
     event.preventDefault();
     const url = "/api/v1/search/posts";
     const request_body = {
       query: body
+    };
+    const destination = (response) => {
+      sessionStorage.setItem("search", JSON.stringify(response));
+      navigate("/results");
+      location.reload();
     };
     const token = document.getElementsByName("csrf-token")[0].getAttribute("content");
     create(url, token, request_body).then((response) => {
@@ -36240,10 +36224,10 @@ var Navbar = () => {
       throw new Error("Network response was not ok.");
     }).then((response) => destination(response)).catch((error2) => console.log(error2.message));
   };
-  const notLoggedIn = /* @__PURE__ */ import_react13.default.createElement(import_react13.default.Fragment, null, /* @__PURE__ */ import_react13.default.createElement("li", { className: "nav-item mx-2" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "fs-5 btn btn-outline-dark border-0", "aria-current": "page", href: "/login" }, "Login")), /* @__PURE__ */ import_react13.default.createElement("li", { className: "nav-item mx-2" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "fs-5 btn btn-outline-dark border-0", "aria-current": "page", href: "/register" }, "Register")));
   const logoutButton = () => {
     return /* @__PURE__ */ import_react13.default.createElement("ul", { className: "nav mb-2 mb-lg-0" }, /* @__PURE__ */ import_react13.default.createElement("li", { className: "nav-item mx-2" }, /* @__PURE__ */ import_react13.default.createElement("form", { onSubmit: logout }, /* @__PURE__ */ import_react13.default.createElement("button", { type: "submit", className: "btn btn-danger fs-6" }, "Logout"))));
   };
+  const notLoggedIn = /* @__PURE__ */ import_react13.default.createElement(import_react13.default.Fragment, null, /* @__PURE__ */ import_react13.default.createElement("li", { className: "nav-item mx-2" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "fs-5 btn btn-outline-dark border-0", "aria-current": "page", href: "/login" }, "Login")), /* @__PURE__ */ import_react13.default.createElement("li", { className: "nav-item mx-2" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "fs-5 btn btn-outline-dark border-0", "aria-current": "page", href: "/register" }, "Register")));
   const loggedIn = /* @__PURE__ */ import_react13.default.createElement(import_react13.default.Fragment, null, /* @__PURE__ */ import_react13.default.createElement("li", { className: "nav-item mx-2" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "fs-5 btn btn-outline-dark border-0", "aria-current": "page", href: "/profile" }, "Profile")), /* @__PURE__ */ import_react13.default.createElement("li", { className: "nav-item mx-2" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "fs-5 btn btn-outline-dark border-0", "aria-current": "page", href: "/new_post" }, "Create")));
   return /* @__PURE__ */ import_react13.default.createElement("nav", { className: "navbar", style: { backgroundColor: "#e3f2fd" } }, /* @__PURE__ */ import_react13.default.createElement("div", { className: "container-fluid" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "navbar-brand", href: "/" }, /* @__PURE__ */ import_react13.default.createElement("img", { src: "/images/logo.png", alt: "Logo", className: "d-inline-block align-text-top mx-2" }), "Forum"), /* @__PURE__ */ import_react13.default.createElement("ul", { className: "nav me-auto mb-2 mb-lg-0" }, /* @__PURE__ */ import_react13.default.createElement("li", { className: "nav-item mx-2" }, /* @__PURE__ */ import_react13.default.createElement("a", { className: "fs-5 btn btn-outline-dark border-0", "aria-current": "page", href: "/" }, "Posts")), name == null ? notLoggedIn : loggedIn), /* @__PURE__ */ import_react13.default.createElement("form", { className: "d-flex w-25", role: "search", onSubmit: searchPosts }, /* @__PURE__ */ import_react13.default.createElement("input", { className: "form-control me-2", name: "query", id: "query", type: "search", placeholder: "Search Posts", "aria-label": "Search", onChange: (event) => setBody(event.target.value) }), /* @__PURE__ */ import_react13.default.createElement("button", { className: "btn btn-outline-primary", type: "submit" }, "Search")), name != null ? logoutButton() : ""));
 };

@@ -128,7 +128,7 @@ const Profile = () => {
               <div className="accordion-item">
                 <h2 className="accordion-header">
                   <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                    <span className="h2" >My Posts: <span className="badge rounded-pill text-bg-secondary">{posts.length}</span></span>
+                    <span className="font-monospace fs-4" >My Posts: <span className="badge rounded-pill text-bg-secondary">{posts.length}</span></span>
                   </button>
                 </h2>
                 <div id="collapseOne" className="accordion-collapse collapse">
@@ -142,7 +142,7 @@ const Profile = () => {
               <div className="accordion-item">
                 <h2 className="accordion-header">
                   <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    <span className="h2" >My Comments: <span className="badge rounded-pill text-bg-secondary">{comments.length}</span></span>
+                    <span className="font-monospace fs-4" >My Comments: <span className="badge rounded-pill text-bg-secondary">{comments.length}</span></span>
                   </button>
                 </h2>
                 <div id="collapseTwo" className="accordion-collapse collapse" >
@@ -169,7 +169,7 @@ const Profile = () => {
                 <div className="accordion-item">
                   <h2 className="accordion-header">
                     <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                      <span className="h2" >Starred Posts: <span className="badge rounded-pill text-bg-secondary">{stars.length}</span></span>
+                      <span className="font-monospace fs-4" >Starred Posts: <span className="badge rounded-pill text-bg-secondary">{stars.length}</span></span>
                     </button>
                   </h2>
                   <div id="collapseThree" className="accordion-collapse collapse">
@@ -185,7 +185,7 @@ const Profile = () => {
                 <div className="accordion-item">
                   <h2 className="accordion-header">
                     <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                      <span className="h2" >My Upvotes: <span className="badge rounded-pill text-bg-secondary">{upvotes.length}</span></span>
+                      <span className="font-monospace fs-4" >My Upvotes: <span className="badge rounded-pill text-bg-secondary">{upvotes.length}</span></span>
                     </button>
                   </h2>
                   <div id="collapseFour" className="accordion-collapse collapse">
@@ -201,7 +201,7 @@ const Profile = () => {
                 <div className="accordion-item">
                   <h2 className="accordion-header">
                     <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFour">
-                      <span className="h2" >My Downvotes: <span className="badge rounded-pill text-bg-secondary">{downvotes.length}</span></span>
+                      <span className="font-monospace fs-4" >My Downvotes: <span className="badge rounded-pill text-bg-secondary">{downvotes.length}</span></span>
                     </button>
                   </h2>
                   <div id="collapseFive" className="accordion-collapse collapse">

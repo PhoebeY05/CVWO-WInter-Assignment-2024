@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { create } from "../functions/requests"
 import { getUsername } from "../functions/username"
+import { stripHtmlEntities } from "../functions/prep"
 
 const NewPost = () => {
   const navigate = useNavigate();
@@ -15,14 +16,6 @@ const NewPost = () => {
   useEffect(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username))
   }, [])
-
-  // Accounting for HTML's behaviour
-  const stripHtmlEntities = (str: String) => {
-    return String(str)
-      .replace(/\n/g, "<br> <br>")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
-  };
 
   // Changing variables' values to match input
   const onChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>, setFunction: Function) => {

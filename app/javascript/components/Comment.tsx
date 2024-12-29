@@ -93,9 +93,9 @@ const Comment = ({ comment, author, pinned }) => {
     // Form to edit comment when edit mode is on
     const edit = (
         <form id={comment.id} onSubmit={(e: React.FormEvent<HTMLFormElement>) => changeComment(e, comment, "update")}>
-            <textarea className="form-control m-3" id="exampleFormControlTextarea1" rows={3} defaultValue={comment.body} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBody(e.target.value)}></textarea>
+            <textarea className="form-control m-3 font-monospace" id="exampleFormControlTextarea1" rows={3} defaultValue={comment.body} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBody(e.target.value)}></textarea>
             <div className="d-flex flex-row justify-content-end mb-2">
-                <button className="btn btn-link border-primary border-3 border-opacity-50"  type="submit">Edit Comment</button>
+                <button className="btn btn-link border-primary border-3 border-opacity-50 text-decoration-none"  type="submit">Edit Comment</button>
             </div>
         </form>
     )
@@ -103,9 +103,9 @@ const Comment = ({ comment, author, pinned }) => {
     // Link to trigger edit mode
     const normal = (
         <div>
-            <p className="lead">{comment.body}</p>
+            <p className="font-monospace">{comment.body}</p>
             <div className="d-flex flex-row justify-content-end mb-1">
-                <button className="btn btn-link" onClick={() => setEditComment(true)}>Edit Comment</button>
+                <button className="btn btn-link text-decoration-none" onClick={() => setEditComment(true)}>Edit Comment</button>
             </div>
         </div>
     )
@@ -157,13 +157,13 @@ const Comment = ({ comment, author, pinned }) => {
             {/* Author & Pin section */}
             <div className="row">
                 <div className="col px-3 d-flex align-items-center">
-                    <p className="fw-bold align-self-center">{comment.anonymous ? "Anonymous" : comment.author} said ...</p> 
+                    <p className="fw-bold align-self-center lead">{comment.anonymous ? "Anonymous" : comment.author} said ...</p> 
                 </div>
                 {author == name && comment.parent_id == 0 ? pin() : null}
             </div>
             {/* Body & Edit Comment section */}
             <div className="row d-flex justify-content-start">
-                {comment.author == name && editComment? edit : comment.author == name && !editComment ? normal : <p className="lead">{comment.body}</p>}
+                {comment.author == name && editComment? edit : comment.author == name && !editComment ? normal : <p className="">{comment.body}</p>}
             </div>
             {/* Delete button */}
             {comment.author == name ? deleteButton(comment) : null}
