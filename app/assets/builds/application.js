@@ -35542,7 +35542,6 @@ var Comment = ({ comment, author, pinned }) => {
   const [body, setBody] = (0, import_react3.useState)("");
   const [editComment, setEditComment] = (0, import_react3.useState)(false);
   const [name, setName] = (0, import_react3.useState)(null);
-  const [anonymous, setAnonymous] = (0, import_react3.useState)(false);
   (0, import_react3.useEffect)(() => {
     getUsername().then((res) => res.message ? setName(null) : setName(res.username));
   }, [comment.id]);

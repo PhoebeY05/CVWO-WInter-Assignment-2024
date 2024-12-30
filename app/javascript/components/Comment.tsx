@@ -11,7 +11,6 @@ const Comment = ({ comment, author, pinned }) => {
     const [body, setBody] = useState("");
     const[editComment, setEditComment] = useState(false);
     const [name, setName] = useState(null);
-    const [anonymous, setAnonymous] = useState(false);
 
     // Get username of current user
     useEffect(() => {

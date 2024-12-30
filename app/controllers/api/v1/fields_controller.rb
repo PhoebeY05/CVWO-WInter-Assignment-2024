@@ -1,4 +1,5 @@
 class Api::V1::FieldsController < ApplicationController
+  # GET /api/v1/fields/index
   def index
     @starred = Field.where({ username: params[:username], starred: true }).select(:post_id)
     @starred = Post.where(id: @starred)
@@ -9,6 +10,7 @@ class Api::V1::FieldsController < ApplicationController
     render json: { starred: @starred, upvoted: @upvoted, downvoted: @downvoted }
   end
 
+  # POST /api/v1/fields/create
   def create
     @field = Field.find_by(username: params[:username], post_id: params[:post_id])
     if @field
@@ -23,11 +25,14 @@ class Api::V1::FieldsController < ApplicationController
       end
     end
   end
+
+  # POST /api/v1/fields/destroy
   def destroy
     Field.where(username: params[:username], post_id: params[:post_id]).destroy_all
-    render json: { message: "Unfieldred!" }
+    render json: { message: "Field deleted!" }
   end
 
+  # GET /api/v1/fields/:id
   def post
     @user = User.find_by(id: session[:user_id])
     if @user.nil?

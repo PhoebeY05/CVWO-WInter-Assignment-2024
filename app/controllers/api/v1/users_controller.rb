@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :set_user, only: %i[ update]
 
+  # GET /api/v1/users/index
   def index
     @user = User.find_by(username: params[:username])
     if @user && @user.authenticate(params[:password])
@@ -10,6 +10,7 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  # POST /api/v1/users/create
   def create
     @user = User.new(user_params)
     if @user.save
@@ -20,7 +21,7 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-
+  # GET /api/v1/users/show
   def show
     @user = User.find_by(id: session[:user_id])
     if @user.nil?
@@ -30,11 +31,7 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-  def update
-    @user.update(user_params)
-    render json: @user
-  end
-
+  # DELETE /api/v1/users/destroy
   def destroy
     @user = User.find(session[:user_id])
     @user.destroy!
@@ -42,10 +39,6 @@ class Api::V1::UsersController < ApplicationController
   end
 
   private
-  def set_user
-    @user = User.find(params[:username])
-  end
-
   def user_params
     params.permit(:username, :password)
   end

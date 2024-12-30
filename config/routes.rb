@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
+      # Routes for posts_controller
       get "posts/index"
       post "posts/create"
       get "/show/:id", to: "posts#show"
@@ -8,6 +9,7 @@ Rails.application.routes.draw do
       put "/update/:id", to: "posts#update"
       post "/update/:id", to: "posts#patch"
 
+      # Routes for comments_controller
       get "/index/:id", to: "comments#index"
       post "comments/create"
       get "/comments/show/:id", to: "comments#show"
@@ -16,20 +18,23 @@ Rails.application.routes.draw do
       post "comments", to: "comments#all"
       get "/comments/count", to: "comments#count"
 
+      # Routes for users_controller
       post "users/index", to: "users#index"
       post "users/create"
       get "/users/show", to: "users#show"
       delete "/users/destroy", to: "users#destroy"
 
+      # Routes for fields_controller
       post "/fields/index", to: "fields#index"
       post "/fields/destroy", to: "fields#destroy"
       post "/fields/create", to: "fields#create"
       get "fields/:id", to: "fields#post"
 
+      # Routes for search_controller
       post "search/posts", to: "search#index"
       get "search/post/:id", to: "search#post"
-      get "search/comment/:id", to: "search#comment"
 
+      # Routes for sessions_controller
       post "sessions/create", to: "sessions#create"
       delete "sessions/destroy", to: "sessions#destroy"
     end
