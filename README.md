@@ -1,4 +1,4 @@
-# Web Forum
+# Web Forum [![wakatime](https://wakatime.com/badge/user/018e18e4-ea39-46c6-b3da-dcbf7a45a702/project/b8490dbc-f16e-4a81-aa5d-45a618c26fae.svg)](https://wakatime.com/badge/user/018e18e4-ea39-46c6-b3da-dcbf7a45a702/project/b8490dbc-f16e-4a81-aa5d-45a618c26fae)
 Name: Phoebe Yap Xin Hui
 
 Deployed Website: [Web Forum](https://webforum-ydus.onrender.com/)
